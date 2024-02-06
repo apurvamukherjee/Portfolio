@@ -899,11 +899,11 @@ noscript{
 }
 /* hover effect on dp */
 .dp:hover::after{
-    transform: translate(20px,20px);
+    transform: translate(10px,70px);
     transition-duration: .5s;
 }
 .dp:hover::before{
-    transform: translate(-20px,-20px);
+    transform: translate(-10px,-10px);
     transition-duration: .5s;
 }
 /* about section ends
