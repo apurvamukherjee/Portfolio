@@ -244,7 +244,7 @@ header{
     align-items: center;
     justify-content: center;
     overflow-y: hidden;
-    background-image: url(src/svg/Pulse-0.4s-200px.svg);
+    background-image: url(Pulse-0.4s-200px.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 10%;
