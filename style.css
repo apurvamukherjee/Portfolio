@@ -351,7 +351,7 @@ noscript{
 
 }
 .hey{
-    color: white;
+    color: rgb(255, 0, 0);
     position: absolute;
     font-size: 2.5rem;
     font-weight: 300;
