@@ -4,7 +4,7 @@ window.addEventListener("load", function () {
   setTimeout(function() {
     loader.style.display = "none";
     document.querySelector('.hey').classList.add('popup');
-  }, 500); // 2000 milliseconds = 2 seconds
+  }, 550); // 1000 milliseconds = 1 seconds
 });
 
 // preloader script ends here.........
