@@ -235,7 +235,8 @@ header{
     justify-content: center;
 }
 #preloader{
-    background-color:white;
+    background-color:#030512;
+    animation-delay: 2s;
     height: 100%;
     width: 100%;
     position: fixed;
@@ -247,8 +248,8 @@ header{
     background-image: url(Preloader.svg);
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 10%;
-    filter: invert(1);
+    background-size: 20%;
+    filter: invert(0);
 
 }
 noscript{
