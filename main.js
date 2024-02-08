@@ -1,10 +1,11 @@
 
-var audio = document.getElementById("audioPlayer");
 var loader = document.getElementById("preloader");
 window.addEventListener("load", function () {
-  loader.style.display = "none";
-  document.querySelector('.hey').classList.add('popup');
-})
+  setTimeout(function() {
+    loader.style.display = "none";
+    document.querySelector('.hey').classList.add('popup');
+  }, 500); // 2000 milliseconds = 2 seconds
+});
 
 // preloader script ends here.........
 
