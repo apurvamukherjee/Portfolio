@@ -1,3 +1,20 @@
+main, #app, .content-wrapper {
+  position: relative;
+  z-index: 1;
+}
+/* Fullscreen Matrix Background */
+#matrixCanvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
+  background: black;
+}
+
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -35,6 +52,89 @@ html {
     padding: 0;
 
 }
+/* MATRIX BACKGROUND - Darkest Red + Black Film Overlay */
+.matrix-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  gap: 2px;
+  pointer-events: none;
+  z-index: -1;
+  overflow: hidden;
+  opacity: 0.00; /* reduced opacity to 30% */
+}
+
+
+/* Optional: Dark Film Overlay */
+.matrix-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100vh;
+  width: 100vw;
+  background: rgb(0, 0, 0); /* semi-black overlay */
+  z-index: -2; /* behind the matrix background */
+  pointer-events: none;
+}
+
+/* Columns */
+.matrix-column {
+  width: 16px;
+  height: 100%;
+  overflow: hidden;
+  animation: scrollDown 6s linear infinite;
+  position: relative;
+}
+
+/* Text */
+.matrix-column::before {
+  content: "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMN";
+  position: absolute;
+  top: -100%;
+  left: 0;
+  font-family: monospace;
+  font-size: 16px;
+  line-height: 16px;
+  writing-mode: vertical-lr;
+  text-orientation: upright;
+  background: linear-gradient(
+    to bottom,
+    #0d0000 0%,
+    #120000 20%,
+    #0a0000 40%,
+    #070000 60%,
+    #040000 80%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  white-space: nowrap;
+}
+
+/* Animation */
+@keyframes scrollDown {
+  0% {
+    transform: translateY(0%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+
+@keyframes scrollDown {
+  0% {
+    transform: translateY(-100%);
+  }
+  100% {
+    transform: translateY(100%);
+  }
+}
+
 :root{
     font-family: Whitney, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
     cursor:default;
@@ -686,7 +786,8 @@ noscript{
     display: flex;
     align-items: flex-start;
     background: -webkit-linear-gradient(135deg,var(--color-light-blue),var(--color-light-purple),var(--color-light-blue),var(--color-light-purple));
-    background: linear-gradient(-45deg,var(--color-light-blue),var(--color-light-purple),var(--color-light-blue),var(--color-light-purple));
+    background: linear-gradient(-45deg, #ff0000, #060000, #ff0000, #280202); /* Red gradient */
+
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -726,7 +827,7 @@ noscript{
     background-clip: text;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    background-color:  #ff0000;
+    background-color:  #990024;
     -webkit-animation: jello-vertical 0.9s both;
 	        animation: jello-vertical 0.9s both;
 }
