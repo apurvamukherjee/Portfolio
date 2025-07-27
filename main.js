@@ -1,13 +1,32 @@
+window.addEventListener("load", () => {
+  const preloader = document.getElementById("custom-preloader");
 
-var loader = document.getElementById("preloader");
-window.addEventListener("load", function () {
-  setTimeout(function() {
-    loader.style.display = "none";
-    document.querySelector('.hey').classList.add('popup');
-  }, 780); // 1000 milliseconds = 1 seconds
+  // Wait 3 seconds before starting fade out
+  setTimeout(() => {
+    preloader.style.transition = "opacity 0.5s ease";
+    preloader.style.opacity = "0";
+
+    // Wait for fade to finish (0.5s), then hide completely
+    setTimeout(() => {
+      preloader.style.display = "none";
+    }, 500); // fade duration
+  }, 3000); // delay before fade
 });
 
-// preloader script ends here.........
+window.addEventListener("load", () => {
+  const preloader = document.getElementById("custom-preloader");
+
+  setTimeout(() => {
+    preloader.style.opacity = "0";
+    preloader.style.transition = "opacity 0.5s ease";
+
+    setTimeout(() => {
+      preloader.style.display = "none";
+    }, 500); // 0.5s = fade time
+  }, 3000); // 3s = delay before fade
+});
+
+
 
 // switch for setting
 function settingtoggle(){
