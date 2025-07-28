@@ -10,8 +10,21 @@ window.addEventListener("load", () => {
     setTimeout(() => {
       preloader.style.display = "none";
     }, 500); // fade duration
-  }, 3000); // delay before fade
+  }, 2700); // delay before fade
 });
+document.querySelectorAll('.hide-during-preload').forEach(el => {
+  el.style.visibility = 'visible';
+});
+window.addEventListener("load", () => {
+  const preloader = document.getElementById("preloader");
+  preloader.style.display = "none";
+
+  // Fade in hidden elements
+  document.querySelectorAll('.hide-during-preload').forEach(el => {
+    el.classList.add('visible');
+  });
+});
+
 
 window.addEventListener("load", () => {
   const preloader = document.getElementById("custom-preloader");
@@ -22,6 +35,7 @@ window.addEventListener("load", () => {
 
     setTimeout(() => {
       preloader.style.display = "none";
+      document.getElementById("resumeBtn").classList.remove("hide-during-preload");
     }, 500); // 0.5s = fade time
   }, 3000); // 3s = delay before fade
 });
