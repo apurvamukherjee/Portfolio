@@ -196,6 +196,18 @@ body {
 }
 
 /* Preloader */
+/* FAILSAFE: CSS Animation to hide preloader if JS breaks */
+@keyframes forceHidePreloader {
+  0% { opacity: 1; visibility: visible; }
+  90% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+#custom-preloader {
+  /* Keep your existing styles, just add this animation */
+  animation: forceHidePreloader 5s forwards linear; 
+  /* "forwards" keeps it hidden after animation ends */
+}
 #custom-preloader {
   position: fixed;
   inset: 0;
