@@ -983,6 +983,7 @@ noscript{
 .fa-copyright{ font-size: 1.5rem; color: rgb(176, 176, 176); }
 
 /* Mobile Menu */
+
 .mobiletogglemenu{ display: none; }
 .hamburger{ display: none; }
 
