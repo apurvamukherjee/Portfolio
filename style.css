@@ -2196,6 +2196,7 @@ transition-duration: 1s;
 .hide-during-preload.visible {
   opacity: 1;
 }
+<<<<<<< HEAD
 /* ---------- MOBILE RESPONSIVE ---------- */
 @media screen and (max-width: 768px) {
   #name {
@@ -2255,3 +2256,157 @@ transition-duration: 1s;
   }
 }
 }
+=======
+/* --- Mobile Styles (e.g., for screens smaller than 768px) --- */
+@media (max-width: 768px) {
+
+    /* --- General Body & Layout Adjustments --- */
+    .body {
+        /* Ensure content doesn't overflow horizontally */
+        overflow-x: hidden;
+    }
+
+    /* Hide the Matrix Canvas background on smaller screens for performance */
+    #matrixCanvas {
+        display: none !important; 
+    }
+
+    /* --- Navigation (Header, Navbar, Hamburger) --- */
+    .navbar {
+        /* Align the "Hey! I am Apurva" text and logo vertically */
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 15px; /* Adjust padding for mobile */
+    }
+
+    .navbar-tabs {
+        display: none; /* Hide desktop tabs, as the hamburger menu handles navigation */
+    }
+
+    /* Make the mobile menu more prominent */
+    .mobiletogglemenu {
+        width: 100%;
+        position: fixed;
+        top: 60px; /* Position below the header */
+        z-index: 999;
+        /* Ensure this is styled to slide in/out correctly in your main.js */
+    }
+
+    /* --- Landing Page Section (#home) --- */
+    .landing-page-container {
+        padding: 15vh 5% 10vh 5%; /* More vertical padding, less horizontal */
+        flex-direction: column;
+        align-items: flex-start; /* Align text content to the left */
+    }
+
+    #hello-friend, #name, #work, #info-para {
+        /* Adjust font sizes to be more readable on small screens */
+        font-size: 24px;
+        line-height: 1.2;
+    }
+    
+    #info-para {
+        font-size: 16px; 
+    }
+
+    /* Style the dynamic text content sections */
+    .text-content {
+        width: 100%; /* Take full width */
+    }
+
+    /* Stack buttons or adjust button container */
+    .contact-btn-div {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px; /* Add space between stacked elements */
+        width: 100%;
+    }
+    
+    /* Move resume button to a more visible place or integrate it */
+    #resumeBtn {
+        position: static; /* Remove fixed positioning */
+        margin-top: 20px;
+    }
+
+    /* Style the settings container to fit better */
+    .setting-container {
+        display: flex;
+        gap: 15px;
+    }
+
+
+    /* --- About Section (#about) --- */
+    .about-section {
+        padding: 50px 5%; /* Adjust padding */
+    }
+
+    .info-dp-section {
+        flex-direction: column; /* Stack image and text */
+    }
+
+    .about-info {
+        width: 100%; /* Take full width */
+        margin-bottom: 20px;
+    }
+
+    .dp {
+        width: 60%; /* Make DP image smaller */
+        margin: 0 auto;
+    }
+
+    /* --- Skills Section (#skills) --- */
+    .skills-section {
+        padding: 50px 5%;
+    }
+
+    /* Allow the skill sections to wrap or stack */
+    .languages-section {
+        flex-wrap: wrap; 
+        justify-content: center;
+    }
+
+    .language-name {
+        min-width: unset; /* Remove fixed width constraints */
+        padding: 5px 10px; /* Smaller padding for skill tags */
+        margin: 5px;
+        font-size: 14px; /* Smaller font size */
+    }
+
+    /* --- Projects Section (#projects) --- */
+    .projects-section-div {
+        padding: 50px 5%;
+    }
+
+    .project-box-wrapper {
+        margin-bottom: 30px;
+    }
+
+    .project-box {
+        flex-direction: column; /* Stack image and text vertically */
+    }
+
+    .image-div {
+        width: 100%; /* Full width for the image */
+    }
+
+    .info-div {
+        width: 100%; /* Full width for the info */
+        padding: 20px;
+    }
+
+    /* --- Footer --- */
+    .footercontainer {
+        padding: 30px 5%;
+    }
+
+    .social-media-container {
+        width: 100%; /* Full width for social handles */
+    }
+
+    .logos {
+        flex-wrap: wrap; /* Wrap social media logos if too many */
+        justify-content: center;
+        gap: 15px;
+    }
+}
+>>>>>>> 12a2820010c0733e05313e01641ba7c5989fd395
