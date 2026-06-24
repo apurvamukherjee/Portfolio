@@ -47,7 +47,7 @@ html {
 body {
     background-color: var(--color-dark-mode);
     overflow-x: hidden;
-    cursor: url('cursorr.png'), auto;
+    cursor: url('assets/img/cursorr.png'), auto;
     height: 100%;
     width: 100%;
     margin: 0;
@@ -297,7 +297,7 @@ header{
     display: flex;
     align-items: center;
     justify-content: center;
-    background-image: url(Preloader.svg);
+    background-image: url(assets/img/Preloader.svg);
     background-repeat: no-repeat;
     background-position: center;
     background-size: 20%;
@@ -1058,6 +1058,14 @@ noscript{
 @media screen and (max-width: 998px) {
     html { font-size: 55%; }
     .navbar-tabs-ul{ display: none; }
+    /* ADDED (mobile menu fix): <main> has z-index:1 and the hamburger lives
+       inside it, while the fixed .navbar sits in the root stacking context at
+       z-index:999 — so the navbar bar painted on top of the burger and
+       swallowed the tap, and the menu never opened. Letting the bar pass taps
+       through to the burger underneath fixes it. No visual change (there is no
+       hover on touch devices, and the nav tabs here are already hidden). */
+    .navbar{ pointer-events: none; }
+    .hamburgerbase, #hamburger-button{ pointer-events: auto; }
     .stopscrolling{ overflow: hidden; }
     
     .hamburger{
@@ -1129,6 +1137,7 @@ noscript{
         justify-content: center;
         align-items: center;
         gap: 70px;
+        list-style: none; /* ADDED: match desktop nav (was showing default bullets once the menu could finally open) */
         box-shadow: -0px 0px 30px rgba(0, 0, 0, 0.176);
     }
     .mobile-navbar-tabs-ul a{ text-decoration: none; }
@@ -1208,4 +1217,202 @@ noscript{
     .image-div img{ border-top-left-radius: 10px; }
     
     .section-heading-article, .skills-heading-article, .projects-heading-article { font-size: 2.5rem; }
+}
+
+/* =====================================================================
+   ADDED: EXPERIENCE SECTION  (career "path")
+   Purely additive — no existing rule above is modified.
+   Reuses the site's existing design tokens only:
+   reds #ff0000 / #280404, var(--color-white), var(--color-shadowDark),
+   card bg rgba(255,255,255,0.005), 'fira code', and the existing
+   @keyframes gradientforlanguage. Visual language matches Projects/Skills.
+   ===================================================================== */
+.experience-section-container{
+    margin: 150px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+.experience-section-div{
+    width: 60%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.experience-boxes-div{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 50px;
+    padding: 50px;
+}
+.exp-company{
+    background-color: rgba(255, 255, 255, 0.005);
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    transition-duration: .3s;
+    box-shadow: 0px 10px 20px var(--color-shadowDark);
+    padding: 40px;
+    gap: 30px;
+}
+.exp-company:after{
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(-45deg, #ff0000, #000000, #ff0000, #000000);
+    background-size: 400% 400%;
+    animation: gradientforlanguage 5s ease infinite;
+    top: 0;
+    left: 0;
+}
+.exp-company:hover{ transform: translate(-5px,-10px); transition-duration: .3s; }
+.exp-company-head{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+.exp-company-name{
+    color: var(--color-white);
+    font-size: 3.4rem;
+    font-weight: 700;
+    font-family: fira code;
+}
+.exp-company-site{
+    color: var(--color-light-blue);
+    font-size: 1.7rem;
+    font-weight: 400;
+    text-decoration: none;
+    font-family: fira code;
+}
+.exp-company-site:hover{ text-decoration: underline; }
+.exp-duration-pill{
+    margin-left: auto;
+    color: gray;
+    font-size: 1.5rem;
+    font-weight: 600;
+    font-family: fira code;
+    border: 1px solid var(--color-navbarBorder-dark);
+    padding: 6px 16px;
+    border-radius: 30px;
+}
+.exp-company-sub{
+    color: gray;
+    font-size: 1.7rem;
+    font-weight: 400;
+}
+
+/* the role "path" / timeline */
+.exp-path{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0;
+}
+.exp-node{
+    flex: 1;
+    background-color: rgba(255, 255, 255, 0.005);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 12px;
+    padding: 30px;
+    box-shadow: 0px 10px 20px var(--color-shadowDark);
+    transform-style: preserve-3d;
+}
+.exp-node::before{
+    content: "";
+    position: absolute;
+    width: 30%;
+    height: 2px;
+    background: linear-gradient(-45deg, #000000, #ff0000, #000000, #ff3c00);
+    background-size: 400% 400%;
+    animation: gradientforlanguage 5s ease infinite;
+    top: 0;
+    left: 0;
+    transition-duration: .5s;
+}
+.exp-node:hover::before{ width: 100%; transition-duration: .5s; }
+.exp-role{
+    color: var(--color-white);
+    font-size: 2.2rem;
+    font-weight: 700;
+    font-family: fira code;
+}
+.exp-role-time{
+    color: rgb(101, 100, 100);
+    font-size: 1.6rem;
+    font-weight: 400;
+    font-family: fira code;
+}
+.exp-tag{
+    font-size: 1.4rem;
+    font-weight: 700;
+    font-family: fira code;
+    padding: 5px 14px;
+    border-radius: 20px;
+    background-image: linear-gradient(90deg,#ff0000,#280404);
+    color: var(--color-white);
+    width: fit-content;
+}
+.exp-tag.current{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.exp-tag.current .exp-dot{
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background-color: var(--color-white);
+    animation: opacity-animation 2s infinite;
+}
+/* connector with arrow between the two roles (reuses red palette) */
+.exp-connector{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 18px;
+    color: #ff0000;
+}
+.exp-connector svg{
+    width: 42px;
+    height: 24px;
+    fill: none;
+    stroke: #ff0000;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+/* ---- Experience responsiveness (mirrors the existing breakpoints) ---- */
+@media screen and (max-width: 1200px){
+    .experience-section-div{ width: 80%; }
+}
+@media screen and (max-width: 998px){
+    .exp-path{ flex-direction: column; align-items: stretch; }
+    .exp-connector{ padding: 14px 0; }
+    .exp-connector svg{ transform: rotate(90deg); }
+    .exp-duration-pill{ margin-left: 0; }
+}
+@media screen and (max-width: 768px){
+    .experience-section-div{ width: 90%; }
+    .experience-boxes-div{ padding: 40px 0; }
+    .exp-company{ padding: 30px 20px; }
+}
+@media screen and (max-width: 500px){
+    .exp-company-name{ font-size: 2.8rem; }
+    .exp-role{ font-size: 2rem; }
 }

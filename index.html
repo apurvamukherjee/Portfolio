@@ -24,7 +24,7 @@
     <meta property="og:image" content="Apurva" >
 
     <title>Apurva Mukherjee | Portfolio</title>
-    <link rel="icon" type="image/x-icon" href="circlepic.jpg">
+    <link rel="icon" type="image/x-icon" href="assets/img/circlepic.jpg">
     <!-- aos cdn -->
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <!-- stylesheet -->
@@ -42,46 +42,13 @@
   
   <canvas id="matrixCanvas"></canvas>
 
-  <script>
-  const canvas = document.getElementById("matrixCanvas");
-  const ctx = canvas.getContext("2d");
-
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
-
-  const letters = "アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const fontSize = 14;
-  const columns = canvas.width / fontSize;
-
-  const drops = Array.from({ length: columns }).fill(1);
-
-  function drawMatrix() {
-    ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-    ctx.fillStyle = "#5c0404"; // red color
-    ctx.font = fontSize + "px monospace";
-
-    for (let i = 0; i < drops.length; i++) {
-      const text = letters[Math.floor(Math.random() * letters.length)];
-      ctx.fillText(text, i * fontSize, drops[i] * fontSize);
-
-      if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-        drops[i] = 0;
-      }
-
-      drops[i]++;
-    }
-  }
-
-  setInterval(drawMatrix, 33);
-
-  // Resize canvas on window resize
-  window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-  });
-</script>
+  <!--
+    NOTE: The matrix-rain logic lives in main.js (mobile-optimized version).
+    A duplicate inline copy used to sit here, but it re-declared `const canvas`
+    in the global scope, which threw "Identifier 'canvas' has already been
+    declared" and stopped main.js from running at all (so the mobile menu,
+    toggles and active-link logic never worked). Kept the single source in main.js.
+  -->
 
   <!-- Matrix Background -->
 
@@ -126,7 +93,7 @@
             <div class="logo" tabindex="0" aria-label="Apurva logo">
 
                 <div class="logo-top">
-                    <img src="bitmojee-removebg-preview.png" alt="animation-head">
+                    <img src="assets/img/bitmojee-removebg-preview.png" alt="animation-head">
                 <div class="face">
                 </div>
             </div>
@@ -139,6 +106,8 @@
                     <li class="about" class="navbar-tabs-li" data-aos="fade-down" data-aos-delay="300">&#60;/AboutMe&#62;</li></a>
                     <a href="#skills"aria-label="skills menu button">
                     <li class="skills" class="navbar-tabs-li"data-aos="fade-down" data-aos-delay="500">&#60;/Skills&#62;</li></a>
+                    <a href="#experience"aria-label="experience menu button">
+                    <li class="experience" class="navbar-tabs-li"data-aos="fade-down" data-aos-delay="600">&#60;/Experience&#62;</li></a>
                     <a href="#projects"aria-label="projects menu button">
                     <li class="projects" class="navbar-tabs-li"data-aos="fade-down" data-aos-delay="700">&#60;/Projects&#62;</li></a>
                     
@@ -170,6 +139,8 @@
                 <li id="aboutme-mobile-tab" class="mobile-navbar-tabs-li about"onclick="hidemenubyli()">&#60;/AboutMe&#62;</li></a>
                 <a href="#skills" tabindex="0" aria-label="skills menu button">
                 <li id="skills-mobile-tab" class="mobile-navbar-tabs-li skills"onclick="hidemenubyli()">&#60;/Skills&#62;</li></a>
+                <a href="#experience" tabindex="0" aria-label="experience menu button">
+                <li id="experience-mobile-tab" class="mobile-navbar-tabs-li experience" onclick="hidemenubyli()">&#60;/Experience&#62;</li></a>
                 <a href="#projects" tabindex="0" aria-label="projects menu button">
                 <li id="projects-mobile-tab" class="mobile-navbar-tabs-li projects" onclick="hidemenubyli()">&#60;/Projects&#62;</li></a>
                 
@@ -258,7 +229,7 @@
 
                     </div>
 
-                    <div class="dp" data-aos="fade-up"><img src="frontface_resized.jpg" alt="Apurva Mukherjee" tabindex="0" aria-label="image of Apurva"></div>
+                    <div class="dp" data-aos="fade-up"><img src="assets/img/frontface_resized.jpg" alt="Apurva Mukherjee" tabindex="0" aria-label="image of Apurva"></div>
                 </div>
             </div>
         </section>
@@ -372,6 +343,54 @@
 
     </main>
 
+    <!-- ADDED: Experience section (career path) — built with the site's existing design tokens -->
+    <section class="experience-section-container" id="experience" data-aos="fade-up">
+        <div class="experience-section-div">
+            <div class="section-heading" data-aos="fade-up">
+                <h2 class="section-heading-article" tabindex="0" aria-label="My experience starts from here">&#60;/Experience&#62;</h2>
+                <p class="sectionHeadingP"></p>
+            </div>
+
+            <div class="experience-boxes-div">
+                <div data-aos="fade-up" class="exp-company">
+                    <div class="exp-company-head">
+                        <article class="exp-company-name" tabindex="0" aria-label="Mind Webs Venture">Mind Webs Venture</article>
+                        <a href="https://mindwebs.org" target="_blank" class="exp-company-site" aria-label="Visit Mind Webs Venture website">mindwebs.org</a>
+                        <span class="exp-duration-pill">1 yr</span>
+                    </div>
+                    <p class="exp-company-sub" tabindex="0">My professional journey — growing from design into full-stack &amp; app development.</p>
+
+                    <div class="exp-path">
+                        <div class="exp-node" data-aos="fade-up">
+                            <article class="exp-role" tabindex="0" aria-label="UI UX Intern">UI/UX Intern</article>
+                            <p class="exp-role-time">6 months</p>
+                            <span class="exp-tag">Completed</span>
+                        </div>
+
+                        <div class="exp-connector" aria-hidden="true">
+                            <svg viewBox="0 0 13 10"><path d="M1,5 L11,5"></path><polyline points="8 1 12 5 8 9"></polyline></svg>
+                        </div>
+
+                        <div class="exp-node" data-aos="fade-up" data-aos-delay="200">
+                            <article class="exp-role" tabindex="0" aria-label="Full Stack and App Developer Intern">Full Stack / App Dev Intern</article>
+                            <p class="exp-role-time">6 months</p>
+                            <span class="exp-tag current"><span class="exp-dot"></span>Current</span>
+                        </div>
+                    </div>
+
+                    <a href="https://mindwebs.org" target="_blank" class="cta" aria-label="Visit Mind Webs Venture">
+                        <span>Visit Company</span>
+                        <svg viewBox="0 0 13 10" height="10px" width="15px">
+                            <path d="M1,5 L11,5"></path>
+                            <polyline points="8 1 12 5 8 9"></polyline>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Experience section ends -->
+
     <section class="projects-section-container" id="projects">
         <div class="projects-section-div">
           <div class="section-heading" data-aos="fade-up">
@@ -384,7 +403,7 @@
             <div data-aos="fade-up" class="project-box-wrapper">
               <div class="project-box project-box2" id="project-box2">
                 <div class="info-div">
-                  <img src="pr/clogo.jpg" alt="chat app logo" class="faviconforProject" />
+                  <img loading="lazy" decoding="async" src="assets/projects/clogo.jpg" alt="chat app logo" class="faviconforProject" />
                   <article class="ProjectHeading">Chat App</article>
                   <p class="ProjectDescription">
                     Chat App: Built a real-time chat application enabling seamless user communication
@@ -392,7 +411,7 @@
                   <div class="project-buttons">
                     <a href="https://github.com/apurvamukherjee/chat-app" target="_blank" class="github-redirect"
                       aria-label="Visit Chat App on GitHub">
-                      <img src="pr/github.svg" alt="github redirect button" />
+                      <img loading="lazy" decoding="async" src="assets/projects/github.svg" alt="github redirect button" />
                     </a>
                     <a href="https://chat-app-alpha-ivory-12.vercel.app/" target="_blank" class="cta"
                       aria-label="Visit Chat App Live">
@@ -405,7 +424,7 @@
                   </div>
                 </div>
                 <div class="image-div">
-                  <img src="pr/screenshot-12.png" alt="Chat App website preview image" />
+                  <img loading="lazy" decoding="async" src="assets/projects/screenshot-12.png" alt="Chat App website preview image" />
                 </div>
               </div>
             </div>
@@ -414,7 +433,7 @@
             <div data-aos="fade-up" class="project-box-wrapper">
                 <div class="project-box project-box2" id="project-box2">
                   <div class="info-div">
-                    <img src="pr/gemini.png" alt="gemini logo" class="faviconforProject" />
+                    <img loading="lazy" decoding="async" src="assets/projects/gemini.png" alt="gemini logo" class="faviconforProject" />
                     <article class="ProjectHeading">Gemini Clone</article>
                     <p class="ProjectDescription">
                         Developed a web application replicating core features of the Gemini platform
@@ -422,7 +441,7 @@
                     <div class="project-buttons">
                       <a href="https://github.com/apurvamukherjee/gemini-clone" target="_blank" class="github-redirect"
                         aria-label="Visit Gemini Clone on GitHub">
-                        <img src="pr/github.svg" alt="github redirect button" />
+                        <img loading="lazy" decoding="async" src="assets/projects/github.svg" alt="github redirect button" />
                       </a>
                       <a href="https://gemini-clone-eg27sqwhf-sameapurvas-projects.vercel.app/" target="_blank" class="cta"
                         aria-label="Visit Gemini Clone Live">
@@ -435,7 +454,7 @@
                     </div>
                   </div>
                   <div class="image-div">
-                    <img src="pr/ss-gemini.png" alt="Gemini Clone website preview image" />
+                    <img loading="lazy" decoding="async" src="assets/projects/ss-gemini.png" alt="Gemini Clone website preview image" />
                   </div>
                 </div>
               </div>
@@ -443,7 +462,7 @@
               <div data-aos="fade-up" class="project-box-wrapper">
                 <div class="project-box project-box2" id="project-box2">
                   <div class="info-div">
-                    <img src="pr/aimlogo.png" alt="gemini logo" class="faviconforProject" />
+                    <img loading="lazy" decoding="async" src="assets/projects/aimlogo.png" alt="gemini logo" class="faviconforProject" />
                     <article class="ProjectHeading">Aim Trainer Game</article>
                     <p class="ProjectDescription">
                         A Aim Trainer Game to improve your aim. made with different levels and difficulty levels.
@@ -451,7 +470,7 @@
                     <div class="project-buttons">
                       <a href="https://github.com/apurvamukherjee/AIm-Trainer-Game" target="_blank" class="github-redirect"
                         aria-label="Visit Aim Trainer Game on GitHub">
-                        <img src="pr/github.svg" alt="github redirect button" />
+                        <img loading="lazy" decoding="async" src="assets/projects/github.svg" alt="github redirect button" />
                       </a>
                       <a href="https://apurvamukherjee.github.io/AIm-Trainer-Game/" target="_blank" class="cta"
                         aria-label="Visit Aim Trainer Game Live">
@@ -464,7 +483,7 @@
                     </div>
                   </div>
                   <div class="image-div">
-                    <img src="pr/aimss.png" alt="Aim Trainer Game website preview image" />
+                    <img loading="lazy" decoding="async" src="assets/projects/aimss.png" alt="Aim Trainer Game website preview image" />
                   </div>
                 </div>
               </div>
