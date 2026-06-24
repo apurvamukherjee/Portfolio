@@ -599,6 +599,7 @@ noscript{
 .info-dp-section{
     width: 100%;
     display: flex;
+    align-items: center; /* align the text block with the photo */
     margin-top: 30px;
 }
 .about-info{
@@ -992,6 +993,7 @@ noscript{
   position: fixed;
   bottom: 1rem;
   left: 1rem;
+  width: fit-content;
   z-index: 9999;
   text-decoration: none;
 }
@@ -1149,7 +1151,8 @@ noscript{
         font-family: fira code;
     }
     
-    .info-dp-section{ flex-direction: column; gap: 30px; }
+    .info-dp-section{ flex-direction: column; gap: 30px; align-items: center; }
+    .about-info{ width: 100%; }
     .dp{ width: 100%; align-items: center; justify-content:center; }
     .project-box{ flex-direction: column; height: 800px; }
     .info-div{ width: 100%; height: 50%; }
@@ -1197,8 +1200,10 @@ noscript{
     .projects-section-div{ width: 90%; }
     .project-boxes-div{ padding: 40px 0; }
     
-    #resumeBtn { position: static; margin-top: 20px; }
+    #resumeBtn { position: fixed; bottom: 1rem; right: 1rem; left: auto; margin-top: 0; }
     .btn-small { width: 80px; height: 80px; }
+    /* keep the back-to-top clear of the bottom-right resume button */
+    #backtotopbutton { bottom: 110px; }
     
     .footercontainer { position: relative; }
     .two-words article { font-size: 2rem; }
@@ -1415,4 +1420,130 @@ noscript{
 @media screen and (max-width: 500px){
     .exp-company-name{ font-size: 2.8rem; }
     .exp-role{ font-size: 2rem; }
+}
+
+
+/* =====================================================================
+   ADDED: side-menu hint (tablet / mobile)
+   Lives inside .hamburger (display:none on desktop) so it only shows on
+   the breakpoints where the burger appears. Uses the site reds + fira code.
+   ===================================================================== */
+.menu-hint{
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    margin-right: 14px;
+    pointer-events: none;          /* purely a hint; the burger handles taps */
+    opacity: .85;
+    animation: menuHintNudge 1.8s ease-in-out infinite;
+}
+.menu-hint-icon{
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: #ff0000;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.menu-hint-text{
+    font-family: fira code;
+    font-size: 1.4rem;
+    font-weight: 600;
+    letter-spacing: .5px;
+    color: var(--color-white);
+}
+@keyframes menuHintNudge{
+    0%, 100% { transform: translateX(0); opacity: .65; }
+    50%      { transform: translateX(6px); opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce){
+    .menu-hint{ animation: none; }
+}
+
+
+/* =====================================================================
+   ADDED: Experience — interactive details (expand/collapse) + playable logo
+   Additive only, built from the existing red / dark / fira-code tokens.
+   ===================================================================== */
+.exp-node{ cursor: pointer; transition: transform .25s ease; }
+.exp-node:hover{ transform: translateY(-4px); }
+.exp-node:focus-visible{ outline: 2px solid #ff0000; outline-offset: 3px; }
+.exp-node-top{
+    width: 100%;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+.exp-node-titles{ display: flex; flex-direction: column; gap: 12px; }
+.exp-chevron{
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+    fill: none;
+    stroke: #ff0000;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: transform .3s ease;
+}
+.exp-node.open .exp-chevron{ transform: rotate(180deg); }
+.exp-detail{
+    width: 100%;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height .4s ease, opacity .4s ease, margin-top .4s ease;
+}
+.exp-node.open .exp-detail{ max-height: 600px; opacity: 1; margin-top: 6px; }
+.exp-points{
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 0 16px 0;
+}
+.exp-points li{
+    position: relative;
+    padding-left: 20px;
+    color: var(--color-ddd-color);
+    font-size: 1.55rem;
+    line-height: 1.5;
+    font-weight: 400;
+}
+.exp-points li::before{
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 9px;
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+    background-image: linear-gradient(90deg,#ff0000,#280404);
+}
+.exp-techs{ display: flex; flex-wrap: wrap; gap: 10px; }
+.exp-tech{
+    font-family: fira code;
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--color-white);
+    padding: 6px 14px;
+    border-radius: 30px;
+    border: 1px solid var(--color-navbarBorder-dark);
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* --- Playable navbar logo (the bitmoji head) --- */
+.logo{ cursor: pointer; }
+.logo.logo-playing{ animation: logoPlay .7s ease; }
+@keyframes logoPlay{
+    0%   { transform: translateY(0) scale(1)    rotate(0deg); }
+    20%  { transform: translateY(-7px) scale(1.14) rotate(-13deg); }
+    45%  { transform: translateY(3px) scale(1.08) rotate(11deg); }
+    70%  { transform: translateY(-3px) scale(1.05) rotate(-6deg); }
+    100% { transform: translateY(0) scale(1)    rotate(0deg); }
+}
+@media (prefers-reduced-motion: reduce){
+    .logo.logo-playing{ animation: none; }
 }

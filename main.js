@@ -308,3 +308,55 @@ if (pupilsArr.length > 0) {
   window.addEventListener('mousemove', mouseMove);
   window.addEventListener('resize', windowResize);
 }
+
+/* =========================================
+   ADDED: Experience expand/collapse + playable logo
+   ========================================= */
+
+// Expand/collapse each experience role card (click, tap, Enter/Space)
+(function () {
+  const expNodes = document.querySelectorAll('.exp-node');
+  expNodes.forEach((node) => {
+    const toggle = () => {
+      const isOpen = node.classList.toggle('open');
+      node.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    };
+    node.addEventListener('click', toggle);
+    node.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
+})();
+
+// Make the navbar bitmoji logo playful on click / tap / keyboard
+(function () {
+  const logoEl = document.querySelector('.logo');
+  if (!logoEl) return;
+
+  const hey = document.querySelector('.hey');
+
+  function playLogo() {
+    logoEl.classList.remove('logo-playing');
+    void logoEl.offsetWidth; // force reflow so the animation can replay
+    logoEl.classList.add('logo-playing');
+
+    if (hey) {
+      hey.classList.remove('popup');
+      void hey.offsetWidth;
+      hey.classList.add('popup');
+    }
+  }
+
+  logoEl.addEventListener('click', playLogo);
+  logoEl.addEventListener('touchstart', playLogo, { passive: true });
+  logoEl.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      playLogo();
+    }
+  });
+  logoEl.addEventListener('animationend', () => logoEl.classList.remove('logo-playing'));
+})();
