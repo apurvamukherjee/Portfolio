@@ -59,7 +59,7 @@ export function About() {
               className="pointer-events-none absolute -inset-2 border-b-2 border-r-2 border-accent transition-transform duration-500 group-hover:translate-x-3 group-hover:translate-y-3"
             />
             <img
-              src="/assets/img/frontface_resized.jpg"
+              src="/assets/img/me.jpeg"
               alt="Apurva Mukherjee"
               className="relative w-full object-cover"
             />
