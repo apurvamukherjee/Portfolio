@@ -1,4 +1,7 @@
+import { useState } from 'react'
 import { useTheme } from './hooks/useTheme'
+import { useReducedMotion } from './hooks/useReducedMotion'
+import { IntroContext } from './hooks/useIntro'
 import { Preloader } from './components/layout/Preloader'
 import { MatrixRain } from './components/shared/MatrixRain'
 import { ScrollProgressBar } from './components/shared/ScrollProgressBar'
@@ -13,12 +16,33 @@ import { Experience } from './components/sections/Experience'
 import { Projects } from './components/sections/Projects'
 import { Leadership } from './components/sections/Leadership'
 
+const INTRO_SESSION_KEY = 'portfolio-intro-seen'
+
+function hasSeenIntro(): boolean {
+  try {
+    return sessionStorage.getItem(INTRO_SESSION_KEY) === '1'
+  } catch {
+    return false
+  }
+}
+
 function App() {
   const { theme, toggle } = useTheme()
+  const reducedMotion = useReducedMotion()
+  const [introDone, setIntroDone] = useState(() => reducedMotion || hasSeenIntro())
+
+  const handleIntroComplete = () => {
+    try {
+      sessionStorage.setItem(INTRO_SESSION_KEY, '1')
+    } catch {
+      // sessionStorage unavailable — intro will just replay next load, acceptable fallback
+    }
+    setIntroDone(true)
+  }
 
   return (
-    <>
-      <Preloader />
+    <IntroContext.Provider value={introDone}>
+      {!introDone && <Preloader onComplete={handleIntroComplete} />}
       <MatrixRain theme={theme} />
       <ScrollProgressBar />
       <Navbar theme={theme} onToggleTheme={toggle} />
@@ -35,7 +59,7 @@ function App() {
       <Footer />
       <FloatingResumeButton />
       <BackToTopButton />
-    </>
+    </IntroContext.Provider>
   )
 }
 

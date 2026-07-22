@@ -1,4 +1,5 @@
 import type { IconType } from 'react-icons'
+import { motion } from 'framer-motion'
 import { TbBrandGithub, TbBrandInstagram, TbBrandLinkedin, TbMail } from 'react-icons/tb'
 import { socialLinks, type SocialLink } from '../../data/social'
 import { site } from '../../data/site'
@@ -22,17 +23,20 @@ export function Footer() {
             {socialLinks.map((link) => {
               const Icon = ICONS[link.icon]
               return (
-                <a
+                <motion.a
                   key={link.label}
                   href={link.href}
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={link.label}
+                  whileHover={{ scale: 1.12, y: -3 }}
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ type: 'spring', stiffness: 350, damping: 18 }}
                   className="group relative flex h-12 w-12 items-center justify-center overflow-hidden rounded-full border-2 border-white/80"
                 >
                   <span className="absolute inset-0 scale-0 rounded-full bg-accent transition-transform duration-500 group-hover:scale-150" />
                   <Icon size={20} className="relative" />
-                </a>
+                </motion.a>
               )
             })}
           </div>

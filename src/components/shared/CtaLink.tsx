@@ -9,7 +9,7 @@ interface CtaLinkProps {
   className?: string
 }
 
-/** Circular glow arrow-link — "Visit Company", "Live view". */
+/** Solid accent pill link with a sliding arrow — "Live view", etc. Always visible, no hover-reveal gimmick. */
 export function CtaLink({ href, children, className = '' }: CtaLinkProps) {
   const reduced = useReducedMotion()
   const { ref, x, y, onMouseMove, onMouseLeave } = useMagnetic<HTMLAnchorElement>(0.15)
@@ -23,17 +23,14 @@ export function CtaLink({ href, children, className = '' }: CtaLinkProps) {
       onMouseMove={reduced ? undefined : onMouseMove}
       onMouseLeave={reduced ? undefined : onMouseLeave}
       style={reduced ? undefined : { x, y }}
-      whileTap={{ scale: 0.95 }}
-      className={`group relative inline-flex items-center gap-2.5 overflow-hidden rounded-full px-4 py-2.5 text-sm font-semibold text-accent transition-colors duration-300 hover:text-white ${className}`}
+      whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.96 }}
+      className={`group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-accent to-accent-deep px-5 py-2.5 text-sm font-semibold text-white shadow-[0_4px_14px_rgba(255,0,0,0.35)] transition-shadow duration-300 hover:shadow-[0_6px_20px_rgba(255,0,0,0.5)] ${className}`}
     >
-      <span
-        aria-hidden
-        className="absolute left-0 top-0 -z-10 h-full w-11 rounded-full bg-border transition-all duration-300 ease-out group-hover:w-full group-hover:bg-accent"
-      />
-      <span className="relative">{children}</span>
+      <span>{children}</span>
       <svg
         viewBox="0 0 13 10"
-        className="relative h-2.5 w-4 -translate-x-1 stroke-accent stroke-2 transition-all duration-300 group-hover:translate-x-0 group-hover:stroke-white"
+        className="h-2.5 w-4 stroke-white stroke-2 transition-transform duration-300 group-hover:translate-x-1"
         fill="none"
       >
         <path d="M1,5 L11,5" strokeLinecap="round" />

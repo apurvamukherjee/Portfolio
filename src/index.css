@@ -36,14 +36,14 @@
 
 [data-theme="light"] {
   color-scheme: light;
-  --color-ink: #14120f;
-  --color-surface: #ece7e1;
-  --color-surface-raised: rgba(0, 0, 0, 0.03);
-  --color-muted: #6b6862;
-  --color-border: rgba(0, 0, 0, 0.08);
-  --color-shadow: rgba(0, 0, 0, 0.12);
-  --color-accent: #ff0000;
-  --color-accent-deep: #ffd9d9;
+  --color-ink: #17140f;
+  --color-surface: #f2ede4;
+  --color-surface-raised: rgba(0, 0, 0, 0.04);
+  --color-muted: #55524b;
+  --color-border: rgba(0, 0, 0, 0.14);
+  --color-shadow: rgba(0, 0, 0, 0.16);
+  --color-accent: #d40000;
+  --color-accent-deep: #6b0000;
 }
 
 @keyframes headshake {

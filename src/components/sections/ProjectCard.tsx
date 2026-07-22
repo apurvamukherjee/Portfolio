@@ -1,7 +1,9 @@
+import { motion } from 'framer-motion'
 import { TbBrandGithub } from 'react-icons/tb'
 import type { Project } from '../../data/projects'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { ImageSlideshow } from '../shared/ImageSlideshow'
+import { MacBookFrame } from '../shared/MacBookFrame'
 import { CtaLink } from '../shared/CtaLink'
 import { Chip } from '../shared/Chip'
 
@@ -58,15 +60,18 @@ export function ProjectCard(project: Project) {
 
         <div className="mt-auto flex flex-wrap items-center gap-3 pt-2">
           {project.githubUrl && (
-            <a
+            <motion.a
               href={project.githubUrl}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={`Visit ${project.name} on GitHub`}
+              whileHover={{ scale: 1.1, rotate: -6 }}
+              whileTap={{ scale: 0.92 }}
+              transition={{ type: 'spring', stiffness: 350, damping: 18 }}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition-colors hover:border-accent hover:text-accent"
             >
               <TbBrandGithub size={18} />
-            </a>
+            </motion.a>
           )}
           {project.liveUrl && <CtaLink href={project.liveUrl}>Live view</CtaLink>}
           {project.status && <Chip variant="accent">● {project.status}</Chip>}
@@ -89,7 +94,9 @@ export function ProjectCard(project: Project) {
         </div>
       ) : (
         <div className="relative min-h-[260px] flex-1 overflow-hidden">
-          <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="cover" />
+          <MacBookFrame>
+            <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="cover" />
+          </MacBookFrame>
         </div>
       )}
     </GradientSweepCard>

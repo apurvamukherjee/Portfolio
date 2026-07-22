@@ -3,23 +3,25 @@ import { site } from '../../data/site'
 import { JelloText } from '../shared/JelloText'
 import { NeuButton } from '../shared/NeuButton'
 import { HeroIllustration } from './HeroIllustration'
-import { fadeUp, fadeIn, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
+import { fadeUp, fadeIn, staggerContainer, withMotionPreference } from '../../lib/motion'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { useIntro } from '../../hooks/useIntro'
 
 export function Hero() {
   const reduced = useReducedMotion()
+  const introDone = useIntro()
   const item = withMotionPreference(fadeUp, reduced)
 
   return (
     <section
       id="home"
-      className="flex min-h-screen w-full items-center justify-center px-6 pb-16 pt-32 sm:px-8 md:px-12 lg:px-16"
+      className="flex min-h-screen w-full items-center justify-center px-6 pb-6 pt-32 sm:px-8 md:px-12 lg:px-16"
     >
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-10">
         <motion.div
           className="order-1 flex w-full max-w-xl flex-col items-start"
           initial="hidden"
-          animate="visible"
+          animate={introDone ? 'visible' : 'hidden'}
           variants={staggerContainer(0.15)}
         >
           <motion.p variants={item} className="text-2xl font-medium text-ink md:text-4xl">
@@ -28,7 +30,7 @@ export function Hero() {
 
           <motion.h1
             variants={item}
-            className="text-gradient-accent-animated animate-gradient-shift whitespace-nowrap text-[clamp(1.75rem,3.4vw,3rem)] font-black leading-tight"
+            className="text-gradient-accent-animated animate-gradient-shift whitespace-nowrap text-[clamp(2.1rem,4.6vw,3.5rem)] font-black leading-tight tracking-tight"
           >
             <JelloText text="Apurva Mukherjee." />
           </motion.h1>
@@ -48,8 +50,7 @@ export function Hero() {
 
         <motion.div
           initial="hidden"
-          whileInView="visible"
-          viewport={viewportOnce}
+          animate={introDone ? 'visible' : 'hidden'}
           variants={withMotionPreference(fadeIn, reduced)}
           className="order-2 w-full"
         >

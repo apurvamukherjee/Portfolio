@@ -54,16 +54,14 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: 'placeholder',
+    kind: 'gallery',
     name: 'Code Synth',
-    badge: '♫',
-    accent: 'violet',
     description:
       'Synthesis engine that converts code into real-time audio via Web Audio API with sub-10ms latency. Gemini-powered natural-language-to-music generation — describe a sound, get music.',
     tech: ['React', 'Web Audio API', 'Gemini API'],
     status: 'Ongoing',
     githubUrl: 'https://github.com/apurvamukherjee',
-    placeholderText: 'Code → music, sub-10ms latency',
+    images: ['/assets/projects/code-synth.png'],
   },
   {
     kind: 'gallery',

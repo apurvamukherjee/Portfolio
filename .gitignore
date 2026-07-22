@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Reference assets not consumed by the built site
+public/assets/preloader.mp4
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
