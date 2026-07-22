@@ -1,10 +1,16 @@
-import { motion } from 'framer-motion'
-import { SectionHeading } from '../shared/SectionHeading'
-import { fadeUp, fadeDown, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { motion } from "framer-motion";
+import { SectionHeading } from "../shared/SectionHeading";
+import {
+  fadeUp,
+  fadeDown,
+  staggerContainer,
+  viewportOnce,
+  withMotionPreference,
+} from "../../lib/motion";
+import { useReducedMotion } from "../../hooks/useReducedMotion";
 
 export function About() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion();
 
   return (
     <section id="about" className="w-full px-6 py-24 md:px-16">
@@ -18,18 +24,25 @@ export function About() {
           viewport={viewportOnce}
           variants={staggerContainer(0.15)}
         >
-          <motion.div variants={withMotionPreference(fadeUp, reduced)} className="flex flex-col gap-5 md:w-3/5">
+          <motion.div
+            variants={withMotionPreference(fadeUp, reduced)}
+            className="flex flex-col gap-5 md:w-3/5"
+          >
             <p className="text-lg leading-relaxed text-ink md:text-xl">
-              I'm Apurva — a full-stack engineer and product builder based in Kolkata. I design systems, write
-              production-grade APIs, and ship end-to-end features across web and mobile. What started as curiosity in
-              2022 at KIIT University became real-world engineering: 50+ reusable React components, live production
-              apps, and full ownership from technical spec to deployment.
+              I'm Apurva — a full-stack engineer and product builder based in
+              Kolkata. I design systems, write production-grade APIs, and ship
+              end-to-end features across web and mobile. What started as
+              curiosity in 2022 at KIIT University became real-world
+              engineering: 50+ reusable React components, live production apps,
+              and full ownership from technical spec to deployment.
             </p>
             <p className="text-lg leading-relaxed text-muted md:text-xl">
-              At Mind Webs Ventures I've worn multiple hats — UI/UX intern, Founder's Office associate leading
-              cross-functional delivery, and now engineering intern building full-stack web and mobile apps with
-              React, React Native, Node.js, and MongoDB. I also represented the company at India Mobile Congress 2025
-              in Delhi, and mentored students as a judge at DriveBlaze Hackathon.
+              I've worn multiple hats — UI/UX intern, Founder's Office associate
+              leading cross-functional delivery, and now engineering intern
+              building full-stack web and mobile apps with React, React Native,
+              Node.js, and MongoDB. I also represented the company at India
+              Mobile Congress 2025 in Delhi, and mentored students as a judge at
+              DriveBlaze Hackathon.
             </p>
           </motion.div>
 
@@ -54,5 +67,5 @@ export function About() {
         </motion.div>
       </div>
     </section>
-  )
+  );
 }
