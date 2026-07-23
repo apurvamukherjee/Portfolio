@@ -1,4 +1,6 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
+import { TbArrowDown } from "react-icons/tb";
 import { site } from "../../data/site";
 import { JelloText } from "../shared/JelloText";
 import { NeuButton } from "../shared/NeuButton";
@@ -12,10 +14,33 @@ import {
 import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useIntro } from "../../hooks/useIntro";
 
+const EGG_DISCOVERED_KEY = "portfolio-egg-discovered";
+
+function readEggDiscovered(): boolean {
+  try {
+    return localStorage.getItem(EGG_DISCOVERED_KEY) === "1";
+  } catch {
+    return false;
+  }
+}
+
 export function Hero() {
   const reduced = useReducedMotion();
   const introDone = useIntro();
   const item = withMotionPreference(fadeUp, reduced);
+  const [eggDiscovered, setEggDiscovered] = useState(readEggDiscovered);
+
+  // Fires on any click inside the illustration (the traffic-light buttons
+  // live in HeroIllustration, left untouched) — retires the hint for good.
+  function handleIllustrationClick() {
+    if (eggDiscovered) return;
+    setEggDiscovered(true);
+    try {
+      localStorage.setItem(EGG_DISCOVERED_KEY, "1");
+    } catch {
+      // localStorage unavailable — hint just won't persist across sessions
+    }
+  }
 
   return (
     <section
@@ -66,8 +91,26 @@ export function Hero() {
           initial="hidden"
           animate={introDone ? "visible" : "hidden"}
           variants={withMotionPreference(fadeIn, reduced)}
-          className="order-2 w-full"
+          className={`relative order-2 w-full ${!eggDiscovered ? "pt-16 lg:pt-0" : ""}`}
+          onClickCapture={handleIllustrationClick}
         >
+          {!eggDiscovered && (
+            <motion.div
+              aria-hidden
+              initial={{ opacity: 0 }}
+              animate={introDone ? { opacity: 1 } : { opacity: 0 }}
+              transition={{ delay: 1, duration: 0.6 }}
+              className="pointer-events-none absolute left-4 top-0 z-10 flex max-w-[11rem] flex-col items-start gap-1 font-mono text-xs font-medium leading-snug text-accent lg:-top-16"
+            >
+              <span>try clicking these traffic lights to close this tab</span>
+              <motion.span
+                animate={reduced ? undefined : { y: [0, 5, 0] }}
+                transition={reduced ? undefined : { duration: 1.1, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <TbArrowDown className="h-4 w-4" />
+              </motion.span>
+            </motion.div>
+          )}
           <HeroIllustration />
         </motion.div>
       </div>
