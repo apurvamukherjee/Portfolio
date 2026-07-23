@@ -28,4 +28,10 @@ export function staggerContainer(staggerChildren = 0.12, delayChildren = 0): Var
   }
 }
 
-export const viewportOnce = { once: true, amount: 0.2 } as const
+/**
+ * A fast/instant scroll (anchor-link nav jump, scrollIntoView, a hard flick) can skip clean over
+ * a narrow intersection window in a single frame, leaving whileInView content stuck at opacity:0
+ * forever since `once: true` never gets a second chance. The large margin makes the detection zone
+ * much bigger than the viewport itself so a big jump still has to pass through it.
+ */
+export const viewportOnce = { once: true, amount: 0, margin: '200px 0px 200px 0px' } as const

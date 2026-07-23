@@ -27,7 +27,8 @@ export function MatrixRain({ theme }: MatrixRainProps) {
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    let fontSize = window.innerWidth < 768 ? 10 : 14
+    let fontSize = window.innerWidth < 768 ? 13 : 14
+    let isMobile = window.innerWidth < 768
     let drops: number[] = []
     let rafId = 0
     let lastTime = 0
@@ -35,7 +36,8 @@ export function MatrixRain({ theme }: MatrixRainProps) {
     const resize = () => {
       canvas.width = window.innerWidth
       canvas.height = window.innerHeight
-      fontSize = window.innerWidth < 768 ? 10 : 14
+      isMobile = window.innerWidth < 768
+      fontSize = isMobile ? 13 : 14
       const columns = Math.ceil(canvas.width / fontSize)
       drops = Array.from({ length: columns }, () => 1)
     }
@@ -46,9 +48,9 @@ export function MatrixRain({ theme }: MatrixRainProps) {
       if (time - lastTime < FRAME_INTERVAL_MS) return
       lastTime = time
 
-      ctx.fillStyle = 'rgba(0, 0, 0, 0.06)'
+      ctx.fillStyle = isMobile ? 'rgba(0, 0, 0, 0.05)' : 'rgba(0, 0, 0, 0.06)'
       ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.fillStyle = '#4a0303'
+      ctx.fillStyle = isMobile ? '#7a0505' : '#4a0303'
       ctx.font = `${fontSize}px monospace`
 
       for (let i = 0; i < drops.length; i++) {
@@ -73,5 +75,5 @@ export function MatrixRain({ theme }: MatrixRainProps) {
     return <div className="fixed inset-0 -z-10 bg-surface" aria-hidden />
   }
 
-  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-10 opacity-70" aria-hidden />
+  return <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-10 opacity-90 md:opacity-70" aria-hidden />
 }

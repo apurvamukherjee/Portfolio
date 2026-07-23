@@ -22,12 +22,12 @@ export function Preloader({ onComplete }: PreloaderProps) {
         transition={{ duration: 0.5 }}
         className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-4 bg-black"
       >
-        <DotLottieReact src="/assets/loader.lottie" autoplay loop className="h-32 w-32 sm:h-40 sm:w-40" />
+        <DotLottieReact src="/assets/loader.lottie" autoplay loop className="h-44 w-44 sm:h-56 sm:w-56" />
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-lg font-semibold tracking-wide text-white"
+          className="text-xl font-semibold tracking-wide text-white sm:text-2xl"
         >
           By <span className="text-accent">Apurva</span>
         </motion.p>
