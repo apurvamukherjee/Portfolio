@@ -38,14 +38,14 @@ export function Hero() {
 
           <motion.h1
             variants={item}
-            className="mt-2 text-gradient-accent-animated animate-gradient-shift whitespace-nowrap text-[clamp(2.1rem,4.6vw,3.5rem)] font-black leading-tight tracking-tight"
+            className="mt-2 text-5xl md:text-6xl text-gradient-accent-animated animate-gradient-shift whitespace-nowrap text-[clamp(2.1rem,4.6vw,3.5rem)] font-black leading-tight tracking-tight"
           >
             <JelloText text="Apurva Mukherjee." />
           </motion.h1>
 
           <motion.p
             variants={item}
-            className="mt-2 text-3xl font-medium text-ink md:text-5xl"
+            className="mt-2 text-2xl font-medium text-ink md:text-4xl"
           >
             <JelloText text={site.tagline} />
           </motion.p>
