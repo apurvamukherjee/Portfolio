@@ -7,6 +7,6 @@ export const site = {
     "I build production grade apps end-to-end — from system design to deployment.",
   contactHref: "https://www.instagram.com/sameapurva",
   resumeHref: "/assets/resume/ApurvaMukherjee.pdf",
-  footerQuote: "Learning, Living, and Leveling Up.",
+  footerQuote: "Learning, Living, and Levelling Up.",
   footerCopyright: "Design & Built by Apurva Mukherjee © twentytwentysix",
 } as const;
