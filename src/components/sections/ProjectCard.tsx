@@ -46,7 +46,11 @@ export function ProjectCard(project: Project) {
         )}
 
         <h3 className="text-2xl font-bold text-ink md:text-3xl">{project.name}</h3>
-        <p className="text-muted">{project.description}</p>
+        {project.descriptionIsHtml ? (
+          <p className="text-muted" dangerouslySetInnerHTML={{ __html: project.description }} />
+        ) : (
+          <p className="text-muted">{project.description}</p>
+        )}
 
         {project.tech.length > 0 && (
           <div className="flex flex-wrap gap-2">

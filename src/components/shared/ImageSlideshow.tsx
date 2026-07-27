@@ -11,7 +11,7 @@ interface ImageSlideshowProps {
   fit?: 'cover' | 'contain'
 }
 
-export function ImageSlideshow({ images, alt, className = '', intervalMs = 4000, fit = 'cover' }: ImageSlideshowProps) {
+export function ImageSlideshow({ images, alt, className = '', intervalMs = 2200, fit = 'cover' }: ImageSlideshowProps) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const reduced = useReducedMotion()

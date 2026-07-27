@@ -1,6 +1,8 @@
 export interface ProjectBase {
   name: string;
   description: string;
+  /** When true, `description` is trusted HTML (author-authored) and rendered as-is instead of escaped text. */
+  descriptionIsHtml?: boolean;
   tech: string[];
   status?: "Ongoing";
   githubUrl?: string;
@@ -23,6 +25,24 @@ export type Project =
     });
 
 export const projects: Project[] = [
+  {
+    kind: "gallery",
+    name: "Pixelpanic",
+    description:
+      "Real-time multiplayer drawing-and-guessing game for up to 12 players — no accounts, just a name and a room code. <strong>Live incremental stroke sync</strong> so everyone watches the picture happen stroke by stroke, time-decayed scoring with progressive hint reveals, team mode, round-robin tournaments, and seven host-toggleable <strong>chaos modes</strong> (Momentum, Bounty Round, Reverse Mode, Sabotage &amp; more).",
+    descriptionIsHtml: true,
+    tech: ["React", "TypeScript", "Fastify", "Socket.IO", "Zustand", "Tailwind CSS", "SQLite"],
+    status: "Ongoing",
+    githubUrl: "https://github.com/apurvamukherjee/PixelPanic",
+    liveUrl: "https://pixelpanic.onrender.com/",
+    images: [
+      "/assets/projects/Menu-PixelPanic.png",
+      "/assets/projects/wordpicker-pixelpanic.png",
+      "/assets/projects/paint-pixelpanic.png",
+      "/assets/projects/correct-pixelpanic.png",
+      "/assets/projects/ScoreBoard-PixelPanic.png",
+    ],
+  },
   {
     kind: "gallery",
     variant: "app",
