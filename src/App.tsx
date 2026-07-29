@@ -67,7 +67,7 @@ function App() {
         <Leadership />
       </main>
 
-      <Footer />
+      <Footer onOpenTerminal={() => setOverlay('terminal')} />
       <FloatingResumeButton />
       <BackToTopButton />
 

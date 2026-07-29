@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import type { NavLink } from '../../data/nav'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
+import { site } from '../../data/site'
 
 interface MobileMenuProps {
   open: boolean
@@ -20,7 +21,7 @@ export function MobileMenu({ open, onClose, links, activeId }: MobileMenuProps) 
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
           transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-10 bg-surface lg:hidden"
+          className="fixed inset-0 z-[45] flex flex-col items-center justify-center gap-10 bg-surface lg:hidden"
         >
           <ul className="flex flex-col items-center gap-10">
             {links.map((link) => (
@@ -34,6 +35,17 @@ export function MobileMenu({ open, onClose, links, activeId }: MobileMenuProps) 
                 >{`</${link.label}>`}</a>
               </li>
             ))}
+            <li>
+              <a
+                href={site.resumeHref}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={onClose}
+                className="font-mono text-xl font-semibold text-accent"
+              >
+                {'</Resume>'}
+              </a>
+            </li>
           </ul>
         </motion.div>
       )}

@@ -115,15 +115,15 @@ export function Terminal({ open, onClose }: TerminalProps) {
             role="dialog"
             aria-modal="true"
             aria-label="Hidden terminal"
-            className="flex h-[70vh] w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-accent-deep bg-black font-mono text-sm text-accent shadow-card"
+            className="flex h-[min(70dvh,32rem)] w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-accent-deep bg-black font-mono text-sm text-accent shadow-card"
             initial={reduced ? { opacity: 0 } : { opacity: 0, scaleY: 0.85 }}
             animate={reduced ? { opacity: 1 } : { opacity: 1, scaleY: 1 }}
             exit={reduced ? { opacity: 0 } : { opacity: 0, scaleY: 0.9 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-accent-deep/60 px-4 py-2 text-xs text-accent/70">
-              <span>{PROMPT}</span>
+            <div className="flex items-center justify-between gap-3 border-b border-accent-deep/60 px-4 py-2 text-xs text-accent/70">
+              <span className="min-w-0 truncate">{PROMPT}</span>
               <button
                 type="button"
                 aria-label="Close terminal"
@@ -143,7 +143,8 @@ export function Terminal({ open, onClose }: TerminalProps) {
             </div>
 
             <div className="flex items-center gap-2 border-t border-accent-deep/60 px-4 py-3">
-              <span className="shrink-0 text-accent">{PROMPT}</span>
+              <span className="hidden shrink-0 text-accent sm:inline">{PROMPT}</span>
+              <span className="shrink-0 text-accent sm:hidden">$</span>
               <input
                 ref={inputRef}
                 value={input}
@@ -151,8 +152,10 @@ export function Terminal({ open, onClose }: TerminalProps) {
                 onKeyDown={handleKeyDown}
                 spellCheck={false}
                 autoComplete="off"
+                autoCapitalize="off"
+                autoCorrect="off"
                 aria-label="Terminal input"
-                className="w-full bg-transparent text-accent outline-none"
+                className="w-full bg-transparent text-base text-accent outline-none"
               />
             </div>
           </motion.div>

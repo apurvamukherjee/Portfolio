@@ -79,8 +79,8 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[100] flex justify-center bg-black/60 backdrop-blur-sm"
-          style={{ paddingTop: '10vh' }}
+          className="fixed inset-0 z-[100] flex justify-center overflow-y-auto bg-black/60 p-4 backdrop-blur-sm"
+          style={{ paddingTop: '10dvh' }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}

@@ -69,6 +69,11 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
     commands.push({ id: 'open-linkedin', label: 'Open LinkedIn', keywords: 'career work', action: () => openExternal(linkedin.href) })
   }
 
+  const leetcode = findSocial('leetcode')
+  if (leetcode) {
+    commands.push({ id: 'open-leetcode', label: 'Open LeetCode', keywords: 'dsa problems coding practice', action: () => openExternal(leetcode.href) })
+  }
+
   const instagram = findSocial('instagram')
   if (instagram) {
     commands.push({ id: 'open-instagram', label: 'Open Instagram', keywords: 'social photos', action: () => openExternal(instagram.href) })
