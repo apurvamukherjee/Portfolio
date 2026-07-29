@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { SectionHeading } from "../shared/SectionHeading";
+import { GithubStats } from "./GithubStats";
 import {
   fadeUp,
   fadeDown,
@@ -65,6 +66,8 @@ export function About() {
             />
           </motion.div>
         </motion.div>
+
+        <GithubStats />
       </div>
     </section>
   );

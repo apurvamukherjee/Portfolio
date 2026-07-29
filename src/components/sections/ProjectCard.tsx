@@ -1,5 +1,6 @@
-import { motion } from 'framer-motion'
-import { TbBrandGithub } from 'react-icons/tb'
+import { useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { TbBrandGithub, TbChevronDown } from 'react-icons/tb'
 import type { Project } from '../../data/projects'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { ImageSlideshow } from '../shared/ImageSlideshow'
@@ -20,6 +21,9 @@ const PLACEHOLDER_BG: Record<'red' | 'blue' | 'violet', string> = {
 }
 
 export function ProjectCard(project: Project) {
+  const [caseStudyOpen, setCaseStudyOpen] = useState(false)
+  const caseStudy = project.kind === 'gallery' ? project.caseStudy : undefined
+
   return (
     <GradientSweepCard className="flex flex-col overflow-hidden rounded-lg md:flex-row">
       <div className="flex flex-1 flex-col gap-4 p-6 md:p-8">
@@ -78,8 +82,46 @@ export function ProjectCard(project: Project) {
             </motion.a>
           )}
           {project.liveUrl && <CtaLink href={project.liveUrl}>Live view</CtaLink>}
+          {caseStudy && (
+            <button
+              type="button"
+              aria-expanded={caseStudyOpen}
+              onClick={() => setCaseStudyOpen((o) => !o)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-border px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-accent hover:text-accent"
+            >
+              View case study
+              <TbChevronDown className={`transition-transform duration-300 ${caseStudyOpen ? 'rotate-180' : ''}`} />
+            </button>
+          )}
           {project.status && <Chip variant="accent">● {project.status}</Chip>}
         </div>
+
+        <AnimatePresence initial={false}>
+          {caseStudyOpen && caseStudy && (
+            <motion.div
+              initial={{ height: 0, opacity: 0 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: 'easeInOut' }}
+              className="overflow-hidden"
+            >
+              <div className="mt-4 flex flex-col gap-3 border-t border-border pt-4 text-sm text-muted">
+                <p>
+                  <span className="font-semibold text-ink">Problem — </span>
+                  {caseStudy.problem}
+                </p>
+                <p>
+                  <span className="font-semibold text-ink">Approach — </span>
+                  {caseStudy.approach}
+                </p>
+                <p>
+                  <span className="font-semibold text-ink">Impact — </span>
+                  {caseStudy.impact}
+                </p>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       {project.kind === 'placeholder' ? (

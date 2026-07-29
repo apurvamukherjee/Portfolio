@@ -1,3 +1,9 @@
+export interface CaseStudy {
+  problem: string;
+  approach: string;
+  impact: string;
+}
+
 export interface ProjectBase {
   name: string;
   description: string;
@@ -22,6 +28,7 @@ export type Project =
       variant?: "app" | "web";
       logoSrc?: string;
       images: string[];
+      caseStudy?: CaseStudy;
     });
 
 export const projects: Project[] = [
@@ -35,6 +42,14 @@ export const projects: Project[] = [
     status: "Ongoing",
     githubUrl: "https://github.com/apurvamukherjee/PixelPanic",
     liveUrl: "https://pixelpanic.onrender.com/",
+    caseStudy: {
+      problem:
+        "Real-time drawing-and-guessing sync for up to 12 concurrent players, with no accounts, needed to actually feel live rather than laggy.",
+      approach:
+        "Incremental stroke-delta broadcast over Socket.IO instead of full canvas snapshots, a time-decayed scoring engine with progressive hint reveals, and a 7-mode chaos-mode plugin layer on top of the core game loop, backed by Fastify + SQLite for lightweight room and session state.",
+      impact:
+        "A fully playable, signup-free party game with near-instant draw sync and replayable variety via chaos modes and round-robin tournaments.",
+    },
     images: [
       "/assets/projects/Menu-PixelPanic.png",
       "/assets/projects/wordpicker-pixelpanic.png",
@@ -52,6 +67,14 @@ export const projects: Project[] = [
     tech: ["React 19", "TypeScript", "Ant Design", "Dexie", "Framer Motion"],
     status: "Ongoing",
     liveUrl: "https://zenith-own-the-peak.vercel.app/",
+    caseStudy: {
+      problem:
+        "Fitness and habit trackers usually require an account and a backend, adding friction and privacy concerns for a tool meant for daily use.",
+      approach:
+        "Built local-first on Dexie/IndexedDB as the only persistence layer — zero backend, data never leaves the device — with an XP/leveling system, 84 achievement badges, a 125-exercise library, and a share-code based leaderboard so friends can compare progress with no server accounts.",
+      impact:
+        "A zero-backend PWA that works offline, keeps all health data on-device, and turns daily tracking into a habit-forming game loop.",
+    },
     images: [
       "/assets/projects/zenith.jpeg",
       "/assets/projects/zenith1.jpeg",
@@ -77,6 +100,14 @@ export const projects: Project[] = [
       "/assets/projects/fitcart2.jpeg",
       "/assets/projects/fitcart3.jpeg",
     ],
+    caseStudy: {
+      problem:
+        "Meal planning that actually respects allergies and dietary preferences normally means manually cross-referencing recipes.",
+      approach:
+        "Integrated Gemini 1.5 Flash as a conversational meal-planning assistant, an animated 5-step health-profile onboarding flow, a 52-week planner, and a nearby-store map with a custom bottom-sheet.",
+      impact:
+        "Collapses meal planning and grocery discovery into a single chat-driven flow in a cross-platform React Native app.",
+    },
   },
   {
     kind: "gallery",
@@ -87,6 +118,13 @@ export const projects: Project[] = [
     status: "Ongoing",
     githubUrl: "https://github.com/apurvamukherjee",
     images: ["/assets/projects/code-synth.png"],
+    caseStudy: {
+      problem: "Turning code or plain text into audio isn't natively supported by any common tool.",
+      approach:
+        "Built a Web Audio API synthesis engine tuned for sub-10ms latency, paired with Gemini-powered natural-language-to-music generation — describe a sound, get music.",
+      impact:
+        "A working proof-of-concept bridging LLM prompting and real-time browser audio synthesis, with no native plugins.",
+    },
   },
   {
     kind: "gallery",

@@ -121,6 +121,28 @@
   }
 }
 
+@keyframes vt-circle-reveal {
+  to {
+    clip-path: circle(var(--vt-radius, 150%) at var(--vt-x, 50%) var(--vt-y, 50%));
+  }
+}
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  z-index: 0;
+}
+
+::view-transition-new(root) {
+  z-index: 1;
+  clip-path: circle(0px at var(--vt-x, 50%) var(--vt-y, 50%));
+  animation: vt-circle-reveal 0.6s ease-in-out forwards;
+}
+
 @layer base {
   * {
     box-sizing: border-box;

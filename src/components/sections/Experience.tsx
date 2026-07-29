@@ -1,5 +1,5 @@
-import { Fragment } from 'react'
-import { motion } from 'framer-motion'
+import { Fragment, useRef } from 'react'
+import { motion, useScroll, useSpring } from 'framer-motion'
 import { experience } from '../../data/experience'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
@@ -10,6 +10,9 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 export function Experience() {
   const reduced = useReducedMotion()
+  const rolesRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: rolesRef, offset: ['start 0.8', 'end 0.3'] })
+  const connectorFill = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })
 
   return (
     <section id="experience" className="w-full px-6 py-24 md:px-16">
@@ -42,6 +45,7 @@ export function Experience() {
             <p className="text-muted">{experience.subtitle}</p>
 
             <motion.div
+              ref={rolesRef}
               className="flex flex-col items-stretch gap-4 sm:flex-row"
               initial="hidden"
               whileInView="visible"
@@ -59,10 +63,7 @@ export function Experience() {
                         <motion.path
                           d="M1,6.5 L20,6.5"
                           strokeLinecap="round"
-                          initial={{ pathLength: 0 }}
-                          whileInView={{ pathLength: 1 }}
-                          viewport={viewportOnce}
-                          transition={{ duration: 0.6, delay: 0.3, ease: 'easeInOut' }}
+                          style={{ pathLength: reduced ? 1 : connectorFill }}
                         />
                         <polyline points="16 1 23 6.5 16 12" strokeLinecap="round" strokeLinejoin="round" />
                       </svg>

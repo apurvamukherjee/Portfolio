@@ -1,5 +1,8 @@
+import type { MouseEvent } from 'react'
+import { flushSync } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TbMoon, TbSun } from 'react-icons/tb'
+import { useReducedMotion } from '../../hooks/useReducedMotion'
 import type { Theme } from '../../hooks/useTheme'
 
 interface ThemeToggleProps {
@@ -7,13 +10,33 @@ interface ThemeToggleProps {
   onToggle: () => void
 }
 
+const supportsViewTransition = typeof document !== 'undefined' && 'startViewTransition' in document
+
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
   const isDark = theme === 'dark'
+  const reduced = useReducedMotion()
+
+  function handleClick(e: MouseEvent<HTMLButtonElement>) {
+    if (reduced || !supportsViewTransition) {
+      onToggle()
+      return
+    }
+
+    const { clientX: x, clientY: y } = e
+    const endRadius = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y))
+    document.documentElement.style.setProperty('--vt-x', `${x}px`)
+    document.documentElement.style.setProperty('--vt-y', `${y}px`)
+    document.documentElement.style.setProperty('--vt-radius', `${endRadius}px`)
+
+    document.startViewTransition(() => {
+      flushSync(() => onToggle())
+    })
+  }
 
   return (
     <motion.button
       type="button"
-      onClick={onToggle}
+      onClick={handleClick}
       aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
       whileHover={{ scale: 1.1 }}
       whileTap={{ scale: 0.9 }}
