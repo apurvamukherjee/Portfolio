@@ -34,6 +34,30 @@ export type Project =
 export const projects: Project[] = [
   {
     kind: "gallery",
+    name: "Kiwami",
+    description:
+      "Local-first calendar PWA that fuses full Month/Week/Day/Agenda views with a routine/streak engine and food-time adherence tracking — no account, no server, your data never leaves your device. The signature <strong>Ember Chain</strong> visualizes streaks as a chain of beads that glows amber when done and goes cold ash the day it's missed. Drag-to-create/move/resize on the time grid, a from-scratch recurrence engine backed by <strong>18 unit tests</strong>, and a genuinely offline-first installable PWA.",
+    descriptionIsHtml: true,
+    tech: ["React 19", "TypeScript", "Vite", "Ant Design", "Dexie", "Framer Motion", "PWA"],
+    status: "Ongoing",
+    githubUrl: "https://github.com/apurvamukherjee/Kiwami---The-Calender",
+    liveUrl: "https://kiwami-kappa.vercel.app/",
+    caseStudy: {
+      problem:
+        "Most calendar apps force an account and a server just to track recurring routines and habit streaks, and treat the Month/Week/Day views as an afterthought squeezed into a phone-sized card.",
+      approach:
+        "Built local-first on Dexie/IndexedDB with a from-scratch recurrence engine (daily, weekly with a weekday picker, monthly with fixed-day clamping, custom every-N-days/weeks) anchored so the cadence never drifts, covered by 18 unit tests for edge cases like month-end clamping and exclusion dates. Routines and food-time slots get their own visual language — the Ember Chain streak visualization and teal fork/knife food blocks — layered on full Month/Week/Day/Agenda views with drag-to-create/move/resize, collapsing cleanly to a Day+Agenda layout on mobile.",
+      impact:
+        "A genuinely offline-first calendar, verified end-to-end with the network disabled, that's built desktop-first rather than a phone card stretched wide — with zero backend and zero account required.",
+    },
+    images: [
+      "/assets/projects/kiwami/month-dark.png",
+      "/assets/projects/kiwami/routine-detail-dark.png",
+      "/assets/projects/kiwami/agenda-dark.png",
+    ],
+  },
+  {
+    kind: "gallery",
     name: "Pixelpanic",
     description:
       "Real-time multiplayer drawing-and-guessing game for up to 12 players — no accounts, just a name and a room code. <strong>Live incremental stroke sync</strong> so everyone watches the picture happen stroke by stroke, time-decayed scoring with progressive hint reveals, team mode, round-robin tournaments, and seven host-toggleable <strong>chaos modes</strong> (Momentum, Bounty Round, Reverse Mode, Sabotage &amp; more).",
