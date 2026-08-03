@@ -67,7 +67,7 @@ export function CursorSpotlight() {
 
       <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-30 h-52 w-52" style={{ x: ringX, y: ringY }}>
         <div
-          className="h-full w-full animate-spin rounded-full opacity-30 [animation-duration:4s]"
+          className="h-full w-full animate-jelly-flow opacity-30"
           style={{ backgroundImage: 'conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--color-accent) 40%, transparent), transparent 40%)' }}
         />
       </motion.div>

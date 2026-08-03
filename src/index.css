@@ -26,6 +26,7 @@
   --animate-gradient-shift: gradient-shift 3s ease infinite;
   --animate-pulse-dot: pulse-dot 2s infinite;
   --animate-pop-up: pop-up 2.4s ease-out forwards;
+  --animate-jelly-flow: jelly-flow 6s ease-in-out infinite;
 
   --shadow-card: 0px 10px 20px var(--color-shadow);
 }
@@ -81,6 +82,33 @@
   }
   100% {
     transform: scale3d(1, 1, 1);
+  }
+}
+
+@keyframes jelly-flow {
+  0% {
+    transform: rotate(0deg) scale(1);
+    border-radius: 50%;
+  }
+  20% {
+    transform: rotate(72deg) scale(1.05);
+    border-radius: 46% 54% 55% 45% / 55% 45% 54% 46%;
+  }
+  40% {
+    transform: rotate(144deg) scale(0.96);
+    border-radius: 58% 42% 45% 55% / 42% 58% 55% 45%;
+  }
+  60% {
+    transform: rotate(216deg) scale(1.04);
+    border-radius: 44% 56% 60% 40% / 60% 40% 56% 44%;
+  }
+  80% {
+    transform: rotate(288deg) scale(0.97);
+    border-radius: 52% 48% 42% 58% / 48% 52% 58% 42%;
+  }
+  100% {
+    transform: rotate(360deg) scale(1);
+    border-radius: 50%;
   }
 }
 
