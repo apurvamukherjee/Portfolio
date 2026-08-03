@@ -34,7 +34,7 @@ export function CursorSpotlight() {
   const tailX = useSpring(x, { stiffness: 45, damping: 20, mass: 0.9 })
   const tailY = useSpring(y, { stiffness: 45, damping: 20, mass: 0.9 })
 
-  const background = useMotionTemplate`radial-gradient(200px circle at ${x}px ${y}px, rgba(255,90,40,0.26), transparent 65%), radial-gradient(340px circle at ${trailX}px ${trailY}px, rgba(255,30,30,0.15), transparent 68%), radial-gradient(520px circle at ${tailX}px ${tailY}px, rgba(180,0,0,0.09), transparent 70%)`
+  const background = useMotionTemplate`radial-gradient(200px circle at ${x}px ${y}px, color-mix(in srgb, var(--color-accent) 32%, transparent), transparent 65%), radial-gradient(340px circle at ${trailX}px ${trailY}px, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 68%), radial-gradient(520px circle at ${tailX}px ${tailY}px, color-mix(in srgb, var(--color-accent-deep) 40%, transparent), transparent 70%)`
   const ringX = useTransform(x, (v) => v - RING_SIZE / 2)
   const ringY = useTransform(y, (v) => v - RING_SIZE / 2)
 
@@ -68,7 +68,7 @@ export function CursorSpotlight() {
       <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-30 h-52 w-52" style={{ x: ringX, y: ringY }}>
         <div
           className="h-full w-full animate-spin rounded-full opacity-50 [animation-duration:4s]"
-          style={{ backgroundImage: 'conic-gradient(from 0deg, transparent, rgba(255,80,0,0.55), transparent 40%)' }}
+          style={{ backgroundImage: 'conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--color-accent) 65%, transparent), transparent 40%)' }}
         />
       </motion.div>
 
