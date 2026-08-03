@@ -14,9 +14,9 @@ interface Ripple {
 let rippleId = 0
 
 /**
- * Cursor-following glow: a bright core plus two laggier "ember trail" rings behind it for a
- * comet-tail feel (three radial-gradients layered in one background, each fed by a spring with
- * progressively less stiffness so they visibly drag behind fast mouse moves), a slowly rotating
+ * Cursor-following glow: a subtle core plus two trailing "ember" rings behind it for a light
+ * comet-tail feel (three radial-gradients layered in one background, each fed by a stiffer,
+ * higher-damping spring than before so the trail stays tight and smooth rather than laggy), a slowly rotating
  * conic energy ring riding along with the cursor, and a shockwave ripple burst on click. Every
  * piece is motion-value/CSS-animation driven so none of it triggers a React re-render on
  * mousemove — only clicks (for ripples) touch state, and those are infrequent.
@@ -29,12 +29,12 @@ export function CursorSpotlight() {
 
   const x = useMotionValue(-9999)
   const y = useMotionValue(-9999)
-  const trailX = useSpring(x, { stiffness: 120, damping: 20, mass: 0.6 })
-  const trailY = useSpring(y, { stiffness: 120, damping: 20, mass: 0.6 })
-  const tailX = useSpring(x, { stiffness: 45, damping: 20, mass: 0.9 })
-  const tailY = useSpring(y, { stiffness: 45, damping: 20, mass: 0.9 })
+  const trailX = useSpring(x, { stiffness: 220, damping: 30, mass: 0.5 })
+  const trailY = useSpring(y, { stiffness: 220, damping: 30, mass: 0.5 })
+  const tailX = useSpring(x, { stiffness: 100, damping: 28, mass: 0.7 })
+  const tailY = useSpring(y, { stiffness: 100, damping: 28, mass: 0.7 })
 
-  const background = useMotionTemplate`radial-gradient(200px circle at ${x}px ${y}px, color-mix(in srgb, var(--color-accent) 32%, transparent), transparent 65%), radial-gradient(340px circle at ${trailX}px ${trailY}px, color-mix(in srgb, var(--color-accent) 18%, transparent), transparent 68%), radial-gradient(520px circle at ${tailX}px ${tailY}px, color-mix(in srgb, var(--color-accent-deep) 40%, transparent), transparent 70%)`
+  const background = useMotionTemplate`radial-gradient(200px circle at ${x}px ${y}px, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 65%), radial-gradient(340px circle at ${trailX}px ${trailY}px, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 68%), radial-gradient(520px circle at ${tailX}px ${tailY}px, color-mix(in srgb, var(--color-accent-deep) 20%, transparent), transparent 70%)`
   const ringX = useTransform(x, (v) => v - RING_SIZE / 2)
   const ringY = useTransform(y, (v) => v - RING_SIZE / 2)
 
@@ -67,8 +67,8 @@ export function CursorSpotlight() {
 
       <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-30 h-52 w-52" style={{ x: ringX, y: ringY }}>
         <div
-          className="h-full w-full animate-spin rounded-full opacity-50 [animation-duration:4s]"
-          style={{ backgroundImage: 'conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--color-accent) 65%, transparent), transparent 40%)' }}
+          className="h-full w-full animate-spin rounded-full opacity-30 [animation-duration:4s]"
+          style={{ backgroundImage: 'conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--color-accent) 40%, transparent), transparent 40%)' }}
         />
       </motion.div>
 
