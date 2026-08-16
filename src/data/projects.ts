@@ -34,6 +34,31 @@ export type Project =
 export const projects: Project[] = [
   {
     kind: "gallery",
+    name: "Monopolis",
+    description:
+      "Real-time multiplayer, Kolkata-themed property trading game for 2-8 players — no login, no database, no downloads. Pick a name, share a 6-character room code, and every roll, trade, and rent payment syncs live. Full Monopoly ruleset (houses/hotels with even-building enforcement, mortgages, bankruptcy with auto-liquidation) plus four host-toggleable <strong>chaos modes</strong>: Speed Round, Auction Mode, Double Rent Events, and Market Crash.",
+    descriptionIsHtml: true,
+    tech: ["React", "TypeScript", "Fastify", "Socket.io", "Zustand", "Tailwind CSS", "Three.js", "Zod"],
+    status: "Ongoing",
+    githubUrl: "https://github.com/apurvamukherjee/Monopolis",
+    liveUrl: "https://monopolis-client.vercel.app/",
+    caseStudy: {
+      problem:
+        "A full Monopoly ruleset — rent tiers, even-building house rules, mortgages, trades, bankruptcy — is a lot of interlocking state to keep consistent across 2-8 live players with zero tolerance for desync.",
+      approach:
+        "Server-authoritative game engine over Socket.io: clients only ever send intent (roll_dice, buy_property, ...) and render whatever the server broadcasts, never computing outcomes locally. Every socket handler validates against a Zod schema shared between server and client via a single @monopolis/shared package, so the two sides can't drift apart. A reconnect flow with a grace window survives a backgrounded mobile tab, and four chaos modes (Speed Round, Auction Mode, Double Rent Events, Market Crash) layer on as toggleable modifiers on top of the core rules engine.",
+      impact:
+        "A fully playable, signup-free Monopoly clone for up to 8 concurrent players with real-time sync, backed by 99 passing tests including full room-to-bankruptcy integration runs over real sockets.",
+    },
+    images: [
+      "/assets/projects/monopolis/home.png",
+      "/assets/projects/monopolis/lobby.png",
+      "/assets/projects/monopolis/live-board.png",
+      "/assets/projects/monopolis/trade-market.png",
+    ],
+  },
+  {
+    kind: "gallery",
     name: "Kiwami",
     description:
       "Local-first calendar PWA that fuses full Month/Week/Day/Agenda views with a routine/streak engine and food-time adherence tracking — no account, no server, your data never leaves your device. The signature <strong>Ember Chain</strong> visualizes streaks as a chain of beads that glows amber when done and goes cold ash the day it's missed. Drag-to-create/move/resize on the time grid, a from-scratch recurrence engine backed by <strong>18 unit tests</strong>, and a genuinely offline-first installable PWA.",
