@@ -1,7 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import type { IconType } from 'react-icons'
-import { TbBrandGithub, TbCheck, TbCode, TbStar, TbUsers } from 'react-icons/tb'
+import { TbBrandGithub, TbCheck, TbCode, TbFlame, TbStar, TbUsers } from 'react-icons/tb'
 import { knownLanguages } from '../../data/skills'
 import { useGithubStats } from '../../hooks/useGithubStats'
 import { useLeetCodeStats } from '../../hooks/useLeetCodeStats'
@@ -32,7 +32,7 @@ function formatValue(value: string | number): string | number {
   return typeof value === 'number' ? value.toLocaleString('en-US') : value
 }
 
-function StatTile({ frames, intervalMs, reduced }: StatGroup & { reduced: boolean }) {
+function StatTile({ frames, intervalMs, reduced, className }: StatGroup & { reduced: boolean; className?: string }) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
 
@@ -47,7 +47,7 @@ function StatTile({ frames, intervalMs, reduced }: StatGroup & { reduced: boolea
 
   return (
     <div
-      className="relative flex min-h-[132px] flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-border bg-surface-raised px-4 py-5 text-center"
+      className={`relative flex min-h-[132px] flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-border bg-surface-raised px-4 py-5 text-center ${className ?? ''}`}
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
@@ -115,13 +115,28 @@ export function GithubStats() {
       ]
     : []
 
+  const streakFrames: StatFrame[] =
+    stats.currentStreak != null && stats.longestStreak != null
+      ? [
+          { icon: TbFlame, label: 'Day streak', value: stats.currentStreak },
+          { icon: TbFlame, label: 'Best streak', value: stats.longestStreak },
+        ]
+      : []
+
   const groups: StatGroup[] = [
     { key: 'github', frames: githubFrames, intervalMs: 2600 },
     { key: 'languages', frames: languageFrames, intervalMs: 2000 },
     { key: 'leetcode', frames: leetcodeFrames, intervalMs: 3200 },
+    { key: 'streak', frames: streakFrames, intervalMs: 2800 },
   ].filter((group) => group.frames.length > 0)
 
-  const colsClass = groups.length >= 3 ? 'sm:grid-cols-3' : 'sm:grid-cols-2'
+  const colsClass =
+    { 4: 'sm:grid-cols-4', 3: 'sm:grid-cols-3', 2: 'sm:grid-cols-2' }[groups.length] ?? 'sm:grid-cols-2'
+  // The 4th tile (streak) depends on a couple of live APIs, one of them a slow-to-cold-start
+  // free host — if it doesn't answer in time, the grid can still land on an odd count. Rather
+  // than hope every fetch lands, make the last tile span the full mobile row whenever the count
+  // is odd, so the 2-column layout never leaves a lone card dangling next to empty space.
+  const isOdd = groups.length % 2 === 1
 
   return (
     <motion.div
@@ -131,8 +146,14 @@ export function GithubStats() {
       viewport={viewportOnce}
       variants={withMotionPreference(fadeUp, reduced)}
     >
-      {groups.map((group) => (
-        <StatTile key={group.key} frames={group.frames} intervalMs={group.intervalMs} reduced={reduced} />
+      {groups.map((group, i) => (
+        <StatTile
+          key={group.key}
+          frames={group.frames}
+          intervalMs={group.intervalMs}
+          reduced={reduced}
+          className={isOdd && i === groups.length - 1 ? 'col-span-2 sm:col-span-1' : undefined}
+        />
       ))}
     </motion.div>
   )

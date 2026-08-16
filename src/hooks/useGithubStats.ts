@@ -15,6 +15,10 @@ export interface GithubStats {
   allLanguages: string[]
   /** All-time GitHub contributions. Null if the contributions API is unreachable — never fabricated. */
   totalContributions: number | null
+  /** Consecutive days with at least one contribution, ending today (or yesterday if today has none yet). Null if unavailable. */
+  currentStreak: number | null
+  /** Longest such run across all recorded history. Null if unavailable. */
+  longestStreak: number | null
 }
 
 interface CacheShape {
@@ -33,8 +37,47 @@ interface GithubRepoResponse {
   language: string | null
 }
 
+interface ContributionDay {
+  date: string
+  count: number
+}
+
 interface ContributionsResponse {
   total: Record<string, number>
+  contributions: ContributionDay[]
+}
+
+/**
+ * The API returns full calendar years, including future dates past today with count 0 —
+ * so "today" can't just be treated as whatever the last array entry happens to be.
+ */
+function computeStreaks(days: ContributionDay[]): { current: number; longest: number } {
+  const todayIso = new Date().toISOString().slice(0, 10)
+  const sorted = days
+    .filter((day) => day.date <= todayIso)
+    .slice()
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  let longest = 0
+  let running = 0
+  for (const day of sorted) {
+    if (day.count > 0) {
+      running++
+      longest = Math.max(longest, running)
+    } else {
+      running = 0
+    }
+  }
+
+  let current = 0
+  let i = sorted.length - 1
+  if (i >= 0 && sorted[i].count === 0) i-- // today might just not be over yet
+  for (; i >= 0; i--) {
+    if (sorted[i].count === 0) break
+    current++
+  }
+
+  return { current, longest }
 }
 
 function isValidCache(value: unknown): value is CacheShape {
@@ -96,9 +139,14 @@ async function fetchStats(): Promise<GithubStats> {
   const topLanguage = allLanguages[0] ?? null
 
   let totalContributions: number | null = null
+  let currentStreak: number | null = null
+  let longestStreak: number | null = null
   if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
     const contributions = (await contribRes.value.json()) as ContributionsResponse
     totalContributions = Object.values(contributions.total).reduce((sum, count) => sum + count, 0)
+    const streaks = computeStreaks(contributions.contributions)
+    currentStreak = streaks.current
+    longestStreak = streaks.longest
   }
 
   return {
@@ -108,6 +156,8 @@ async function fetchStats(): Promise<GithubStats> {
     topLanguage,
     allLanguages,
     totalContributions,
+    currentStreak,
+    longestStreak,
   }
 }
 
