@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 
 const GITHUB_USERNAME = 'apurvamukherjee'
-const CACHE_KEY = 'portfolio-github-stats-cache'
+// Bumping this version invalidates any cache written by an older shape of GithubStats —
+// a stale entry missing new fields (e.g. allLanguages) would otherwise crash the render.
+const CACHE_KEY = 'portfolio-github-stats-cache-v2'
 const CACHE_TTL_MS = 60 * 60 * 1000
 
 export interface GithubStats {
@@ -35,10 +37,25 @@ interface ContributionsResponse {
   total: Record<string, number>
 }
 
+function isValidCache(value: unknown): value is CacheShape {
+  if (typeof value !== 'object' || value === null) return false
+  const { fetchedAt, stats } = value as Record<string, unknown>
+  if (typeof fetchedAt !== 'number' || typeof stats !== 'object' || stats === null) return false
+  const s = stats as Record<string, unknown>
+  return (
+    typeof s.publicRepos === 'number' &&
+    typeof s.totalStars === 'number' &&
+    typeof s.followers === 'number' &&
+    Array.isArray(s.allLanguages)
+  )
+}
+
 function readCache(): CacheShape | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY)
-    return raw ? (JSON.parse(raw) as CacheShape) : null
+    if (!raw) return null
+    const parsed: unknown = JSON.parse(raw)
+    return isValidCache(parsed) ? parsed : null
   } catch {
     return null
   }

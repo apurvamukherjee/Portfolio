@@ -10,6 +10,7 @@ import { CursorSpotlight } from './components/shared/CursorSpotlight'
 import { CommandPalette } from './components/shared/CommandPalette'
 import { Terminal } from './components/shared/Terminal'
 import { ScrollProgressBar } from './components/shared/ScrollProgressBar'
+import { ErrorBoundary } from './components/shared/ErrorBoundary'
 import { Navbar } from './components/layout/Navbar'
 import { Footer } from './components/layout/Footer'
 import { FloatingResumeButton } from './components/layout/FloatingResumeButton'
@@ -59,12 +60,24 @@ function App() {
       <Navbar theme={theme} onToggleTheme={toggle} />
 
       <main className="relative">
-        <Hero />
-        <About />
-        <Skills />
-        <Experience />
-        <Projects />
-        <Leadership />
+        <ErrorBoundary>
+          <Hero />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <About />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Skills />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Experience />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Projects />
+        </ErrorBoundary>
+        <ErrorBoundary>
+          <Leadership />
+        </ErrorBoundary>
       </main>
 
       <Footer onOpenTerminal={() => setOverlay('terminal')} />

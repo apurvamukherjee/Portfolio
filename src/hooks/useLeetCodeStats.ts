@@ -25,10 +25,20 @@ interface LeetCodeSolvedResponse {
   totalSubmissionNum: SubmissionBucket[]
 }
 
+function isValidCache(value: unknown): value is CacheShape {
+  if (typeof value !== 'object' || value === null) return false
+  const { fetchedAt, stats } = value as Record<string, unknown>
+  if (typeof fetchedAt !== 'number' || typeof stats !== 'object' || stats === null) return false
+  const s = stats as Record<string, unknown>
+  return typeof s.totalSolved === 'number' && typeof s.totalSubmissions === 'number'
+}
+
 function readCache(): CacheShape | null {
   try {
     const raw = localStorage.getItem(CACHE_KEY)
-    return raw ? (JSON.parse(raw) as CacheShape) : null
+    if (!raw) return null
+    const parsed: unknown = JSON.parse(raw)
+    return isValidCache(parsed) ? parsed : null
   } catch {
     return null
   }

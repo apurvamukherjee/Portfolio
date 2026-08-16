@@ -22,9 +22,9 @@ interface StatGroup {
 }
 
 /** Resume languages first (their preferred casing), then any GitHub-detected language not already covered. */
-function mergeLanguages(resumeLanguages: string[], githubLanguages: string[]): string[] {
+function mergeLanguages(resumeLanguages: string[], githubLanguages: string[] | undefined): string[] {
   const seen = new Set(resumeLanguages.map((lang) => lang.toLowerCase()))
-  const extra = githubLanguages.filter((lang) => !seen.has(lang.toLowerCase()))
+  const extra = (githubLanguages ?? []).filter((lang) => !seen.has(lang.toLowerCase()))
   return [...resumeLanguages, ...extra]
 }
 
