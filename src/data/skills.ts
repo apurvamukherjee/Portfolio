@@ -37,6 +37,9 @@ export interface Skill {
   icon: IconType
 }
 
+/** Programming/markup languages from the resume — merged with GitHub-detected languages for the rotating stats tile. */
+export const knownLanguages = ['JavaScript', 'TypeScript', 'HTML/CSS', 'Python', 'Java', 'C', 'SQL']
+
 export interface SkillCategory {
   heading: string
   skills: Skill[]

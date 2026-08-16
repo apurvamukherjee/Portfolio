@@ -9,6 +9,10 @@ export interface GithubStats {
   totalStars: number
   followers: number
   topLanguage: string | null
+  /** All languages detected across own (non-fork) repos, sorted most- to least-used. */
+  allLanguages: string[]
+  /** All-time GitHub contributions. Null if the contributions API is unreachable — never fabricated. */
+  totalContributions: number | null
 }
 
 interface CacheShape {
@@ -25,6 +29,10 @@ interface GithubRepoResponse {
   fork: boolean
   stargazers_count: number
   language: string | null
+}
+
+interface ContributionsResponse {
+  total: Record<string, number>
 }
 
 function readCache(): CacheShape | null {
@@ -45,15 +53,17 @@ function writeCache(stats: GithubStats) {
 }
 
 async function fetchStats(): Promise<GithubStats> {
-  const [userRes, reposRes] = await Promise.all([
+  const [userRes, reposRes, contribRes] = await Promise.allSettled([
     fetch(`https://api.github.com/users/${GITHUB_USERNAME}`),
     fetch(`https://api.github.com/users/${GITHUB_USERNAME}/repos?per_page=100`),
+    fetch(`https://github-contributions-api.jogruber.de/v4/${GITHUB_USERNAME}?y=all`),
   ])
 
-  if (!userRes.ok || !reposRes.ok) throw new Error('GitHub API request failed')
+  if (userRes.status !== 'fulfilled' || !userRes.value.ok) throw new Error('GitHub user request failed')
+  if (reposRes.status !== 'fulfilled' || !reposRes.value.ok) throw new Error('GitHub repos request failed')
 
-  const user = (await userRes.json()) as GithubUserResponse
-  const repos = (await reposRes.json()) as GithubRepoResponse[]
+  const user = (await userRes.value.json()) as GithubUserResponse
+  const repos = (await reposRes.value.json()) as GithubRepoResponse[]
   const ownRepos = repos.filter((repo) => !repo.fork)
 
   const totalStars = ownRepos.reduce((sum, repo) => sum + repo.stargazers_count, 0)
@@ -63,16 +73,25 @@ async function fetchStats(): Promise<GithubStats> {
     if (!repo.language) continue
     languageCounts.set(repo.language, (languageCounts.get(repo.language) ?? 0) + 1)
   }
-  let topLanguage: string | null = null
-  let topCount = 0
-  for (const [language, count] of languageCounts) {
-    if (count > topCount) {
-      topLanguage = language
-      topCount = count
-    }
+  const allLanguages = [...languageCounts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .map(([language]) => language)
+  const topLanguage = allLanguages[0] ?? null
+
+  let totalContributions: number | null = null
+  if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
+    const contributions = (await contribRes.value.json()) as ContributionsResponse
+    totalContributions = Object.values(contributions.total).reduce((sum, count) => sum + count, 0)
   }
 
-  return { publicRepos: user.public_repos, totalStars, followers: user.followers, topLanguage }
+  return {
+    publicRepos: user.public_repos,
+    totalStars,
+    followers: user.followers,
+    topLanguage,
+    allLanguages,
+    totalContributions,
+  }
 }
 
 /** Client-side GitHub stats, cached in localStorage for an hour so repeat visits are instant and stay under the unauthenticated rate limit. Never fabricates numbers — falls back to cache or nothing on failure. */
