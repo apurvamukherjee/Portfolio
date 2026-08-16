@@ -1,14 +1,11 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import { useTheme } from './hooks/useTheme'
 import { useReducedMotion } from './hooks/useReducedMotion'
 import { useCommandPaletteShortcut } from './hooks/useCommandPaletteShortcut'
 import { useKeySequence } from './hooks/useKeySequence'
 import { IntroContext } from './hooks/useIntro'
-import { Preloader } from './components/layout/Preloader'
 import { MatrixRain } from './components/shared/MatrixRain'
 import { CursorSpotlight } from './components/shared/CursorSpotlight'
-import { CommandPalette } from './components/shared/CommandPalette'
-import { Terminal } from './components/shared/Terminal'
 import { ScrollProgressBar } from './components/shared/ScrollProgressBar'
 import { ErrorBoundary } from './components/shared/ErrorBoundary'
 import { Navbar } from './components/layout/Navbar'
@@ -21,6 +18,15 @@ import { Skills } from './components/sections/Skills'
 import { Experience } from './components/sections/Experience'
 import { Projects } from './components/sections/Projects'
 import { Leadership } from './components/sections/Leadership'
+
+// Lazy: Preloader pulls in the dotlottie player (only needed once per session, first visit),
+// and CommandPalette/Terminal are overlays that stay invisible until explicitly opened —
+// none of the three belong in the critical initial bundle.
+const Preloader = lazy(() => import('./components/layout/Preloader').then((m) => ({ default: m.Preloader })))
+const CommandPalette = lazy(() =>
+  import('./components/shared/CommandPalette').then((m) => ({ default: m.CommandPalette })),
+)
+const Terminal = lazy(() => import('./components/shared/Terminal').then((m) => ({ default: m.Terminal })))
 
 const INTRO_SESSION_KEY = 'portfolio-intro-seen'
 const SUDO_SEQUENCE = ['s', 'u', 'd', 'o']
@@ -53,7 +59,11 @@ function App() {
 
   return (
     <IntroContext.Provider value={introDone}>
-      {!introDone && <Preloader onComplete={handleIntroComplete} />}
+      {!introDone && (
+        <Suspense fallback={<div className="fixed inset-0 z-[999] bg-black" />}>
+          <Preloader onComplete={handleIntroComplete} />
+        </Suspense>
+      )}
       <MatrixRain theme={theme} />
       <CursorSpotlight />
       <ScrollProgressBar />
@@ -84,13 +94,15 @@ function App() {
       <FloatingResumeButton />
       <BackToTopButton />
 
-      <CommandPalette
-        open={overlay === 'palette'}
-        onClose={() => setOverlay('none')}
-        theme={theme}
-        onToggleTheme={toggle}
-      />
-      <Terminal open={overlay === 'terminal'} onClose={() => setOverlay('none')} />
+      <Suspense fallback={null}>
+        <CommandPalette
+          open={overlay === 'palette'}
+          onClose={() => setOverlay('none')}
+          theme={theme}
+          onToggleTheme={toggle}
+        />
+        <Terminal open={overlay === 'terminal'} onClose={() => setOverlay('none')} />
+      </Suspense>
     </IntroContext.Provider>
   )
 }
