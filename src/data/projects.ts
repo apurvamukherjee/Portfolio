@@ -59,6 +59,30 @@ export const projects: Project[] = [
   },
   {
     kind: "gallery",
+    name: "KeyStrike",
+    description:
+      "Browser typing-rhythm game — one word at a time, centered on screen, with a shrinking timer underneath. Every song is synthesized live via the Web Audio API, no audio files shipped. <strong>Battle mode</strong> pits up to 4 players in a real-time car race driven by typing speed, with a 2v2 <strong>team mode</strong> where teammates share one car and the server sums both players' progress to call the win, plus session-token reconnect so a refresh mid-race doesn't cost you your seat.",
+    descriptionIsHtml: true,
+    tech: ["React 18", "TypeScript", "Vite", "Socket.IO", "Web Audio API", "PWA"],
+    status: "Ongoing",
+    githubUrl: "https://github.com/apurvamukherjee/KeyStrike-The-Battle-Begins",
+    caseStudy: {
+      problem:
+        "Syncing every keystroke of a 4-player typing race over the network would be both slow and unfair to players with worse latency — but the race still needs to feel live, and a 2v2 team mode needs a combined-progress win condition no single client can see on its own.",
+      approach:
+        "Each client stays fully authoritative for its own run — the same local judging engine as solo play — with the server only relaying room membership, a synchronized start signal, and periodic progress snapshots. The two exceptions where the server has to act on its own: in team mode it sums both teammates' progress and declares the win itself once their combined total crosses the finish line, and it matches a reconnecting client back to its existing seat by a client-generated session id so a refresh mid-lobby or mid-battle doesn't lose the player's spot.",
+      impact:
+        "A signup-free 4-player typing race with a car-track visualization, 2v2 team play, and reconnect resilience, all synthesized live in-browser with zero shipped audio files.",
+    },
+    images: [
+      "/assets/projects/keystrike/11-battle.png",
+      "/assets/projects/keystrike/04-gameplay.png",
+      "/assets/projects/keystrike/16-team-battle.png",
+      "/assets/projects/keystrike/17-team-results.png",
+    ],
+  },
+  {
+    kind: "gallery",
     name: "Kiwami",
     description:
       "Local-first calendar PWA that fuses full Month/Week/Day/Agenda views with a routine/streak engine and food-time adherence tracking — no account, no server, your data never leaves your device. The signature <strong>Ember Chain</strong> visualizes streaks as a chain of beads that glows amber when done and goes cold ash the day it's missed. Drag-to-create/move/resize on the time grid, a from-scratch recurrence engine backed by <strong>18 unit tests</strong>, and a genuinely offline-first installable PWA.",
