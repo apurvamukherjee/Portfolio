@@ -66,6 +66,7 @@ export const projects: Project[] = [
     tech: ["React 18", "TypeScript", "Vite", "Socket.IO", "Web Audio API", "PWA"],
     status: "Ongoing",
     githubUrl: "https://github.com/apurvamukherjee/KeyStrike-The-Battle-Begins",
+    liveUrl: "https://key-strike-sigma.vercel.app/",
     caseStudy: {
       problem:
         "Syncing every keystroke of a 4-player typing race over the network would be both slow and unfair to players with worse latency — but the race still needs to feel live, and a 2v2 team mode needs a combined-progress win condition no single client can see on its own. Layering a whole second game mode (Duel) on top then means reusing that same judging engine for something that has to feel like combat, not a race.",
