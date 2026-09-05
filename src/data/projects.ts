@@ -61,20 +61,21 @@ export const projects: Project[] = [
     kind: "gallery",
     name: "KeyStrike",
     description:
-      "Browser typing-rhythm game — one word at a time, centered on screen, with a shrinking timer underneath. Every song is synthesized live via the Web Audio API, no audio files shipped. <strong>Battle mode</strong> pits up to 4 players in a real-time car race driven by typing speed, with a 2v2 <strong>team mode</strong> where teammates share one car and the server sums both players' progress to call the win, plus session-token reconnect so a refresh mid-race doesn't cost you your seat.",
+      "Browser typing-rhythm game — one word at a time, centered on screen, with a shrinking timer underneath. Every song is synthesized live via the Web Audio API, no audio files shipped. <strong>Battle mode</strong> pits up to 4 players in a real-time car race driven by typing speed, with a 2v2 <strong>team mode</strong> where teammates share one car, plus <strong>Duel Mode</strong> — a moonlit sword duel against a rival, solo against a 5-fighter CPU ladder or head-to-head in multiplayer, decided over best-of-3 rounds with its own victory screen.",
     descriptionIsHtml: true,
     tech: ["React 18", "TypeScript", "Vite", "Socket.IO", "Web Audio API", "PWA"],
     status: "Ongoing",
     githubUrl: "https://github.com/apurvamukherjee/KeyStrike-The-Battle-Begins",
     caseStudy: {
       problem:
-        "Syncing every keystroke of a 4-player typing race over the network would be both slow and unfair to players with worse latency — but the race still needs to feel live, and a 2v2 team mode needs a combined-progress win condition no single client can see on its own.",
+        "Syncing every keystroke of a 4-player typing race over the network would be both slow and unfair to players with worse latency — but the race still needs to feel live, and a 2v2 team mode needs a combined-progress win condition no single client can see on its own. Layering a whole second game mode (Duel) on top then means reusing that same judging engine for something that has to feel like combat, not a race.",
       approach:
-        "Each client stays fully authoritative for its own run — the same local judging engine as solo play — with the server only relaying room membership, a synchronized start signal, and periodic progress snapshots. The two exceptions where the server has to act on its own: in team mode it sums both teammates' progress and declares the win itself once their combined total crosses the finish line, and it matches a reconnecting client back to its existing seat by a client-generated session id so a refresh mid-lobby or mid-battle doesn't lose the player's spot.",
+        "Each client stays fully authoritative for its own run — the same local judging engine as solo play — with the server only relaying room membership, a synchronized start signal, and periodic progress snapshots. In team mode it sums both teammates' progress and declares the win itself once their combined total crosses the finish line; a client-generated session id lets a reconnecting client resume its seat after a refresh. Duel Mode reframes every clean word as a sword strike instead of race distance, reusing the same per-word judging against either a scripted CPU ladder (solo) or the existing socket relay (multiplayer), with matches decided over best-of-3 rounds.",
       impact:
-        "A signup-free 4-player typing race with a car-track visualization, 2v2 team play, and reconnect resilience, all synthesized live in-browser with zero shipped audio files.",
+        "A signup-free 4-player typing race with a car-track visualization, 2v2 team play, reconnect resilience, and a full sword-duel mode with its own solo ladder and best-of-3 multiplayer matches — all synthesized live in-browser with zero shipped audio files.",
     },
     images: [
+      "/assets/projects/keystrike/25-duel-mode.png",
       "/assets/projects/keystrike/11-battle.png",
       "/assets/projects/keystrike/04-gameplay.png",
       "/assets/projects/keystrike/16-team-battle.png",
@@ -103,6 +104,31 @@ export const projects: Project[] = [
       "/assets/projects/kiwami/month-dark.png",
       "/assets/projects/kiwami/routine-detail-dark.png",
       "/assets/projects/kiwami/agenda-dark.png",
+    ],
+  },
+  {
+    kind: "gallery",
+    variant: "app",
+    name: "LifeOS",
+    description:
+      "Local-first personal-tracking PWA that fuses nine daily trackers — water, supplements, tasks, medication, food, gym, expenses, wishlist, and notes — behind one home screen instead of nine separate apps. A forgiving streak system with quiet 'freeze' days instead of hard resets, a weekly coaching summary, and a companion character that reflects your week back at you. Also ships as a native Android app via Capacitor, with optional Supabase sync layered on top of an offline-first IndexedDB core.",
+    descriptionIsHtml: true,
+    tech: ["React 19", "TypeScript", "Vite", "Tailwind CSS", "Dexie", "Supabase", "Capacitor"],
+    status: "Ongoing",
+    githubUrl: "https://github.com/apurvamukherjee/LifeOS-Plan-and-Build",
+    caseStudy: {
+      problem:
+        "Tracking water, workouts, meds, food, money, and habits usually means juggling nine different single-purpose apps, none of which share a design language or talk to each other — and most demand an account before they'll even show a home screen.",
+      approach:
+        "Built local-first on Dexie/IndexedDB as the source of truth, with nine tracker modules sharing one streak engine, one design language, and one home screen instead of being bolted together as separate mini-apps. Streaks use a 'freeze' day instead of a hard reset so a missed day doesn't erase progress, a weekly job synthesizes an honest one-line coaching summary instead of a wall of charts, and a Capacitor wrapper produces a real installable Android build on top of the same web codebase, with Supabase sync as an optional layer rather than a requirement.",
+      impact:
+        "One offline-first app that replaces nine trackers, works fully without a network or an account, and still gets a native Android build and optional cross-device sync from the same core.",
+    },
+    images: [
+      "/assets/projects/lifeos/home.png",
+      "/assets/projects/lifeos/celebration.png",
+      "/assets/projects/lifeos/gym.png",
+      "/assets/projects/lifeos/wishlist.png",
     ],
   },
   {
