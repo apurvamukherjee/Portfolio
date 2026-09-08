@@ -85,6 +85,33 @@ export const projects: Project[] = [
   },
   {
     kind: "gallery",
+    variant: "app",
+    name: "LearnMo",
+    description:
+      "Minimal, mobile-first PWA for organizing what you're learning — by topic, with progress you can actually see. Write notes under the topic they belong to, mark each piece done, keep a running 'read next' queue, and watch every topic, entry, and note appear automatically on an <strong>interactive map</strong> you can drag, connect, and pinch-zoom. No accounts, no sync, no clutter — it lives on your phone and stays there.",
+    descriptionIsHtml: true,
+    tech: ["Svelte 5", "Vite", "@xyflow/svelte", "PWA"],
+    status: "Ongoing",
+    githubUrl: "https://github.com/apurvamukherjee/LearnMo",
+    caseStudy: {
+      problem:
+        "Learning notes usually end up scattered across apps that force an account, a sync backend, or a desktop-first layout that's awkward to use one-handed on a phone.",
+      approach:
+        "Built as an installable, offline-first PWA with on-device storage only — no accounts, no server. Topics group entries with a live progress bar, a touch-sized rich-text editor (headings, lists, checklists, quotes, links) handles the writing, and every topic/entry/note is mirrored onto an @xyflow/svelte-powered map you can drag, connect, and zoom to see how your knowledge base fits together. Ready-made prompts let you draft content or a map layout in any AI chat and paste it straight back in.",
+      impact:
+        "A genuinely pocket-sized, zero-setup learning tracker that works fully offline and turns a flat notes list into a visual map of what you know.",
+    },
+    images: [
+      "/assets/projects/learnmo/topics-list.png",
+      "/assets/projects/learnmo/entry-editor.png",
+      "/assets/projects/learnmo/topic-detail.png",
+      "/assets/projects/learnmo/notes.png",
+      "/assets/projects/learnmo/map.png",
+      "/assets/projects/learnmo/settings.png",
+    ],
+  },
+  {
+    kind: "gallery",
     name: "Kiwami",
     description:
       "Local-first calendar PWA that fuses full Month/Week/Day/Agenda views with a routine/streak engine and food-time adherence tracking — no account, no server, your data never leaves your device. The signature <strong>Ember Chain</strong> visualizes streaks as a chain of beads that glows amber when done and goes cold ash the day it's missed. Drag-to-create/move/resize on the time grid, a from-scratch recurrence engine backed by <strong>18 unit tests</strong>, and a genuinely offline-first installable PWA.",
