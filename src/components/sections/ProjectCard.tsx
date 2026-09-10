@@ -2,23 +2,12 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TbBrandGithub, TbChevronDown } from 'react-icons/tb'
 import type { Project } from '../../data/projects'
+import { BADGE_BG, PLACEHOLDER_BG } from '../../lib/projectStyles'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { ImageSlideshow } from '../shared/ImageSlideshow'
 import { MacBookFrame } from '../shared/MacBookFrame'
 import { CtaLink } from '../shared/CtaLink'
 import { Chip } from '../shared/Chip'
-
-const BADGE_BG: Record<'red' | 'blue' | 'violet', string> = {
-  red: 'bg-red-600',
-  blue: 'bg-blue-600',
-  violet: 'bg-violet-600',
-}
-
-const PLACEHOLDER_BG: Record<'red' | 'blue' | 'violet', string> = {
-  red: 'from-red-950',
-  blue: 'from-blue-950',
-  violet: 'from-violet-950',
-}
 
 export function ProjectCard(project: Project) {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false)
