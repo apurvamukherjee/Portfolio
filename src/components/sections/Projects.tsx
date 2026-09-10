@@ -11,15 +11,15 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 type ProjectsView = 'shelf' | 'list'
 const VIEW_STORAGE_KEY = 'portfolio:projects-view'
 const VIEW_OPTIONS = [
-  { id: 'shelf', label: 'Shelf', Icon: TbBooks },
   { id: 'list', label: 'List', Icon: TbList },
+  { id: 'shelf', label: 'Shelf', Icon: TbBooks },
 ] as const
 
 function loadView(): ProjectsView {
   try {
-    return localStorage.getItem(VIEW_STORAGE_KEY) === 'list' ? 'list' : 'shelf'
+    return localStorage.getItem(VIEW_STORAGE_KEY) === 'shelf' ? 'shelf' : 'list'
   } catch {
-    return 'shelf'
+    return 'list'
   }
 }
 
