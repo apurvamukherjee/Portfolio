@@ -5,7 +5,6 @@ import { hashString, mulberry32 } from '../../../lib/seededRandom'
 
 interface BookLoaderProps {
   project: Project
-  settled: boolean
 }
 
 const COLS = 10
@@ -16,8 +15,13 @@ const FILL_THRESHOLD = 0.55
  * Cover shown while a book's shared-layout transition is still growing from the shelf to the
  * open spread. The fill pattern is seeded from the project name (not random per render), so each
  * project gets its own stable "fingerprint" instead of every book showing the same flat color.
+ *
+ * Mounted by the parent only while `!settled`, inside an AnimatePresence — the fade/hinge below
+ * is the `exit` animation, so this element actually leaves the DOM once it plays instead of
+ * sitting around indefinitely at opacity 0. Firefox in particular would otherwise occasionally
+ * paint a stale frame of this 3D-rotated layer as a ghost over the real content.
  */
-export function BookLoader({ project, settled }: BookLoaderProps) {
+export function BookLoader({ project }: BookLoaderProps) {
   const rand = mulberry32(hashString(project.name))
   const cells = Array.from({ length: COLS * ROWS }, () => rand())
   const jsxName = project.name.replace(/[^a-zA-Z0-9]/g, '') || 'Project'
@@ -26,9 +30,9 @@ export function BookLoader({ project, settled }: BookLoaderProps) {
     <motion.div
       aria-hidden
       className={`pointer-events-none absolute inset-0 z-[2] overflow-hidden bg-gradient-to-br ${CAT_GRADIENT[project.category]}`}
-      style={{ transformOrigin: 'left center' }}
+      style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
       initial={{ opacity: 1, rotateY: 0 }}
-      animate={{ opacity: settled ? 0 : 1, rotateY: settled ? -28 : 0 }}
+      exit={{ opacity: 0, rotateY: -28 }}
       transition={{ duration: 0.24 }}
     >
       <div
@@ -64,8 +68,9 @@ export function BookLoader({ project, settled }: BookLoaderProps) {
           <motion.div
             className="h-full bg-white"
             initial={{ width: '0%' }}
-            animate={{ width: settled ? '100%' : '85%' }}
-            transition={{ duration: settled ? 0.2 : 0.65, ease: 'easeOut' }}
+            animate={{ width: '92%' }}
+            exit={{ width: '100%' }}
+            transition={{ duration: 0.6, ease: 'easeOut' }}
           />
         </div>
       </div>
