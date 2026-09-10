@@ -53,6 +53,20 @@ export function Book({ project, index, hidden, onOpen }: BookProps) {
       whileTap={!reduced ? { y: -9, scale: 0.98 } : undefined}
       transition={{ type: 'spring', stiffness: 380, damping: 26 }}
     >
+      {project.spineLogo && (
+        <>
+          <span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 overflow-hidden rounded-t-md rounded-b-sm bg-cover bg-center"
+            style={{ backgroundImage: `url(${project.spineLogo})` }}
+          />
+          <span
+            aria-hidden
+            className={`pointer-events-none absolute inset-0 overflow-hidden rounded-t-md rounded-b-sm bg-gradient-to-br opacity-60 ${CAT_GRADIENT[project.category]}`}
+          />
+        </>
+      )}
+
       {project.status === 'Ongoing' && (
         <span aria-hidden className="absolute -top-2.5 right-2.5 z-10 h-5 w-3.5" style={RIBBON_STYLE} />
       )}

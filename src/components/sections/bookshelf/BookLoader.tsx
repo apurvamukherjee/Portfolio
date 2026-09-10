@@ -35,6 +35,17 @@ export function BookLoader({ project }: BookLoaderProps) {
       exit={{ opacity: 0, rotateY: -28 }}
       transition={{ duration: 0.24 }}
     >
+      {project.spineLogo && (
+        <>
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-cover bg-center"
+            style={{ backgroundImage: `url(${project.spineLogo})` }}
+          />
+          <div aria-hidden className={`absolute inset-0 bg-gradient-to-br opacity-60 ${CAT_GRADIENT[project.category]}`} />
+        </>
+      )}
+
       <div
         aria-hidden
         className="animate-gradient-shift absolute inset-0 opacity-25"
