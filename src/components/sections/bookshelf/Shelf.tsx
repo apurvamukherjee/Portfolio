@@ -26,7 +26,7 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
       <div className="relative min-w-0 flex-1">
         <div aria-hidden className="absolute inset-x-0 bottom-0 h-3.5 rounded-sm" style={WOOD_STYLE} />
         <ul
-          className="thin-scrollbar relative z-[1] flex list-none items-end gap-3.5 overflow-x-auto px-2 pb-3.5 pt-6"
+          className="thin-scrollbar relative z-[1] flex h-[220px] list-none items-end gap-3.5 overflow-x-auto px-2 pb-3.5 pt-6"
           style={{ scrollSnapType: 'x proximity' }}
         >
           {projects.map((project, i) => (
