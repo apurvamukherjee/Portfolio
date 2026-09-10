@@ -4,6 +4,18 @@ export interface CaseStudy {
   impact: string;
 }
 
+/** Bookshelf grouping — which shelf a project sits on in the Projects section. */
+export type ShelfCategory = "games" | "apps" | "native" | "exp";
+
+export const SHELF_ORDER: ShelfCategory[] = ["games", "apps", "native", "exp"];
+
+export const SHELF_LABELS: Record<ShelfCategory, string> = {
+  games: "Multiplayer & Games",
+  apps: "Offline-First Apps",
+  native: "React Native",
+  exp: "Early Experiments",
+};
+
 export interface ProjectBase {
   name: string;
   description: string;
@@ -13,6 +25,7 @@ export interface ProjectBase {
   status?: "Ongoing";
   githubUrl?: string;
   liveUrl?: string;
+  category: ShelfCategory;
 }
 
 export type Project =
@@ -35,6 +48,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Monopolis",
+    category: "games",
     description:
       "Real-time multiplayer, Kolkata-themed property trading game for 2-8 players — no login, no database, no downloads. Pick a name, share a 6-character room code, and every roll, trade, and rent payment syncs live. Full Monopoly ruleset (houses/hotels with even-building enforcement, mortgages, bankruptcy with auto-liquidation) plus four host-toggleable <strong>chaos modes</strong>: Speed Round, Auction Mode, Double Rent Events, and Market Crash.",
     descriptionIsHtml: true,
@@ -60,6 +74,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "KeyStrike",
+    category: "games",
     description:
       "Browser typing-rhythm game — one word at a time, centered on screen, with a shrinking timer underneath. Every song is synthesized live via the Web Audio API, no audio files shipped. <strong>Battle mode</strong> pits up to 4 players in a real-time car race driven by typing speed, with a 2v2 <strong>team mode</strong> where teammates share one car, plus <strong>Duel Mode</strong> — a moonlit sword duel against a rival, solo against a 5-fighter CPU ladder or head-to-head in multiplayer, decided over best-of-3 rounds with its own victory screen.",
     descriptionIsHtml: true,
@@ -87,6 +102,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "app",
     name: "LearnMo",
+    category: "apps",
     description:
       "Minimal, mobile-first PWA for organizing what you're learning — by topic, with progress you can actually see. Write notes under the topic they belong to, mark each piece done, keep a running 'read next' queue, and watch every topic, entry, and note appear automatically on an <strong>interactive map</strong> you can drag, connect, and pinch-zoom. No accounts, no sync, no clutter — it lives on your phone and stays there.",
     descriptionIsHtml: true,
@@ -113,6 +129,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Kiwami",
+    category: "apps",
     description:
       "Local-first calendar PWA that fuses full Month/Week/Day/Agenda views with a routine/streak engine and food-time adherence tracking — no account, no server, your data never leaves your device. The signature <strong>Ember Chain</strong> visualizes streaks as a chain of beads that glows amber when done and goes cold ash the day it's missed. Drag-to-create/move/resize on the time grid, a from-scratch recurrence engine backed by <strong>18 unit tests</strong>, and a genuinely offline-first installable PWA.",
     descriptionIsHtml: true,
@@ -138,6 +155,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "app",
     name: "LifeOS",
+    category: "apps",
     description:
       "Local-first personal-tracking PWA that fuses nine daily trackers — water, supplements, tasks, medication, food, gym, expenses, wishlist, and notes — behind one home screen instead of nine separate apps. A forgiving streak system with quiet 'freeze' days instead of hard resets, a weekly coaching summary, and a companion character that reflects your week back at you. Also ships as a native Android app via Capacitor, with optional Supabase sync layered on top of an offline-first IndexedDB core.",
     descriptionIsHtml: true,
@@ -162,6 +180,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Pixelpanic",
+    category: "games",
     description:
       "Real-time multiplayer drawing-and-guessing game for up to 12 players — no accounts, just a name and a room code. <strong>Live incremental stroke sync</strong> so everyone watches the picture happen stroke by stroke, time-decayed scoring with progressive hint reveals, team mode, round-robin tournaments, and seven host-toggleable <strong>chaos modes</strong> (Momentum, Bounty Round, Reverse Mode, Sabotage &amp; more).",
     descriptionIsHtml: true,
@@ -189,6 +208,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "app",
     name: "Zenith",
+    category: "apps",
     description:
       "Local-first personal tracker PWA — training, nutrition, sleep, hydration, study & bike fuel. Zero backend, data never leaves your device. XP leveling system, 84 achievement badges, 125-exercise library, social leaderboard via share codes.",
     tech: ["React 19", "TypeScript", "Ant Design", "Dexie", "Framer Motion"],
@@ -212,6 +232,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "app",
     name: "FitCart",
+    category: "native",
     description:
       "AI-powered meal planning app with Gemini 1.5 Flash chat interface. Generates personalized recipes & grocery lists respecting allergies and dietary preferences. Animated 5-step health profile, 52-week planner, nearby store map with custom bottom-sheet.",
     tech: [
@@ -239,6 +260,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Code Synth",
+    category: "exp",
     description:
       "Synthesis engine that converts code into real-time audio via Web Audio API with sub-10ms latency. Gemini-powered natural-language-to-music generation — describe a sound, get music.",
     tech: ["React", "Web Audio API", "Gemini API"],
@@ -256,6 +278,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Chat App",
+    category: "exp",
     description:
       "Built a real-time chat application enabling seamless user communication.",
     tech: [],
@@ -267,6 +290,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Aim Trainer Game",
+    category: "exp",
     description:
       "A Aim Trainer Game to improve your aim. made with different levels and difficulty levels.",
     tech: [],
@@ -278,6 +302,7 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     name: "Gemini Clone",
+    category: "exp",
     description:
       "Developed a web application replicating core features of the Gemini platform.",
     tech: [],

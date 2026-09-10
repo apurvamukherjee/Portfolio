@@ -21,6 +21,16 @@
   --color-accent: #ff0000;
   --color-accent-deep: #2a0000;
 
+  /* Bookshelf category spines ("games" reuses the accent above) */
+  --color-cat-apps: #3f8f89;
+  --color-cat-apps-deep: #194543;
+  --color-cat-native: #6a63c9;
+  --color-cat-native-deep: #2c2760;
+  --color-cat-exp: #c98a2f;
+  --color-cat-exp-deep: #5c3d13;
+  --color-wood: #241a15;
+  --color-wood-deep: #140e0b;
+
   --animate-headshake: headshake 15s linear infinite;
   --animate-jello: jello 0.9s both;
   --animate-gradient-shift: gradient-shift 3s ease infinite;
@@ -45,6 +55,15 @@
   --color-shadow: rgba(0, 0, 0, 0.16);
   --color-accent: #d40000;
   --color-accent-deep: #6b0000;
+
+  --color-cat-apps: #2f7d76;
+  --color-cat-apps-deep: #1f5b56;
+  --color-cat-native: #524bb0;
+  --color-cat-native-deep: #37307e;
+  --color-cat-exp: #a9701f;
+  --color-cat-exp-deep: #7a4f12;
+  --color-wood: #a9784c;
+  --color-wood-deep: #7c5535;
 }
 
 @keyframes headshake {
@@ -220,4 +239,21 @@
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+@utility thin-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-accent) transparent;
+
+  &::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+  }
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: var(--color-accent);
+    border-radius: 3px;
+  }
 }
