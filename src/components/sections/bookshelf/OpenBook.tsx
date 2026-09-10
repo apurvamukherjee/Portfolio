@@ -10,6 +10,7 @@ import { Chip } from '../../shared/Chip'
 import { CtaLink } from '../../shared/CtaLink'
 import { ImageSlideshow } from '../../shared/ImageSlideshow'
 import { MacBookFrame } from '../../shared/MacBookFrame'
+import { BookLoader } from './BookLoader'
 
 interface OpenBookProps {
   project: Project
@@ -73,18 +74,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           <TbX size={18} />
         </button>
 
-        {!reduced && (
-          <motion.div
-            aria-hidden
-            className={`pointer-events-none absolute inset-0 z-[2] flex items-center justify-center bg-gradient-to-br text-5xl font-extrabold text-white/90 ${CAT_GRADIENT[project.category]}`}
-            style={{ transformOrigin: 'left center' }}
-            initial={{ opacity: 1, rotateY: 0 }}
-            animate={{ opacity: settled ? 0 : 1, rotateY: settled ? -28 : 0 }}
-            transition={{ duration: 0.24 }}
-          >
-            {project.name.charAt(0)}
-          </motion.div>
-        )}
+        {!reduced && <BookLoader project={project} settled={settled} />}
 
         <motion.div
           className="thin-scrollbar relative z-[1] flex h-full min-h-0 flex-col overflow-y-auto md:flex-row md:overflow-hidden"

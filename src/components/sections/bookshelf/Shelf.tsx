@@ -1,7 +1,7 @@
 import type { Project, ShelfCategory } from '../../../data/projects'
 import { SHELF_LABELS } from '../../../data/projects'
 import { Book } from './Book'
-import { ShelfOrnament } from './ShelfOrnament'
+import { ShelfOrnaments } from './ShelfOrnament'
 
 interface ShelfProps {
   category: ShelfCategory
@@ -34,8 +34,8 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
               <Book project={project} index={i} hidden={project.name === openId} onOpen={() => onOpen(project.name)} />
             </li>
           ))}
-          <li className="flex-none self-end">
-            <ShelfOrnament category={category} />
+          <li className="flex flex-none items-end gap-2 self-end">
+            <ShelfOrnaments category={category} />
           </li>
         </ul>
       </div>
