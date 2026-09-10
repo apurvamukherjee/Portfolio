@@ -31,7 +31,13 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
         >
           {projects.map((project, i) => (
             <li key={project.name} className="flex-none">
-              <Book project={project} index={i} hidden={project.name === openId} onOpen={() => onOpen(project.name)} />
+              <Book
+                project={project}
+                index={i}
+                shelfSize={projects.length}
+                hidden={project.name === openId}
+                onOpen={() => onOpen(project.name)}
+              />
             </li>
           ))}
           <li className="flex flex-none items-end gap-2 self-end">

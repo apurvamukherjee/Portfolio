@@ -22,15 +22,17 @@ const RIBBON_STYLE = {
 interface BookProps {
   project: Project
   index: number
+  /** How many books share this shelf — a lone book uses the tallest spine so it reads as anchored to the shelf tag instead of floating below it with no taller neighbor to compare against. */
+  shelfSize: number
   hidden: boolean
   onOpen: () => void
 }
 
 /** One spine on the shelf. Renders an inert placeholder (same footprint) while its OpenBook counterpart owns the shared layout transition, so neighboring books never reflow. */
-export function Book({ project, index, hidden, onOpen }: BookProps) {
+export function Book({ project, index, shelfSize, hidden, onOpen }: BookProps) {
   const fine = useFinePointer()
   const reduced = useReducedMotion()
-  const height = HEIGHTS[index % HEIGHTS.length]
+  const height = shelfSize === 1 ? Math.max(...HEIGHTS) : HEIGHTS[index % HEIGHTS.length]
   const width = WIDTHS[index % WIDTHS.length]
 
   if (hidden) {
