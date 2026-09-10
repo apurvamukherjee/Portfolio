@@ -1,5 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { AnimatePresence, motion } from 'framer-motion'
 import { TbBrandGithub, TbX } from 'react-icons/tb'
 import type { Project } from '../../../data/projects'
 import { SHELF_LABELS } from '../../../data/projects'
@@ -37,6 +37,16 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
   }, [])
 
   useEffect(() => {
+    if (reduced) return
+    // A fixed timer rather than onLayoutAnimationComplete: spring "settle" detection is inherently
+    // fuzzy and its real-world timing varies across browsers/devices, which left the loader cover
+    // visible a few hundred ms longer than intended in some engines (Firefox would briefly composite
+    // a stale frame of it as a ghost). A flat delay tuned to the spring below is fully deterministic.
+    const id = setTimeout(() => setSettled(true), 520)
+    return () => clearTimeout(id)
+  }, [reduced])
+
+  useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
     }
@@ -59,7 +69,6 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
         aria-modal="true"
         aria-labelledby={titleId}
         layoutId={reduced ? undefined : `book-${project.name}`}
-        onLayoutAnimationComplete={() => setSettled(true)}
         transition={reduced ? { duration: 0.15 } : { type: 'spring', stiffness: 300, damping: 32 }}
         className="relative flex h-full w-full flex-col overflow-hidden bg-surface shadow-card md:h-[min(600px,86vh)] md:w-[min(920px,92vw)] md:rounded-2xl md:border md:border-border"
         style={{ perspective: 1600 }}
@@ -74,7 +83,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           <TbX size={18} />
         </button>
 
-        {!reduced && <BookLoader project={project} settled={settled} />}
+        <AnimatePresence>{!reduced && !settled && <BookLoader project={project} />}</AnimatePresence>
 
         <motion.div
           className="thin-scrollbar relative z-[1] flex h-full min-h-0 flex-col overflow-y-auto md:flex-row md:overflow-hidden"
