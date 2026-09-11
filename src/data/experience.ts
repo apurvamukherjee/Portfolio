@@ -51,7 +51,7 @@ export const experience: ExperienceCompany = {
       tech: ['React', 'Node.js', 'Express', 'MongoDB', 'React Native'],
     },
     {
-      role: 'Software Engineer (Full-time)',
+      role: 'Software Engineer',
       icon: TbUserCheck,
       time: 'Aug 2026 – Present',
       status: 'Current',
