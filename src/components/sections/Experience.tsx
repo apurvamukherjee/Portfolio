@@ -1,5 +1,6 @@
 import { Fragment, useRef } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
+import { TbArrowNarrowRight } from 'react-icons/tb'
 import { experience } from '../../data/experience'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
@@ -59,14 +60,15 @@ export function Experience() {
                   </motion.div>
                   {i < experience.roles.length - 1 && (
                     <div aria-hidden className="flex items-center justify-center py-2 text-accent sm:py-0">
-                      <svg viewBox="0 0 24 13" className="h-4 w-8 rotate-90 fill-none stroke-accent stroke-2 sm:rotate-0">
-                        <motion.path
-                          d="M1,6.5 L20,6.5"
-                          strokeLinecap="round"
-                          style={{ pathLength: reduced ? 1 : connectorFill }}
-                        />
-                        <polyline points="16 1 23 6.5 16 12" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
+                      <div className="rotate-90 sm:rotate-0">
+                        <motion.div
+                          style={{ opacity: reduced ? 1 : connectorFill }}
+                          animate={reduced ? undefined : { x: [0, 6, 0] }}
+                          transition={reduced ? undefined : { duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
+                        >
+                          <TbArrowNarrowRight size={26} strokeWidth={2} />
+                        </motion.div>
+                      </div>
                     </div>
                   )}
                 </Fragment>
