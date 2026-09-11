@@ -1,6 +1,5 @@
-import { Fragment, useRef } from 'react'
+import { useRef } from 'react'
 import { motion, useScroll, useSpring } from 'framer-motion'
-import { TbArrowNarrowRight } from 'react-icons/tb'
 import { experience } from '../../data/experience'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
@@ -11,9 +10,9 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 
 export function Experience() {
   const reduced = useReducedMotion()
-  const rolesRef = useRef<HTMLDivElement>(null)
-  const { scrollYProgress } = useScroll({ target: rolesRef, offset: ['start 0.8', 'end 0.3'] })
-  const connectorFill = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })
+  const timelineRef = useRef<HTMLDivElement>(null)
+  const { scrollYProgress } = useScroll({ target: timelineRef, offset: ['start 0.8', 'end 0.3'] })
+  const progress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })
 
   return (
     <section id="experience" className="w-full px-6 py-24 md:px-16">
@@ -46,32 +45,27 @@ export function Experience() {
             <p className="text-muted">{experience.subtitle}</p>
 
             <motion.div
-              ref={rolesRef}
-              className="flex flex-col items-stretch gap-4 sm:flex-row"
+              ref={timelineRef}
+              className="relative flex flex-col gap-10"
               initial="hidden"
               whileInView="visible"
               viewport={viewportOnce}
               variants={staggerContainer(0.15)}
             >
-              {experience.roles.map((role, i) => (
-                <Fragment key={role.role}>
-                  <motion.div variants={withMotionPreference(fadeUp, reduced)} className="flex-1">
-                    <ExperienceNode {...role} />
-                  </motion.div>
-                  {i < experience.roles.length - 1 && (
-                    <div aria-hidden className="flex items-center justify-center py-2 text-accent sm:py-0">
-                      <div className="rotate-90 sm:rotate-0">
-                        <motion.div
-                          style={{ opacity: reduced ? 1 : connectorFill }}
-                          animate={reduced ? undefined : { x: [0, 6, 0] }}
-                          transition={reduced ? undefined : { duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-                        >
-                          <TbArrowNarrowRight size={26} strokeWidth={2} />
-                        </motion.div>
-                      </div>
-                    </div>
-                  )}
-                </Fragment>
+              <div
+                aria-hidden
+                className="absolute bottom-[22px] left-[22px] top-[22px] w-0.5 overflow-hidden rounded-full bg-border"
+              >
+                <motion.div
+                  className="w-full origin-top bg-gradient-to-b from-accent to-accent-deep"
+                  style={{ height: '100%', scaleY: reduced ? 1 : progress }}
+                />
+              </div>
+
+              {experience.roles.map((role) => (
+                <motion.div key={role.role} variants={withMotionPreference(fadeUp, reduced)}>
+                  <ExperienceNode {...role} />
+                </motion.div>
               ))}
             </motion.div>
           </GradientSweepCard>
