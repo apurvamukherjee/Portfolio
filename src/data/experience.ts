@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons'
-import { TbBriefcase, TbCode } from 'react-icons/tb'
+import { TbBriefcase, TbCode, TbUserCheck } from 'react-icons/tb'
 
 export interface ExperienceRole {
   role: string
@@ -23,7 +23,7 @@ export const experience: ExperienceCompany = {
   name: 'Mind Webs Venture',
   site: 'mindwebs.org',
   siteUrl: 'https://mindwebs.org',
-  duration: '1 yr 2 mo',
+  duration: '1 yr 3 mo',
   subtitle: 'My professional journey — growing from design into full-stack & app development.',
   roles: [
     {
@@ -42,8 +42,21 @@ export const experience: ExperienceCompany = {
       role: 'Full Stack / App Dev Intern',
       icon: TbCode,
       time: '10 months',
+      status: 'Completed',
+      points: [
+        'Built full-stack web & mobile apps end to end.',
+        'Developed REST APIs, auth and database-driven features.',
+        'Shipped responsive, theme-consistent front-ends.',
+      ],
+      tech: ['React', 'Node.js', 'Express', 'MongoDB', 'React Native'],
+    },
+    {
+      role: 'Software Engineer (Full-time)',
+      icon: TbUserCheck,
+      time: 'Aug 2026 – Present',
       status: 'Current',
       points: [
+        'Converted to full-time Software Engineer after the internship.',
         'Building full-stack web & mobile apps end to end.',
         'Developing REST APIs, auth and database-driven features.',
         'Shipping responsive, theme-consistent front-ends.',
