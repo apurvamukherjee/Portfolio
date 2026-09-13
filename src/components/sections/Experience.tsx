@@ -1,15 +1,13 @@
 import { useRef } from 'react'
-import { motion, useScroll, useSpring } from 'framer-motion'
+import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion'
 import { experience } from '../../data/experience'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { Chip } from '../shared/Chip'
 import { ExperienceNode } from './ExperienceNode'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 export function Experience() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const timelineRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: timelineRef, offset: ['start 0.8', 'end 0.3'] })
   const progress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })

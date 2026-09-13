@@ -1,7 +1,5 @@
 import { useRef, type MouseEvent, type ReactNode } from 'react'
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion'
 interface GradientSweepCardProps {
   children: ReactNode
   className?: string
@@ -16,7 +14,7 @@ interface GradientSweepCardProps {
  */
 export function GradientSweepCard({ children, className = '', tilt = true }: GradientSweepCardProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const active = tilt && !reduced
 
   const x = useMotionValue(0)

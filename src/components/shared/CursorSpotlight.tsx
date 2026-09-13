@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform } from 'framer-motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion'
 import { useFinePointer } from '../../hooks/useFinePointer'
 
 const RING_SIZE = 208
@@ -35,7 +34,7 @@ let rippleId = 0
  * triggers a React re-render on mousemove either — only clicks (for ripples) touch state.
  */
 export function CursorSpotlight() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const fine = useFinePointer()
   const active = fine && !reduced
   const [ripples, setRipples] = useState<Ripple[]>([])

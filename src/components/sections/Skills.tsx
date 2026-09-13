@@ -1,12 +1,10 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { skillCategories } from '../../data/skills'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 export function Skills() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   return (
     <section id="skills" className="w-full px-6 py-24 md:px-16">

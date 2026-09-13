@@ -1,7 +1,5 @@
 import { useEffect, useRef, useState, type MouseEvent } from 'react'
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type TargetAndTransition } from 'framer-motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
+import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type TargetAndTransition, useReducedMotion } from 'framer-motion'
 type Wobble = 'none' | 'close' | 'minimize' | 'maximize'
 
 const SNIPPETS = [
@@ -43,7 +41,7 @@ const WOBBLE_LABEL: Record<Exclude<Wobble, 'none'>, string> = {
 
 /** Minimal laptop/terminal mockup — idle float, cursor-parallax tilt, cycling snippets, clickable traffic lights. */
 export function HeroIllustration() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)

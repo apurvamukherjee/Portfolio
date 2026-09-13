@@ -1,9 +1,8 @@
 import { useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { navLinks } from '../../data/nav'
 import { useScrollSpy } from '../../hooks/useScrollSpy'
 import { useIntro } from '../../hooks/useIntro'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
 import type { Theme } from '../../hooks/useTheme'
 import { Logo } from './Logo'
 import { Hamburger } from './Hamburger'
@@ -19,7 +18,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const activeId = useScrollSpy(navLinks.map((l) => l.id))
   const introDone = useIntro()
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   return (
     <>

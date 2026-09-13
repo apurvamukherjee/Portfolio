@@ -1,6 +1,6 @@
 import { lazy, Suspense, useState } from 'react'
 import { useTheme } from './hooks/useTheme'
-import { useReducedMotion } from './hooks/useReducedMotion'
+import { useReducedMotion } from 'framer-motion'
 import { useCommandPaletteShortcut } from './hooks/useCommandPaletteShortcut'
 import { useKeySequence } from './hooks/useKeySequence'
 import { IntroContext } from './hooks/useIntro'
@@ -41,7 +41,7 @@ function hasSeenIntro(): boolean {
 
 function App() {
   const { theme, toggle } = useTheme()
-  const reducedMotion = useReducedMotion()
+  const reducedMotion = useReducedMotion() ?? false
   const [introDone, setIntroDone] = useState(() => reducedMotion || hasSeenIntro())
   const [overlay, setOverlay] = useState<'none' | 'palette' | 'terminal'>('none')
 

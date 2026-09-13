@@ -1,9 +1,7 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import type { Project } from '../../../data/projects'
 import { CAT_GRADIENT, CATEGORY_ICON } from '../../../lib/projectStyles'
 import { useFinePointer } from '../../../hooks/useFinePointer'
-import { useReducedMotion } from '../../../hooks/useReducedMotion'
-
 const TILTS = [-3, 2, -1, 3, -2]
 const HEIGHTS = [172, 156, 182, 164]
 const WIDTHS = [70, 70, 78, 70]
@@ -31,7 +29,7 @@ interface BookProps {
 /** One spine on the shelf. Renders an inert placeholder (same footprint) while its OpenBook counterpart owns the shared layout transition, so neighboring books never reflow. */
 export function Book({ project, index, shelfSize, hidden, onOpen }: BookProps) {
   const fine = useFinePointer()
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const height = shelfSize === 1 ? Math.max(...HEIGHTS) : HEIGHTS[index % HEIGHTS.length]
   const width = WIDTHS[index % WIDTHS.length]
 

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { TbArrowDown } from "react-icons/tb";
 import { site } from "../../data/site";
 import { JelloText } from "../shared/JelloText";
@@ -11,7 +11,6 @@ import {
   staggerContainer,
   withMotionPreference,
 } from "../../lib/motion";
-import { useReducedMotion } from "../../hooks/useReducedMotion";
 import { useIntro } from "../../hooks/useIntro";
 
 const EGG_DISCOVERED_KEY = "portfolio-egg-discovered";
@@ -25,7 +24,7 @@ function readEggDiscovered(): boolean {
 }
 
 export function Hero() {
-  const reduced = useReducedMotion();
+  const reduced = useReducedMotion() ?? false;
   const introDone = useIntro();
   const item = withMotionPreference(fadeUp, reduced);
   const [eggDiscovered, setEggDiscovered] = useState(readEggDiscovered);

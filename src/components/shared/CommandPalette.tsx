@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbCommand, TbCornerDownLeft } from 'react-icons/tb'
 import { buildCommands } from '../../data/commands'
 import { fuzzyScore } from '../../lib/fuzzyMatch'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
 import type { Theme } from '../../hooks/useTheme'
 
 interface CommandPaletteProps {
@@ -15,7 +14,7 @@ interface CommandPaletteProps {
 }
 
 export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandPaletteProps) {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)

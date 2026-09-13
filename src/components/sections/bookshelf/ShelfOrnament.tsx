@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { AnimatePresence, motion, type Transition } from 'framer-motion'
+import { AnimatePresence, motion, type Transition, useReducedMotion } from 'framer-motion'
 import type { IconType } from 'react-icons'
 import {
   GiBubblingFlask,
@@ -16,8 +16,6 @@ import {
   GiRobotGolem,
 } from 'react-icons/gi'
 import type { ShelfCategory } from '../../../data/projects'
-import { useReducedMotion } from '../../../hooks/useReducedMotion'
-
 type IdleKind = 'bob' | 'sway' | 'pulse' | 'glow' | 'spin'
 
 interface Ornament {
@@ -92,7 +90,7 @@ export function ShelfOrnaments({ category }: ShelfOrnamentsProps) {
 
 function OrnamentPiece({ ornament }: { ornament: Ornament }) {
   const { Icon, label, quip, idle } = ornament
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const [poked, setPoked] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const preset = idlePreset(idle)

@@ -1,12 +1,10 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { leadershipEvents } from '../../data/leadership'
 import { SectionHeading } from '../shared/SectionHeading'
 import { LeadershipCard } from './LeadershipCard'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 export function Leadership() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   return (
     <section id="leadership" className="w-full px-6 py-24 md:px-16">

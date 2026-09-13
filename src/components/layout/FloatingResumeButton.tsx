@@ -1,10 +1,8 @@
 import { useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbFileDescription } from 'react-icons/tb'
 import { site } from '../../data/site'
 import { useIsScrolling } from '../../hooks/useIsScrolling'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 /**
  * A keycap-style button in the site's red/black palette — stamps like a hanko seal when clicked.
  * Shown at every breakpoint (MobileMenu also carries its own `</Resume>` link, but this floating
@@ -14,7 +12,7 @@ import { useReducedMotion } from '../../hooks/useReducedMotion'
 export function FloatingResumeButton() {
   const [stamped, setStamped] = useState(false)
   const isScrolling = useIsScrolling()
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   return (
     <motion.a

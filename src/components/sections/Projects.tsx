@@ -1,13 +1,11 @@
 import { useEffect, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { TbBooks, TbList } from 'react-icons/tb'
 import { projects } from '../../data/projects'
 import { SectionHeading } from '../shared/SectionHeading'
 import { ProjectCard } from './ProjectCard'
 import { Bookshelf } from './bookshelf/Bookshelf'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 type ProjectsView = 'shelf' | 'list'
 const VIEW_STORAGE_KEY = 'portfolio:projects-view'
 const VIEW_OPTIONS = [
@@ -24,7 +22,7 @@ function loadView(): ProjectsView {
 }
 
 export function Projects() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const [view, setView] = useState<ProjectsView>(loadView)
 
   useEffect(() => {

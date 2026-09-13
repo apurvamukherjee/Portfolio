@@ -1,11 +1,10 @@
 import { useEffect, useId, useRef, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbBrandGithub, TbX } from 'react-icons/tb'
 import type { Project } from '../../../data/projects'
 import { SHELF_LABELS } from '../../../data/projects'
 import { BADGE_BG, CAT_GRADIENT, PLACEHOLDER_BG } from '../../../lib/projectStyles'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
-import { useReducedMotion } from '../../../hooks/useReducedMotion'
 import { Chip } from '../../shared/Chip'
 import { CtaLink } from '../../shared/CtaLink'
 import { ImageSlideshow } from '../../shared/ImageSlideshow'
@@ -18,7 +17,7 @@ interface OpenBookProps {
 }
 
 export function OpenBook({ project, onClose }: OpenBookProps) {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const [settled, setSettled] = useState(reduced)
   const titleId = useId()
   const closeBtnRef = useRef<HTMLButtonElement>(null)

@@ -1,8 +1,7 @@
 import type { MouseEvent } from 'react'
 import { flushSync } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbMoon, TbSun } from 'react-icons/tb'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
 import type { Theme } from '../../hooks/useTheme'
 
 interface ThemeToggleProps {
@@ -14,7 +13,7 @@ const supportsViewTransition = typeof document !== 'undefined' && 'startViewTran
 
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
   const isDark = theme === 'dark'
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
     if (reduced || !supportsViewTransition) {

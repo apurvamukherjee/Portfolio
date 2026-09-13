@@ -1,5 +1,4 @@
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
+import { useReducedMotion } from 'framer-motion'
 interface JelloTextProps {
   text: string
   className?: string
@@ -7,7 +6,7 @@ interface JelloTextProps {
 
 /** Splits text into per-letter spans with the hero's squash/stretch hover effect. Wraps only between words. */
 export function JelloText({ text, className = '' }: JelloTextProps) {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const words = text.split(' ')
 
   return (

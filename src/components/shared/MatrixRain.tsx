@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
+import { useReducedMotion } from 'framer-motion'
 import type { Theme } from '../../hooks/useTheme'
 
 const LETTERS = 'アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -17,7 +17,7 @@ interface MatrixRainProps {
  */
 export function MatrixRain({ theme }: MatrixRainProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const active = theme === 'dark' && !reduced
 
   useEffect(() => {

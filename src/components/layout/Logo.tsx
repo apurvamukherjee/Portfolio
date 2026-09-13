@@ -1,11 +1,10 @@
 import { useState } from 'react'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
+import { useReducedMotion } from 'framer-motion'
 /** The bitmoji avatar — subtle infinite headshake, plus a "Hey! I'm Apurva" popup on click/tap/Enter. */
 export function Logo() {
   const [playCount, setPlayCount] = useState(0)
   const [showHey, setShowHey] = useState(false)
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   const play = () => {
     setPlayCount((c) => c + 1)

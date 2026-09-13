@@ -1,10 +1,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbX } from 'react-icons/tb'
 import { runTerminalCommand } from '../../data/terminalCommands'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 interface TerminalProps {
   open: boolean
   onClose: () => void
@@ -21,7 +19,7 @@ const PROMPT = 'guest@apurva-portfolio:~$'
 let lineId = 0
 
 export function Terminal({ open, onClose }: TerminalProps) {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const [transcript, setTranscript] = useState<TranscriptLine[]>([])
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([])

@@ -1,14 +1,12 @@
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { fadeUp, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 interface SectionHeadingProps {
   tag: string
   as?: 'h2' | 'h1'
 }
 
 export function SectionHeading({ tag, as: As = 'h2' }: SectionHeadingProps) {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
 
   return (
     <motion.div

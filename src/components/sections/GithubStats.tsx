@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import type { IconType } from 'react-icons'
 import { TbBrandGithub, TbCheck, TbCode, TbFlame, TbStar, TbUsers } from 'react-icons/tb'
@@ -7,8 +7,6 @@ import { useGithubStats } from '../../hooks/useGithubStats'
 import { useLeetCodeStats } from '../../hooks/useLeetCodeStats'
 import { getLanguageIcon } from '../../lib/languageIcons'
 import { fadeUp, viewportOnce, withMotionPreference } from '../../lib/motion'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 interface StatFrame {
   icon: IconType
   label: string
@@ -86,7 +84,7 @@ function StatTile({ frames, intervalMs, reduced, className }: StatGroup & { redu
 }
 
 export function GithubStats() {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const stats = useGithubStats()
   const leetcode = useLeetCodeStats()
 

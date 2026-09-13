@@ -1,8 +1,6 @@
 import type { ReactNode } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { useMagnetic } from '../../hooks/useMagnetic'
-import { useReducedMotion } from '../../hooks/useReducedMotion'
-
 interface NeuButtonProps {
   href: string
   children: ReactNode
@@ -11,7 +9,7 @@ interface NeuButtonProps {
 
 /** Neubrutalist offset-shadow button (the "Let's Talk!" hero CTA) with a subtle magnetic hover pull. */
 export function NeuButton({ href, children, className = '' }: NeuButtonProps) {
-  const reduced = useReducedMotion()
+  const reduced = useReducedMotion() ?? false
   const { ref, x, y, onMouseMove, onMouseLeave } = useMagnetic<HTMLAnchorElement>(0.2)
 
   return (

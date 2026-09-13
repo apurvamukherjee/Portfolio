@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { readCache, writeCache } from '../lib/localCache'
 
 const GITHUB_USERNAME = 'apurvamukherjee'
 // Bumping this version invalidates any cache written by an older shape of GithubStats —
@@ -19,11 +20,6 @@ export interface GithubStats {
   currentStreak: number | null
   /** Longest such run across all recorded history. Null if unavailable. */
   longestStreak: number | null
-}
-
-interface CacheShape {
-  fetchedAt: number
-  stats: GithubStats
 }
 
 interface GithubUserResponse {
@@ -80,36 +76,15 @@ function computeStreaks(days: ContributionDay[]): { current: number; longest: nu
   return { current, longest }
 }
 
-function isValidCache(value: unknown): value is CacheShape {
+function isValidStats(value: unknown): value is GithubStats {
   if (typeof value !== 'object' || value === null) return false
-  const { fetchedAt, stats } = value as Record<string, unknown>
-  if (typeof fetchedAt !== 'number' || typeof stats !== 'object' || stats === null) return false
-  const s = stats as Record<string, unknown>
+  const s = value as Record<string, unknown>
   return (
     typeof s.publicRepos === 'number' &&
     typeof s.totalStars === 'number' &&
     typeof s.followers === 'number' &&
     Array.isArray(s.allLanguages)
   )
-}
-
-function readCache(): CacheShape | null {
-  try {
-    const raw = localStorage.getItem(CACHE_KEY)
-    if (!raw) return null
-    const parsed: unknown = JSON.parse(raw)
-    return isValidCache(parsed) ? parsed : null
-  } catch {
-    return null
-  }
-}
-
-function writeCache(stats: GithubStats) {
-  try {
-    localStorage.setItem(CACHE_KEY, JSON.stringify({ fetchedAt: Date.now(), stats }))
-  } catch {
-    // localStorage unavailable (private mode / disabled) — stats just won't persist across visits
-  }
 }
 
 async function fetchStats(): Promise<GithubStats> {
@@ -163,10 +138,10 @@ async function fetchStats(): Promise<GithubStats> {
 
 /** Client-side GitHub stats, cached in localStorage for an hour so repeat visits are instant and stay under the unauthenticated rate limit. Never fabricates numbers — falls back to cache or nothing on failure. */
 export function useGithubStats(): GithubStats | null {
-  const [stats, setStats] = useState<GithubStats | null>(() => readCache()?.stats ?? null)
+  const [stats, setStats] = useState<GithubStats | null>(() => readCache(CACHE_KEY, isValidStats)?.stats ?? null)
 
   useEffect(() => {
-    const cached = readCache()
+    const cached = readCache(CACHE_KEY, isValidStats)
     if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) return
 
     let cancelled = false
@@ -174,7 +149,7 @@ export function useGithubStats(): GithubStats | null {
       .then((fresh) => {
         if (cancelled) return
         setStats(fresh)
-        writeCache(fresh)
+        writeCache(CACHE_KEY, fresh)
       })
       .catch(() => {
         // Network error or rate-limited — keep showing whatever was already cached, if anything.
