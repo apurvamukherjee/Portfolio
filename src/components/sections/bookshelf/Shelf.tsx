@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import type { Project, ShelfCategory } from '../../../data/projects'
 import { SHELF_LABELS } from '../../../data/projects'
 import { Book } from './Book'
@@ -10,12 +11,18 @@ interface ShelfProps {
   onOpen: (name: string) => void
 }
 
+const ROW_H = 230
+
 /** The shelf itself: a hairline rule with a short soft gradient under it standing in for the
  *  board's thickness. Replaces the old wood-grain plank, which read as clip art against a
- *  site that is otherwise flat surfaces and 1px borders. */
+ *  site that is otherwise flat surfaces and 1px borders. Tiled once per row so wrapped rows
+ *  each stand on a board rather than floating. */
 const BOARD_STYLE = {
-  background:
+  backgroundImage:
     'linear-gradient(180deg, var(--color-shelf-line) 0 1px, color-mix(in srgb, var(--color-shelf-line) 35%, transparent) 1px 2px, transparent 2px)',
+  backgroundSize: `100% ${ROW_H}px`,
+  backgroundPosition: `0 ${ROW_H - 2}px`,
+  backgroundRepeat: 'repeat-y',
 }
 
 export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
@@ -30,11 +37,11 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
 
       <div className="relative min-w-0 flex-1">
         <ul
-          className="thin-scrollbar relative z-[1] flex h-[230px] list-none items-end gap-[3px] overflow-x-auto px-1 pt-6"
-          style={{ scrollSnapType: 'x proximity' }}
+          className="relative z-[1] flex list-none flex-wrap gap-x-[3px] px-1"
+          style={{ ...BOARD_STYLE, '--shelf-row-h': `${ROW_H}px` } as CSSProperties}
         >
           {projects.map((project) => (
-            <li key={project.name} className="flex-none">
+            <li key={project.name} className="flex h-[var(--shelf-row-h)] flex-none items-end">
               <Book
                 project={project}
                 shelfSize={projects.length}
@@ -43,11 +50,10 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
               />
             </li>
           ))}
-          <li className="ml-3 flex flex-none items-end gap-1 self-end">
+          <li className="ml-3 flex h-[var(--shelf-row-h)] flex-none items-end gap-1">
             <ShelfOrnaments category={category} />
           </li>
         </ul>
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-2" style={BOARD_STYLE} />
       </div>
     </div>
   )

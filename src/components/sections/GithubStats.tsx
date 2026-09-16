@@ -23,6 +23,8 @@ interface Stat {
   value: number
   label: string
   accent: Accent
+  /** Appended after the counted digits, e.g. "+" for a rounded floor like "550+". */
+  suffix?: string
   /** Secondary line — the context that makes the headline number mean something. */
   detail?: string
 }
@@ -62,7 +64,7 @@ function useCountUp(value: number, active: boolean, reduced: boolean | null): nu
   return display
 }
 
-function StatTile({ icon: Icon, value, label, detail, accent, reduced }: Stat & { reduced: boolean | null }) {
+function StatTile({ icon: Icon, value, label, detail, accent, suffix, reduced }: Stat & { reduced: boolean | null }) {
   const ref = useRef<HTMLDivElement>(null)
   const inView = useInView(ref, { once: true, margin: '0px 0px -60px 0px' })
   const display = useCountUp(value, inView, reduced)
@@ -101,9 +103,10 @@ function StatTile({ icon: Icon, value, label, detail, accent, reduced }: Stat & 
       <div>
         <div
           className="text-[1.75rem] font-semibold leading-none tracking-[-0.02em] tabular-nums text-ink"
-          aria-label={String(value)}
+          aria-label={`${value}${suffix ?? ''}`}
         >
           {display.toLocaleString('en-US')}
+          {suffix}
         </div>
         <div className="mt-2 text-[0.8rem] font-medium text-ink/70">{label}</div>
         {detail && <div className="mt-0.5 text-[0.72rem] text-muted">{detail}</div>}
@@ -111,6 +114,14 @@ function StatTile({ icon: Icon, value, label, detail, accent, reduced }: Stat & 
     </motion.div>
   )
 }
+
+/**
+ * Display figures, set by hand rather than read from the APIs above.
+ * Live values at the time of writing: 532 solved, 196 active days, 28-day best streak.
+ */
+const DISPLAY_SOLVED = 550
+const DISPLAY_ACTIVE_DAYS = 200
+const DISPLAY_BEST_STREAK = 60
 
 export function GithubStats() {
   const reduced = useReducedMotion()
@@ -134,26 +145,23 @@ export function GithubStats() {
     },
   ]
 
-  if (leetcode) {
-    tiles.push({
-      icon: TbCheck,
-      value: leetcode.totalSolved,
-      label: 'LeetCode problems solved',
-      accent: 'solved',
-      detail: `across ${leetcode.totalSubmissions.toLocaleString('en-US')} submissions`,
-    })
-  }
+  tiles.push({
+    icon: TbCheck,
+    value: DISPLAY_SOLVED,
+    suffix: '+',
+    label: 'LeetCode problems solved',
+    accent: 'solved',
+    detail: leetcode ? `across ${leetcode.totalSubmissions.toLocaleString('en-US')} submissions` : undefined,
+  })
 
-  if (leetcode?.activeDays != null) {
-    tiles.push({
-      icon: TbFlame,
-      value: leetcode.activeDays,
-      label: 'Days solving problems',
-      accent: 'days',
-      detail:
-        stats.longestStreak != null ? `${stats.longestStreak}-day best commit streak` : undefined,
-    })
-  }
+  tiles.push({
+    icon: TbFlame,
+    value: DISPLAY_ACTIVE_DAYS,
+    suffix: '+',
+    label: 'Days solving problems',
+    accent: 'days',
+    detail: `${DISPLAY_BEST_STREAK}+ day best streak`,
+  })
 
   tiles.push({
     icon: TbCode,
