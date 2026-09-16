@@ -10,23 +10,27 @@ interface ShelfProps {
   onOpen: (name: string) => void
 }
 
-const WOOD_STYLE = {
-  background: 'linear-gradient(180deg, var(--color-wood), var(--color-wood-deep))',
-  boxShadow: '0 10px 18px -6px var(--color-shadow), inset 0 1px 0 var(--color-border)',
+/** The shelf itself: a hairline rule with a short soft gradient under it standing in for the
+ *  board's thickness. Replaces the old wood-grain plank, which read as clip art against a
+ *  site that is otherwise flat surfaces and 1px borders. */
+const BOARD_STYLE = {
+  background:
+    'linear-gradient(180deg, var(--color-shelf-line) 0 1px, color-mix(in srgb, var(--color-shelf-line) 35%, transparent) 1px 2px, transparent 2px)',
 }
 
 export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
   return (
-    <div className="flex items-end gap-5 max-md:flex-col max-md:items-stretch max-md:gap-2.5">
-      <div className="mb-3.5 flex w-[var(--shelf-label-w)] flex-none items-center justify-between gap-2 self-start rounded border border-l-[3px] border-border border-l-accent bg-surface-raised px-3 py-1.5 max-md:mb-0 max-md:w-auto">
-        <span className="text-xs font-bold uppercase tracking-wider text-ink">{SHELF_LABELS[category]}</span>
-        <span className="font-mono text-[0.7rem] tabular-nums text-muted">{projects.length}</span>
+    <div className="flex items-end gap-6 max-md:flex-col max-md:items-stretch max-md:gap-2">
+      <div className="mb-4 flex w-[var(--shelf-label-w)] flex-none items-baseline justify-between gap-3 self-start max-md:mb-0 max-md:w-auto">
+        <span className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-muted">{SHELF_LABELS[category]}</span>
+        <span className="text-[0.7rem] tabular-nums text-muted/60">
+          {String(projects.length).padStart(2, '0')}
+        </span>
       </div>
 
       <div className="relative min-w-0 flex-1">
-        <div aria-hidden className="absolute inset-x-0 bottom-0 h-3.5 rounded-sm" style={WOOD_STYLE} />
         <ul
-          className="thin-scrollbar relative z-[1] flex h-[220px] list-none items-end gap-3.5 overflow-x-auto px-2 pb-3.5 pt-6"
+          className="thin-scrollbar relative z-[1] flex h-[230px] list-none items-end gap-[3px] overflow-x-auto px-1 pt-6"
           style={{ scrollSnapType: 'x proximity' }}
         >
           {projects.map((project) => (
@@ -39,10 +43,11 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
               />
             </li>
           ))}
-          <li className="flex flex-none items-end gap-2 self-end">
+          <li className="ml-3 flex flex-none items-end gap-1 self-end">
             <ShelfOrnaments category={category} />
           </li>
         </ul>
+        <div aria-hidden className="absolute inset-x-0 bottom-0 h-2" style={BOARD_STYLE} />
       </div>
     </div>
   )

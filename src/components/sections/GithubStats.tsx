@@ -1,22 +1,18 @@
-import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { useEffect, useState } from 'react'
+import { motion, useReducedMotion } from 'framer-motion'
 import type { IconType } from 'react-icons'
-import { TbBrandGithub, TbCheck, TbCode, TbFlame, TbStar, TbUsers } from 'react-icons/tb'
+import { TbBrandGithub, TbCheck, TbCode, TbFlame } from 'react-icons/tb'
 import { knownLanguages } from '../../data/skills'
 import { useGithubStats } from '../../hooks/useGithubStats'
 import { useLeetCodeStats } from '../../hooks/useLeetCodeStats'
 import { getLanguageIcon } from '../../lib/languageIcons'
 import { fadeUp, viewportOnce, withMotionPreference } from '../../lib/motion'
-interface StatFrame {
-  icon: IconType
-  label: string
-  value: string | number
-}
 
-interface StatGroup {
-  key: string
-  frames: StatFrame[]
-  intervalMs: number
+interface Stat {
+  icon: IconType
+  value: string | number
+  label: string
+  /** Secondary line — the context that makes the headline number mean something. */
+  detail?: string
 }
 
 /** Resume languages first (their preferred casing), then any GitHub-detected language not already covered. */
@@ -30,55 +26,17 @@ function formatValue(value: string | number): string | number {
   return typeof value === 'number' ? value.toLocaleString('en-US') : value
 }
 
-function StatTile({ frames, intervalMs, reduced, className }: StatGroup & { reduced: boolean | null; className?: string }) {
-  const [index, setIndex] = useState(0)
-  const [paused, setPaused] = useState(false)
-
-  useEffect(() => {
-    if (frames.length <= 1 || reduced || paused) return
-    const id = setInterval(() => setIndex((i) => (i + 1) % frames.length), intervalMs)
-    return () => clearInterval(id)
-  }, [frames.length, intervalMs, reduced, paused])
-
-  const frame = frames[index]
-  const Icon = frame.icon
-
+function StatTile({ icon: Icon, value, label, detail }: Stat) {
   return (
-    <div
-      className={`relative flex min-h-[132px] flex-col items-center justify-center gap-2 overflow-hidden rounded-xl border border-border bg-surface-raised px-4 py-5 text-center ${className ?? ''}`}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-    >
-      <span className="sr-only">
-        {frames.map((f) => `${f.label}: ${formatValue(f.value)}`).join(', ')}
-      </span>
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={index}
-          initial={reduced ? false : { opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={reduced ? undefined : { opacity: 0, y: -14 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
-          className="flex flex-col items-center gap-2"
-          aria-hidden
-        >
-          <Icon className="text-accent" size={20} />
-          <span className="text-xl font-bold text-ink">{formatValue(frame.value)}</span>
-          <span className="text-xs text-muted">{frame.label}</span>
-        </motion.div>
-      </AnimatePresence>
-      {frames.length > 1 && (
-        <div className="mt-1 flex gap-1" aria-hidden>
-          {frames.map((_, i) => (
-            <span
-              key={i}
-              className={`h-1 w-1 rounded-full transition-colors duration-300 ${
-                i === index ? 'bg-accent' : 'bg-border'
-              }`}
-            />
-          ))}
+    <div className="flex flex-col gap-3 rounded-xl border border-border bg-surface-raised p-5">
+      <Icon className="text-muted" size={17} aria-hidden />
+      <div>
+        <div className="text-[1.75rem] font-semibold leading-none tracking-[-0.02em] text-ink">
+          {formatValue(value)}
         </div>
-      )}
+        <div className="mt-2 text-[0.8rem] font-medium text-ink/70">{label}</div>
+        {detail && <div className="mt-0.5 text-[0.72rem] text-muted">{detail}</div>}
+      </div>
     </div>
   )
 }
@@ -90,69 +48,73 @@ export function GithubStats() {
 
   if (!stats) return null
 
-  const githubFrames: StatFrame[] = [
-    { icon: TbBrandGithub, label: 'Public repos', value: stats.publicRepos },
-    { icon: TbStar, label: 'Stars earned', value: stats.totalStars },
-    { icon: TbUsers, label: 'Followers', value: stats.followers },
+  const languages = mergeLanguages(knownLanguages, stats.allLanguages)
+
+  const tiles: Stat[] = [
+    {
+      icon: TbBrandGithub,
+      value: stats.publicRepos,
+      label: 'Public repositories',
+      detail:
+        stats.totalContributions != null
+          ? `${stats.totalContributions.toLocaleString('en-US')} all-time contributions`
+          : undefined,
+    },
   ]
-  if (stats.totalContributions != null) {
-    githubFrames.push({ icon: TbCode, label: 'All-time contributions', value: stats.totalContributions })
+
+  if (leetcode) {
+    tiles.push({
+      icon: TbCheck,
+      value: leetcode.totalSolved,
+      label: 'LeetCode problems solved',
+      detail: `across ${leetcode.totalSubmissions.toLocaleString('en-US')} submissions`,
+    })
   }
 
-  const languages = mergeLanguages(knownLanguages, stats.allLanguages)
-  const languageFrames: StatFrame[] = languages.map((lang) => ({
-    icon: getLanguageIcon(lang),
-    label: 'Language',
-    value: lang,
-  }))
+  if (stats.longestStreak != null) {
+    tiles.push({
+      icon: TbFlame,
+      value: stats.longestStreak,
+      label: 'Longest commit streak',
+      detail: stats.currentStreak != null ? `${stats.currentStreak} days running now` : undefined,
+    })
+  }
 
-  const leetcodeFrames: StatFrame[] = leetcode
-    ? [
-        { icon: TbCode, label: 'LeetCode submissions', value: leetcode.totalSubmissions },
-        { icon: TbCheck, label: 'Problems solved', value: leetcode.totalSolved },
-      ]
-    : []
-
-  const streakFrames: StatFrame[] =
-    stats.currentStreak != null && stats.longestStreak != null
-      ? [
-          { icon: TbFlame, label: 'Day streak', value: stats.currentStreak },
-          { icon: TbFlame, label: 'Best streak', value: stats.longestStreak },
-        ]
-      : []
-
-  const groups: StatGroup[] = [
-    { key: 'github', frames: githubFrames, intervalMs: 2600 },
-    { key: 'languages', frames: languageFrames, intervalMs: 2000 },
-    { key: 'leetcode', frames: leetcodeFrames, intervalMs: 3200 },
-    { key: 'streak', frames: streakFrames, intervalMs: 2800 },
-  ].filter((group) => group.frames.length > 0)
-
-  const colsClass =
-    { 4: 'sm:grid-cols-4', 3: 'sm:grid-cols-3', 2: 'sm:grid-cols-2' }[groups.length] ?? 'sm:grid-cols-2'
-  // The 4th tile (streak) depends on a couple of live APIs, one of them a slow-to-cold-start
-  // free host — if it doesn't answer in time, the grid can still land on an odd count. Rather
-  // than hope every fetch lands, make the last tile span the full mobile row whenever the count
-  // is odd, so the 2-column layout never leaves a lone card dangling next to empty space.
-  const isOdd = groups.length % 2 === 1
+  tiles.push({
+    icon: TbCode,
+    value: languages.length,
+    label: 'Languages shipped',
+    detail: languages.slice(0, 3).join(' · '),
+  })
 
   return (
     <motion.div
-      className={`mt-10 grid w-full grid-cols-2 gap-4 ${colsClass}`}
+      className="mt-10 w-full"
       initial="hidden"
       whileInView="visible"
       viewport={viewportOnce}
       variants={withMotionPreference(fadeUp, reduced)}
     >
-      {groups.map((group, i) => (
-        <StatTile
-          key={group.key}
-          frames={group.frames}
-          intervalMs={group.intervalMs}
-          reduced={reduced}
-          className={isOdd && i === groups.length - 1 ? 'col-span-2 sm:col-span-1' : undefined}
-        />
-      ))}
+      <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+        {tiles.map((tile) => (
+          <StatTile key={tile.label} {...tile} />
+        ))}
+      </div>
+
+      <ul className="mt-3 flex list-none flex-wrap gap-1.5 p-0">
+        {languages.map((lang) => {
+          const LangIcon = getLanguageIcon(lang)
+          return (
+            <li
+              key={lang}
+              className="flex items-center gap-1.5 rounded-full border border-border px-2.5 py-1 text-[0.72rem] text-muted"
+            >
+              <LangIcon size={12} aria-hidden />
+              {lang}
+            </li>
+          )
+        })}
+      </ul>
     </motion.div>
   )
 }

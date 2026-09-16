@@ -69,7 +69,7 @@ function idlePreset(kind: IdleKind): { animate: Record<string, (number | string)
         animate: {
           filter: [
             'drop-shadow(0 0 0px rgba(255,255,255,0))',
-            'drop-shadow(0 0 6px rgba(255,255,255,0.85))',
+            'drop-shadow(0 0 4px rgba(255,255,255,0.35))',
             'drop-shadow(0 0 0px rgba(255,255,255,0))',
           ],
         },
@@ -116,13 +116,13 @@ function OrnamentPiece({ ornament }: { ornament: Ornament }) {
         type="button"
         onClick={poke}
         aria-label={`Poke ${label}`}
-        className="flex h-11 w-11 items-center justify-center rounded-lg text-ink/50 transition-colors [-webkit-tap-highlight-color:transparent] hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-ink focus-visible:outline-offset-2"
+        className="flex h-9 w-9 items-center justify-center rounded text-foil/35 transition-colors [-webkit-tap-highlight-color:transparent] hover:text-foil/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         animate={reduced ? undefined : preset.animate}
         transition={reduced ? undefined : preset.transition}
         whileHover={reduced ? undefined : { scale: 1.18 }}
         whileTap={reduced ? undefined : { scale: 0.9 }}
       >
-        <Icon size={26} aria-hidden className={poked && !reduced ? 'animate-jello' : ''} />
+        <Icon size={19} aria-hidden className={poked && !reduced ? 'animate-jello' : ''} />
       </motion.button>
 
       <AnimatePresence>

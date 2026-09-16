@@ -2,14 +2,10 @@ import type { IconType } from 'react-icons'
 import { TbBrandApple, TbBrandReactNative, TbDeviceGamepad2Filled, TbDeviceMobileFilled, TbFlaskFilled } from 'react-icons/tb'
 import type { ShelfCategory } from '../data/projects'
 
-/** Tailwind gradient stop classes per shelf category — spines, monogram chips, and other project badges share this so the color language stays consistent between the bookshelf and the list view. */
-export const CAT_GRADIENT: Record<ShelfCategory, string> = {
-  games: 'from-accent to-accent-deep',
-  apps: 'from-cat-apps to-cat-apps-deep',
-  mac: 'from-cat-mac to-cat-mac-deep',
-  native: 'from-cat-native to-cat-native-deep',
-  exp: 'from-cat-exp to-cat-exp-deep',
-}
+/** Book-cloth tones. Four flat graphite shades assigned by spine identity, not category —
+ *  a shelf should read as a run of related volumes. Category is carried by the shelf label
+ *  and the foil glyph instead, so the palette never turns into a color key. */
+export const CLOTH = ['bg-cloth-1', 'bg-cloth-2', 'bg-cloth-3', 'bg-cloth-4'] as const
 
 /** Small foil-stamp glyph per category, embossed near the base of each book spine. */
 export const CATEGORY_ICON: Record<ShelfCategory, IconType> = {

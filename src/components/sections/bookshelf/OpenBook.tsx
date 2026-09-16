@@ -3,7 +3,7 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbBrandGithub, TbX } from 'react-icons/tb'
 import type { Project } from '../../../data/projects'
 import { SHELF_LABELS } from '../../../data/projects'
-import { BADGE_BG, CAT_GRADIENT, PLACEHOLDER_BG } from '../../../lib/projectStyles'
+import { BADGE_BG, PLACEHOLDER_BG } from '../../../lib/projectStyles'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
 import { Chip } from '../../shared/Chip'
 import { CtaLink } from '../../shared/CtaLink'
@@ -103,14 +103,16 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
             ) : (
               <div
                 aria-hidden
-                className={`flex h-12 w-12 items-center justify-center rounded-full bg-gradient-to-br text-xl font-bold text-white ${CAT_GRADIENT[project.category]}`}
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface-raised text-xl font-semibold text-ink"
               >
                 {project.name.charAt(0)}
               </div>
             )}
 
-            <p className="mt-4 text-xs font-bold uppercase tracking-wider text-accent">{SHELF_LABELS[project.category]}</p>
-            <h2 id={titleId} className="mt-1 text-2xl font-bold text-ink md:text-3xl">
+            <p className="mt-5 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted">
+              {SHELF_LABELS[project.category]}
+            </p>
+            <h2 id={titleId} className="mt-2 text-2xl font-semibold tracking-[-0.01em] text-ink md:text-[1.75rem]">
               {project.name}
             </h2>
 
@@ -153,7 +155,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           <section className="thin-scrollbar flex-1 overflow-y-auto p-6 md:p-8">
             {project.kind === 'gallery' ? (
               <>
-                <p className="mb-3 text-xs font-bold uppercase tracking-wider text-muted">Screens</p>
+                <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted">Screens</p>
                 {project.variant === 'app' ? (
                   <div className="relative mx-auto aspect-[9/19] w-40 overflow-hidden rounded-[1.75rem] border-4 border-white/10 bg-black shadow-card sm:w-48">
                     <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="contain" />
