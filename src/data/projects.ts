@@ -316,15 +316,21 @@ export const projects: Project[] = [
   },
   {
     kind: "gallery",
-    name: "Chat App",
+    name: "Kimu-The_chatting_app",
     category: "exp",
     description:
       "Built a real-time chat application enabling seamless user communication.",
     tech: [],
-    logoSrc: "/assets/projects/clogo.jpg",
-    spineLogo: "/assets/projects/clogo.jpg",
-    images: ["/assets/projects/screenshot-12.png"],
-    githubUrl: "https://github.com/apurvamukherjee/chat-app",
+    logoSrc: "/assets/projects/kimu/logo.png",
+    spineLogo: "/assets/projects/kimu/logo.png",
+    images: [
+      "/assets/projects/kimu/chat-light.png",
+      "/assets/projects/kimu/chat-dark.png",
+      "/assets/projects/kimu/mobile-chat.png",
+      "/assets/projects/kimu/features-light.png",
+      "/assets/projects/kimu/login-light.png",
+    ],
+    githubUrl: "https://github.com/apurvamukherjee/Kimu-The_chatting_app",
     liveUrl: "https://chat-app-alpha-ivory-12.vercel.app/",
   },
   {
