@@ -316,7 +316,7 @@ export const projects: Project[] = [
   },
   {
     kind: "gallery",
-    name: "Kimu-The_chatting_app",
+    name: "Kimu",
     category: "exp",
     description:
       "Built a real-time chat application enabling seamless user communication.",
