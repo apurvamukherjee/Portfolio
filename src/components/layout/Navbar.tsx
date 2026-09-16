@@ -18,7 +18,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
   const activeId = useScrollSpy(navLinks.map((l) => l.id))
   const introDone = useIntro()
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <>

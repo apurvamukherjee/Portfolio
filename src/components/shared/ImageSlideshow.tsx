@@ -12,7 +12,7 @@ interface ImageSlideshowProps {
 export function ImageSlideshow({ images, alt, className = '', intervalMs = 2200, fit = 'cover' }: ImageSlideshowProps) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const hasMultiple = images.length > 1
 
   useEffect(() => {

@@ -4,7 +4,7 @@ import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
 export function Skills() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <section id="skills" className="w-full px-6 py-24 md:px-16">

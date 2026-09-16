@@ -4,7 +4,7 @@ import { SectionHeading } from '../shared/SectionHeading'
 import { LeadershipCard } from './LeadershipCard'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
 export function Leadership() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <section id="leadership" className="w-full px-6 py-24 md:px-16">

@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { readCache, writeCache } from '../lib/localCache'
+import { useCachedStats } from '../lib/localCache'
 
 const LEETCODE_USERNAME = 'apurvamukherjee'
 const CACHE_KEY = 'portfolio-leetcode-stats-cache'
@@ -41,27 +40,5 @@ async function fetchStats(): Promise<LeetCodeStats> {
 
 /** Client-side LeetCode stats via an unofficial public API, cached in localStorage for an hour. Never fabricates numbers — falls back to cache or nothing on failure (the upstream host can cold-start slowly). */
 export function useLeetCodeStats(): LeetCodeStats | null {
-  const [stats, setStats] = useState<LeetCodeStats | null>(() => readCache(CACHE_KEY, isValidStats)?.stats ?? null)
-
-  useEffect(() => {
-    const cached = readCache(CACHE_KEY, isValidStats)
-    if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) return
-
-    let cancelled = false
-    fetchStats()
-      .then((fresh) => {
-        if (cancelled) return
-        setStats(fresh)
-        writeCache(CACHE_KEY, fresh)
-      })
-      .catch(() => {
-        // Network error, timeout, or cold-start failure — keep showing whatever was already cached, if anything.
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  return stats
+  return useCachedStats({ key: CACHE_KEY, ttlMs: CACHE_TTL_MS, isValid: isValidStats, fetchStats })
 }

@@ -19,7 +19,7 @@ const PROMPT = 'guest@apurva-portfolio:~$'
 let lineId = 0
 
 export function Terminal({ open, onClose }: TerminalProps) {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const [transcript, setTranscript] = useState<TranscriptLine[]>([])
   const [input, setInput] = useState('')
   const [history, setHistory] = useState<string[]>([])

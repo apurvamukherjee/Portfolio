@@ -30,7 +30,7 @@ function formatValue(value: string | number): string | number {
   return typeof value === 'number' ? value.toLocaleString('en-US') : value
 }
 
-function StatTile({ frames, intervalMs, reduced, className }: StatGroup & { reduced: boolean; className?: string }) {
+function StatTile({ frames, intervalMs, reduced, className }: StatGroup & { reduced: boolean | null; className?: string }) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
 
@@ -84,7 +84,7 @@ function StatTile({ frames, intervalMs, reduced, className }: StatGroup & { redu
 }
 
 export function GithubStats() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const stats = useGithubStats()
   const leetcode = useLeetCodeStats()
 

@@ -22,5 +22,7 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"]
+  "include": ["src"],
+  // Node-only self-check, run via `npx tsx`; excluded so the browser build needs no @types/node.
+  "exclude": ["src/**/*.selfcheck.ts"]
 }

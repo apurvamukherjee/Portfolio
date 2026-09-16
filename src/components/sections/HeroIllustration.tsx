@@ -41,7 +41,7 @@ const WOBBLE_LABEL: Record<Exclude<Wobble, 'none'>, string> = {
 
 /** Minimal laptop/terminal mockup — idle float, cursor-parallax tilt, cycling snippets, clickable traffic lights. */
 export function HeroIllustration() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)

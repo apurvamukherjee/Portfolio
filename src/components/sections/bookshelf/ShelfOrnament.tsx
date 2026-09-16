@@ -90,7 +90,7 @@ export function ShelfOrnaments({ category }: ShelfOrnamentsProps) {
 
 function OrnamentPiece({ ornament }: { ornament: Ornament }) {
   const { Icon, label, quip, idle } = ornament
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const [poked, setPoked] = useState(false)
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const preset = idlePreset(idle)

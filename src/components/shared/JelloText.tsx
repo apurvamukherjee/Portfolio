@@ -6,7 +6,7 @@ interface JelloTextProps {
 
 /** Splits text into per-letter spans with the hero's squash/stretch hover effect. Wraps only between words. */
 export function JelloText({ text, className = '' }: JelloTextProps) {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const words = text.split(' ')
 
   return (

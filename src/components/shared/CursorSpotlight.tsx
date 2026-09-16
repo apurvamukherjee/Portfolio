@@ -34,7 +34,7 @@ let rippleId = 0
  * triggers a React re-render on mousemove either — only clicks (for ripples) touch state.
  */
 export function CursorSpotlight() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const fine = useFinePointer()
   const active = fine && !reduced
   const [ripples, setRipples] = useState<Ripple[]>([])

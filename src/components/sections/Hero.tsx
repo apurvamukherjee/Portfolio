@@ -24,7 +24,7 @@ function readEggDiscovered(): boolean {
 }
 
 export function Hero() {
-  const reduced = useReducedMotion() ?? false;
+  const reduced = useReducedMotion();
   const introDone = useIntro();
   const item = withMotionPreference(fadeUp, reduced);
   const [eggDiscovered, setEggDiscovered] = useState(readEggDiscovered);

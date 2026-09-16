@@ -7,7 +7,7 @@ import { Chip } from '../shared/Chip'
 import { ExperienceNode } from './ExperienceNode'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
 export function Experience() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const timelineRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: timelineRef, offset: ['start 0.8', 'end 0.3'] })
   const progress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })

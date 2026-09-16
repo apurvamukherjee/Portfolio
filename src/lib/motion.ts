@@ -16,7 +16,7 @@ export const fadeIn: Variants = {
 }
 
 /** Degrades any movement-based variant to a fade-only equivalent under prefers-reduced-motion. */
-export function withMotionPreference(variant: Variants, reduced: boolean): Variants {
+export function withMotionPreference(variant: Variants, reduced: boolean | null): Variants {
   if (!reduced) return variant
   return fadeIn
 }

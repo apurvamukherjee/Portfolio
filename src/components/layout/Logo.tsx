@@ -4,7 +4,7 @@ import { useReducedMotion } from 'framer-motion'
 export function Logo() {
   const [playCount, setPlayCount] = useState(0)
   const [showHey, setShowHey] = useState(false)
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   const play = () => {
     setPlayCount((c) => c + 1)

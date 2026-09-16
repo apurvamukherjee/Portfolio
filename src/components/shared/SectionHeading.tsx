@@ -6,7 +6,7 @@ interface SectionHeadingProps {
 }
 
 export function SectionHeading({ tag, as: As = 'h2' }: SectionHeadingProps) {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <motion.div

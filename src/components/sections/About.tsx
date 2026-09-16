@@ -9,7 +9,7 @@ import {
   withMotionPreference,
 } from "../../lib/motion";
 export function About() {
-  const reduced = useReducedMotion() ?? false;
+  const reduced = useReducedMotion();
 
   return (
     <section id="about" className="w-full px-6 py-24 md:px-16">

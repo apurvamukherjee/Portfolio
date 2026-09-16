@@ -12,7 +12,7 @@ import { useIsScrolling } from '../../hooks/useIsScrolling'
 export function FloatingResumeButton() {
   const [stamped, setStamped] = useState(false)
   const isScrolling = useIsScrolling()
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   return (
     <motion.a

@@ -1,5 +1,4 @@
-import { useEffect, useState } from 'react'
-import { readCache, writeCache } from '../lib/localCache'
+import { useCachedStats } from '../lib/localCache'
 
 const GITHUB_USERNAME = 'apurvamukherjee'
 // Bumping this version invalidates any cache written by an older shape of GithubStats —
@@ -138,27 +137,5 @@ async function fetchStats(): Promise<GithubStats> {
 
 /** Client-side GitHub stats, cached in localStorage for an hour so repeat visits are instant and stay under the unauthenticated rate limit. Never fabricates numbers — falls back to cache or nothing on failure. */
 export function useGithubStats(): GithubStats | null {
-  const [stats, setStats] = useState<GithubStats | null>(() => readCache(CACHE_KEY, isValidStats)?.stats ?? null)
-
-  useEffect(() => {
-    const cached = readCache(CACHE_KEY, isValidStats)
-    if (cached && Date.now() - cached.fetchedAt < CACHE_TTL_MS) return
-
-    let cancelled = false
-    fetchStats()
-      .then((fresh) => {
-        if (cancelled) return
-        setStats(fresh)
-        writeCache(CACHE_KEY, fresh)
-      })
-      .catch(() => {
-        // Network error or rate-limited — keep showing whatever was already cached, if anything.
-      })
-
-    return () => {
-      cancelled = true
-    }
-  }, [])
-
-  return stats
+  return useCachedStats({ key: CACHE_KEY, ttlMs: CACHE_TTL_MS, isValid: isValidStats, fetchStats })
 }

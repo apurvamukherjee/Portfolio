@@ -14,7 +14,7 @@ interface GradientSweepCardProps {
  */
 export function GradientSweepCard({ children, className = '', tilt = true }: GradientSweepCardProps) {
   const ref = useRef<HTMLDivElement>(null)
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const active = tilt && !reduced
 
   const x = useMotionValue(0)

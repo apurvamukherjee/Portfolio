@@ -13,7 +13,7 @@ const supportsViewTransition = typeof document !== 'undefined' && 'startViewTran
 
 export function ThemeToggle({ theme, onToggle }: ThemeToggleProps) {
   const isDark = theme === 'dark'
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
 
   function handleClick(e: MouseEvent<HTMLButtonElement>) {
     if (reduced || !supportsViewTransition) {

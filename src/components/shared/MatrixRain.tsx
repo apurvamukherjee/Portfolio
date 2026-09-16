@@ -17,7 +17,7 @@ interface MatrixRainProps {
  */
 export function MatrixRain({ theme }: MatrixRainProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const active = theme === 'dark' && !reduced
 
   useEffect(() => {

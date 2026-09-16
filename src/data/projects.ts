@@ -12,7 +12,7 @@ export const SHELF_ORDER: ShelfCategory[] = ["games", "apps", "native", "exp"];
 export const SHELF_LABELS: Record<ShelfCategory, string> = {
   games: "Multiplayer & Games",
   apps: "Offline-First Apps",
-  native: "React Native",
+  native: "Native Apps",
   exp: "Early Experiments",
 };
 
@@ -235,6 +235,33 @@ export const projects: Project[] = [
       "/assets/projects/zenith.jpeg",
       "/assets/projects/zenith1.jpeg",
       "/assets/projects/zenith3.jpeg",
+    ],
+  },
+  {
+    kind: "gallery",
+    variant: "web",
+    name: "Visor",
+    category: "native",
+    spineLogo: "/assets/projects/logos/visor.png",
+    description:
+      "Turns the MacBook notch into a Dynamic Island — built in 26 hours. Hover the dead black bar and it grows into now playing, your day's agenda, and battery; move away and it collapses back into the hardware cutout. Includes a <strong>vinyl mode</strong> with a physically-modelled tonearm, and a screenshot catcher that holds every capture for a minute so you can drag it straight into Slack or Figma. Idles at <strong>0.0% CPU</strong> while playing music.",
+    descriptionIsHtml: true,
+    tech: ["Swift 6", "SwiftUI", "AppKit", "Core Animation", "EventKit", "ImageIO", "XcodeGen"],
+    githubUrl: "https://github.com/apurvamukherjee/Visor--The-Mac-Island",
+    caseStudy: {
+      problem:
+        "An always-on overlay welded to the notch has to animate constantly and still cost nothing — a menu-bar widget that drains battery is worse than no widget. The naive SwiftUI implementation of just four bouncing playback bars burned 5% CPU, because animating frame(height:) re-runs the view graph every single frame.",
+      approach:
+        "Event-driven only — no polling loops, no global mouse monitors — and nothing animates or ticks when it is off-screen, paused, or the display is asleep. The playback bars moved to CALayer + CABasicAnimation, handed to the render server once so the main thread pays nothing. Artwork is decoded once per track and downsampled with ImageIO, accessibility settings are cached instead of round-tripping to the accessibility server from a view body, and the store diffs before it writes so constant position updates re-render nothing. Architecture is one store, one shape, and a service per feature, with features never importing each other; Reduce Motion is honoured everywhere, including mid-track.",
+      impact:
+        "0.0% idle CPU while playing — measured with `sample` against a real track, not a target. Ships as a signed .dmg with one dependency and 10 test suites covering notch geometry, album colour extraction, calendar mapping, and store behaviour.",
+    },
+    images: [
+      "/assets/projects/visor/expanded.png",
+      "/assets/projects/visor/compact.png",
+      "/assets/projects/visor/agenda.png",
+      "/assets/projects/visor/vinyl.png",
+      "/assets/projects/visor/screenshot-catch.png",
     ],
   },
   {

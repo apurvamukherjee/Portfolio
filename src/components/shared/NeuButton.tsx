@@ -9,7 +9,7 @@ interface NeuButtonProps {
 
 /** Neubrutalist offset-shadow button (the "Let's Talk!" hero CTA) with a subtle magnetic hover pull. */
 export function NeuButton({ href, children, className = '' }: NeuButtonProps) {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const { ref, x, y, onMouseMove, onMouseLeave } = useMagnetic<HTMLAnchorElement>(0.2)
 
   return (

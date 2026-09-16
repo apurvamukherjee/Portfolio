@@ -22,7 +22,7 @@ function loadView(): ProjectsView {
 }
 
 export function Projects() {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const [view, setView] = useState<ProjectsView>(loadView)
 
   useEffect(() => {

@@ -14,7 +14,7 @@ interface CommandPaletteProps {
 }
 
 export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandPaletteProps) {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)

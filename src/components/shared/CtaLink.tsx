@@ -9,7 +9,7 @@ interface CtaLinkProps {
 
 /** Solid accent pill link with a sliding arrow — "Live view", etc. Always visible, no hover-reveal gimmick. */
 export function CtaLink({ href, children, className = '' }: CtaLinkProps) {
-  const reduced = useReducedMotion() ?? false
+  const reduced = useReducedMotion()
   const { ref, x, y, onMouseMove, onMouseLeave } = useMagnetic<HTMLAnchorElement>(0.15)
 
   return (
