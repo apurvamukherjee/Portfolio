@@ -71,12 +71,13 @@ export function GithubStats() {
     })
   }
 
-  if (stats.longestStreak != null) {
+  if (leetcode?.activeDays != null) {
     tiles.push({
       icon: TbFlame,
-      value: stats.longestStreak,
-      label: 'Longest commit streak',
-      detail: stats.currentStreak != null ? `${stats.currentStreak} days running now` : undefined,
+      value: leetcode.activeDays,
+      label: 'Days solving problems',
+      detail:
+        stats.longestStreak != null ? `${stats.longestStreak}-day best commit streak` : undefined,
     })
   }
 
