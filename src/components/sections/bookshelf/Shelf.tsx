@@ -29,7 +29,7 @@ const BOARD_STYLE = {
  *  overflow-hidden, so a glow drawn inside it would never reach past the spine edge. */
 const GLOW_STYLE = {
   background:
-    'radial-gradient(60% 55% at 50% 78%, color-mix(in srgb, var(--color-accent) 42%, transparent) 0%, transparent 70%)',
+    'radial-gradient(58% 52% at 50% 72%, color-mix(in srgb, var(--color-accent) 85%, transparent) 0%, color-mix(in srgb, var(--color-accent) 30%, transparent) 45%, transparent 72%)',
 }
 
 export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
@@ -48,10 +48,10 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
           style={{ ...BOARD_STYLE, '--shelf-row-h': `${ROW_H}px` } as CSSProperties}
         >
           {projects.map((project) => (
-            <li key={project.name} className="group/book relative isolate flex h-[var(--shelf-row-h)] flex-none items-end">
+            <li key={project.name} className="group/book relative flex h-[var(--shelf-row-h)] flex-none items-end">
               <span
                 aria-hidden
-                className="pointer-events-none absolute inset-x-[-14px] bottom-0 top-[-10px] -z-[1] rounded-[10px] opacity-0 blur-[14px] transition-opacity duration-300 group-hover/book:opacity-100 group-focus-within/book:opacity-100"
+                className="pointer-events-none absolute inset-x-[-18px] bottom-[-6px] top-[-14px] rounded-[12px] opacity-0 blur-[16px] transition-opacity duration-300 group-hover/book:opacity-100 group-focus-within/book:opacity-100"
                 style={GLOW_STYLE}
               />
               <Book

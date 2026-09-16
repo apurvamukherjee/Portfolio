@@ -96,7 +96,7 @@ export function Book({ project, shelfSize, hidden, onOpen }: BookProps) {
       onClick={onOpen}
       aria-label={`Open ${project.name}`}
       style={{ height, width }}
-      className="group relative flex-none touch-manipulation snap-start overflow-hidden rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.45)] [-webkit-tap-highlight-color:transparent] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+      className="group relative z-10 flex-none touch-manipulation snap-start overflow-hidden rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.45)] [-webkit-tap-highlight-color:transparent] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
       whileHover={!reduced && fine ? lifted : undefined}
       whileFocus={!reduced ? lifted : undefined}
       whileTap={!reduced ? { y: motionChar.lift / 2, scale: 0.99 } : undefined}

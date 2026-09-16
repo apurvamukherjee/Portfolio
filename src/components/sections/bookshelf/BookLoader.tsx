@@ -25,10 +25,15 @@ export function BookLoader({ project }: BookLoaderProps) {
     <motion.div
       aria-hidden
       className="pointer-events-none absolute inset-0 z-[2] overflow-hidden bg-cloth-2"
-      style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden' }}
+      style={{ transformOrigin: 'left center', backfaceVisibility: 'hidden', transformStyle: 'preserve-3d' }}
       initial={{ opacity: 1, rotateY: 0 }}
-      exit={{ opacity: 0, rotateY: -28 }}
-      transition={{ duration: 0.24 }}
+      /* Swings most of the way open before it goes: a real board clears ~100°, and holding
+         opacity until the last third stops the whole thing reading as a cross-fade. */
+      exit={{ opacity: 0, rotateY: -105 }}
+      transition={{
+        rotateY: { type: 'spring', stiffness: 170, damping: 24 },
+        opacity: { duration: 0.22, delay: 0.2 },
+      }}
     >
       <div
         aria-hidden
@@ -44,6 +49,29 @@ export function BookLoader({ project }: BookLoaderProps) {
         aria-hidden
         className="absolute inset-y-0 left-0 w-10"
         style={{ backgroundImage: 'linear-gradient(90deg, rgba(0,0,0,0.5), transparent)' }}
+      />
+
+      {/* Fore-edge: the stack of leaves at the opening edge, visible as the board swings. */}
+      <div
+        aria-hidden
+        className="absolute inset-y-[3px] right-0 w-[6px]"
+        style={{
+          backgroundImage:
+            'repeating-linear-gradient(0deg, rgba(0,0,0,0.22) 0 1px, rgba(255,255,255,0.10) 1px 2px)',
+        }}
+      />
+
+      {/* Specular sweep travelling across the cloth as the board turns toward the light. */}
+      <motion.div
+        aria-hidden
+        className="absolute inset-0"
+        style={{
+          backgroundImage:
+            'linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.13) 50%, transparent 70%)',
+        }}
+        initial={{ x: '-60%', opacity: 0 }}
+        exit={{ x: '60%', opacity: 1 }}
+        transition={{ duration: 0.42, ease: 'easeOut' }}
       />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-8 text-center">

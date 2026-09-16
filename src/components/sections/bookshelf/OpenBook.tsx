@@ -41,7 +41,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
     // fuzzy and its real-world timing varies across browsers/devices, which left the loader cover
     // visible a few hundred ms longer than intended in some engines (Firefox would briefly composite
     // a stale frame of it as a ghost). A flat delay tuned to the spring below is fully deterministic.
-    const id = setTimeout(() => setSettled(true), 520)
+    const id = setTimeout(() => setSettled(true), 560)
     return () => clearTimeout(id)
   }, [reduced])
 
@@ -61,14 +61,15 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
       exit={{ opacity: 0 }}
       transition={{ duration: reduced ? 0.12 : 0.25 }}
     >
-      <div aria-hidden className="absolute inset-0 bg-black/60" onClick={onClose} />
+      {/* Opacity is already animated by the parent overlay; this only adds the blur. */}
+      <div aria-hidden className="absolute inset-0 bg-black/60 md:backdrop-blur-sm" onClick={onClose} />
 
       <motion.div
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         layoutId={reduced ? undefined : `book-${project.name}`}
-        transition={reduced ? { duration: 0.15 } : { type: 'spring', stiffness: 300, damping: 32 }}
+        transition={reduced ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 30, mass: 0.9 }}
         className="relative flex h-full w-full flex-col overflow-hidden bg-surface shadow-card md:h-[min(600px,86vh)] md:w-[min(920px,92vw)] md:rounded-2xl md:border md:border-border"
         style={{ perspective: 1600 }}
       >
@@ -86,9 +87,9 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
 
         <motion.div
           className="thin-scrollbar relative z-[1] flex h-full min-h-0 flex-col overflow-y-auto md:flex-row md:overflow-hidden"
-          initial={{ opacity: reduced ? 1 : 0 }}
-          animate={{ opacity: settled ? 1 : 0 }}
-          transition={{ duration: 0.28, delay: settled ? 0.05 : 0 }}
+          initial={{ opacity: reduced ? 1 : 0, y: reduced ? 0 : 8 }}
+          animate={{ opacity: settled ? 1 : 0, y: settled ? 0 : 8 }}
+          transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1], delay: settled ? 0.04 : 0 }}
         >
           <section className="thin-scrollbar flex-1 overflow-y-auto border-b border-border p-6 pt-14 md:border-b-0 md:border-r md:p-8 md:pt-8">
             {project.kind === 'placeholder' ? (
