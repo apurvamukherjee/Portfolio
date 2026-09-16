@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { TbX } from 'react-icons/tb'
 import { runTerminalCommand } from '../../data/terminalCommands'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
+import { appleEase, iosSpringSoft } from '../../lib/motion'
 interface TerminalProps {
   open: boolean
   onClose: () => void
@@ -17,6 +17,27 @@ interface TranscriptLine {
 const PROMPT = 'guest@apurva-portfolio:~$'
 
 let lineId = 0
+
+/**
+ * macOS traffic lights. Real ones hide their glyphs until the window group is hovered, which is
+ * why this reads as a title bar rather than three coloured dots.
+ */
+function TrafficLights({ onClose }: { onClose: () => void }) {
+  return (
+    <div className="group/lights flex shrink-0 items-center gap-2">
+      <button
+        type="button"
+        aria-label="Close terminal"
+        onClick={onClose}
+        className="flex h-3 w-3 items-center justify-center rounded-full bg-[#ff5f57] text-[7px] font-bold leading-none text-black/60 transition-transform active:scale-90"
+      >
+        <span className="opacity-0 transition-opacity group-hover/lights:opacity-100">×</span>
+      </button>
+      <span aria-hidden className="h-3 w-3 rounded-full bg-[#febc2e]" />
+      <span aria-hidden className="h-3 w-3 rounded-full bg-[#28c840]" />
+    </div>
+  )
+}
 
 export function Terminal({ open, onClose }: TerminalProps) {
   const reduced = useReducedMotion()
@@ -102,47 +123,54 @@ export function Terminal({ open, onClose }: TerminalProps) {
     <AnimatePresence>
       {open && (
         <motion.div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70 p-4"
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4 backdrop-blur-md"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: 0.15 }}
+          transition={{ duration: 0.2, ease: appleEase }}
           onClick={onClose}
         >
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="Hidden terminal"
-            className="flex h-[min(70dvh,32rem)] w-full max-w-2xl flex-col overflow-hidden rounded-lg border border-accent-deep bg-black font-mono text-sm text-accent shadow-card"
-            initial={reduced ? { opacity: 0 } : { opacity: 0, scaleY: 0.85 }}
-            animate={reduced ? { opacity: 1 } : { opacity: 1, scaleY: 1 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, scaleY: 0.9 }}
-            transition={{ duration: 0.25, ease: 'easeOut' }}
+            className="window-chrome flex h-[min(70dvh,32rem)] w-full max-w-2xl flex-col overflow-hidden rounded-xl border border-white/10 bg-black/85 font-mono text-sm text-accent vibrancy"
+            initial={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.92, y: 12 }}
+            animate={reduced ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0 }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, scale: 0.96, y: 8 }}
+            transition={reduced ? { duration: 0.15 } : iosSpringSoft}
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between gap-3 border-b border-accent-deep/60 px-4 py-2 text-xs text-accent/70">
-              <span className="min-w-0 truncate">{PROMPT}</span>
-              <button
-                type="button"
-                aria-label="Close terminal"
-                onClick={onClose}
-                className="text-accent/70 transition-colors hover:text-accent"
-              >
-                <TbX size={16} />
-              </button>
+            <div className="relative flex items-center gap-3 border-b border-white/10 bg-white/[0.06] px-4 py-2.5">
+              <TrafficLights onClose={onClose} />
+              <span className="pointer-events-none absolute inset-x-0 truncate text-center text-xs font-semibold text-muted">
+                guest — zsh — 80×24
+              </span>
             </div>
 
-            <div ref={scrollRef} className="flex-1 overflow-y-auto px-4 py-3">
+            <div ref={scrollRef} className="thin-scrollbar flex-1 overflow-y-auto px-4 py-3 leading-relaxed">
               {transcript.map((line) => (
-                <div key={line.id} className={`whitespace-pre-wrap ${line.type === 'input' ? 'text-accent' : 'text-accent/70'}`}>
-                  {line.type === 'input' ? `${PROMPT} ${line.text}` : line.text}
-                </div>
+                <motion.div
+                  key={line.id}
+                  initial={reduced ? false : { opacity: 0, y: 2 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.18, ease: appleEase }}
+                  className="whitespace-pre-wrap"
+                >
+                  {line.type === 'input' ? (
+                    <>
+                      <span className="text-[#28c840]">{PROMPT}</span> <span className="text-white/90">{line.text}</span>
+                    </>
+                  ) : (
+                    <span className="text-white/65">{line.text}</span>
+                  )}
+                </motion.div>
               ))}
             </div>
 
-            <div className="flex items-center gap-2 border-t border-accent-deep/60 px-4 py-3">
-              <span className="hidden shrink-0 text-accent sm:inline">{PROMPT}</span>
-              <span className="shrink-0 text-accent sm:hidden">$</span>
+            <div className="flex items-center gap-2 border-t border-white/10 px-4 py-3">
+              <span className="hidden shrink-0 text-[#28c840] sm:inline">{PROMPT}</span>
+              <span className="shrink-0 text-[#28c840] sm:hidden">$</span>
               <input
                 ref={inputRef}
                 value={input}
@@ -153,7 +181,7 @@ export function Terminal({ open, onClose }: TerminalProps) {
                 autoCapitalize="off"
                 autoCorrect="off"
                 aria-label="Terminal input"
-                className="w-full bg-transparent text-base text-accent outline-none"
+                className="w-full bg-transparent text-base text-white/90 caret-[#28c840] outline-none"
               />
             </div>
           </motion.div>

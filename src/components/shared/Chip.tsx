@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react'
 import { motion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 
 interface ChipProps {
   children: ReactNode
@@ -19,7 +20,8 @@ export function Chip({ children, variant = 'tech', dot = false, className = '' }
   return (
     <motion.span
       whileHover={{ scale: 1.06 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+      whileTap={{ scale: 0.96 }}
+      transition={iosSpring}
       className={`inline-flex items-center gap-2 whitespace-nowrap rounded-full px-3.5 py-1.5 font-mono text-xs font-semibold ${variants[variant]} ${className}`}
     >
       {dot && <span className="animate-pulse-dot h-2 w-2 rounded-full bg-white" aria-hidden />}

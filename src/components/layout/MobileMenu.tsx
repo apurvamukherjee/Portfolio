@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import type { NavLink } from '../../data/nav'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
 import { site } from '../../data/site'
+import { iosSpringSoft } from '../../lib/motion'
 
 interface MobileMenuProps {
   open: boolean
@@ -20,8 +21,8 @@ export function MobileMenu({ open, onClose, links, activeId }: MobileMenuProps) 
           initial={{ x: '100%' }}
           animate={{ x: 0 }}
           exit={{ x: '100%' }}
-          transition={{ duration: 0.4, ease: 'easeInOut' }}
-          className="fixed inset-0 z-[45] flex flex-col items-center justify-center gap-10 bg-surface lg:hidden"
+          transition={iosSpringSoft}
+          className="fixed inset-0 z-[45] flex flex-col items-center justify-center gap-10 bg-surface/90 vibrancy lg:hidden"
         >
           <ul className="flex flex-col items-center gap-10">
             {links.map((link) => (

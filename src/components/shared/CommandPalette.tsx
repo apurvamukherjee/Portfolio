@@ -4,6 +4,7 @@ import { TbCommand, TbCornerDownLeft } from 'react-icons/tb'
 import { buildCommands } from '../../data/commands'
 import { fuzzyScore } from '../../lib/fuzzyMatch'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
+import { appleEase, iosSpring } from '../../lib/motion'
 import type { Theme } from '../../hooks/useTheme'
 
 interface CommandPaletteProps {
@@ -83,18 +84,18 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          transition={{ duration: reduced ? 0.15 : 0.2 }}
+          transition={{ duration: reduced ? 0.15 : 0.2, ease: appleEase }}
           onClick={onClose}
         >
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-label="Command palette"
-            className="h-fit w-[92%] max-w-xl overflow-hidden rounded-2xl border border-border bg-surface/80 shadow-card backdrop-blur-xl"
-            initial={reduced ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.98 }}
+            className="window-chrome vibrancy h-fit w-[92%] max-w-xl overflow-hidden rounded-2xl border border-border bg-surface/70"
+            initial={reduced ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.96 }}
             animate={reduced ? { opacity: 1 } : { opacity: 1, y: 0, scale: 1 }}
-            exit={reduced ? { opacity: 0 } : { opacity: 0, y: -12, scale: 0.98 }}
-            transition={{ duration: 0.2, ease: 'easeOut' }}
+            exit={reduced ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.97 }}
+            transition={reduced ? { duration: 0.15 } : iosSpring}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center gap-3 border-b border-border px-5 py-4">
@@ -124,8 +125,8 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
                   aria-selected={i === activeIndex}
                   onMouseEnter={() => setActiveIndex(i)}
                   onClick={() => runCommand(i)}
-                  className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
-                    i === activeIndex ? 'bg-accent/15 text-accent' : 'text-ink'
+                  className={`flex cursor-pointer items-center justify-between gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors duration-150 ${
+                    i === activeIndex ? 'bg-accent/15 text-accent' : 'text-ink hover:bg-surface-raised'
                   }`}
                 >
                   <span>{command.label}</span>

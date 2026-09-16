@@ -6,6 +6,15 @@ const TILTS = [-3, 2, -1, 3, -2]
 const HEIGHTS = [172, 156, 182, 164]
 const WIDTHS = [70, 70, 78, 70]
 
+/** Stable hash of the project name. Spine height/width/tilt are keyed to identity, not
+ *  shelf position, so reordering a shelf or moving a project between shelves never
+ *  reshuffles its neighbors' dimensions. */
+function nameSeed(name: string): number {
+  let h = 0
+  for (let i = 0; i < name.length; i++) h = (h * 31 + name.charCodeAt(i)) | 0
+  return Math.abs(h)
+}
+
 const PAGE_EDGE_STYLE = {
   background:
     'repeating-linear-gradient(to bottom, rgba(255,255,255,0.7) 0, rgba(255,255,255,0.7) 2px, rgba(255,255,255,0.32) 2px, rgba(255,255,255,0.32) 4px)',
@@ -19,7 +28,6 @@ const RIBBON_STYLE = {
 
 interface BookProps {
   project: Project
-  index: number
   /** How many books share this shelf — a lone book uses the tallest spine so it reads as anchored to the shelf tag instead of floating below it with no taller neighbor to compare against. */
   shelfSize: number
   hidden: boolean
@@ -27,17 +35,18 @@ interface BookProps {
 }
 
 /** One spine on the shelf. Renders an inert placeholder (same footprint) while its OpenBook counterpart owns the shared layout transition, so neighboring books never reflow. */
-export function Book({ project, index, shelfSize, hidden, onOpen }: BookProps) {
+export function Book({ project, shelfSize, hidden, onOpen }: BookProps) {
   const fine = useFinePointer()
   const reduced = useReducedMotion()
-  const height = shelfSize === 1 ? Math.max(...HEIGHTS) : HEIGHTS[index % HEIGHTS.length]
-  const width = WIDTHS[index % WIDTHS.length]
+  const seed = nameSeed(project.name)
+  const height = shelfSize === 1 ? Math.max(...HEIGHTS) : HEIGHTS[seed % HEIGHTS.length]
+  const width = WIDTHS[seed % WIDTHS.length]
 
   if (hidden) {
     return <div aria-hidden className="flex-none" style={{ width, height }} />
   }
 
-  const tilt = TILTS[index % TILTS.length]
+  const tilt = TILTS[seed % TILTS.length]
   const CategoryIcon = CATEGORY_ICON[project.category]
 
   return (

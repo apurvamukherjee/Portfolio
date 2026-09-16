@@ -18,7 +18,7 @@ const WOOD_STYLE = {
 export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
   return (
     <div className="flex items-end gap-5 max-md:flex-col max-md:items-stretch max-md:gap-2.5">
-      <div className="mb-3.5 inline-flex flex-none items-center gap-2 self-start whitespace-nowrap rounded border border-l-[3px] border-border border-l-accent bg-surface-raised px-3 py-1.5 max-md:mb-0">
+      <div className="mb-3.5 flex w-[var(--shelf-label-w)] flex-none items-center justify-between gap-2 self-start rounded border border-l-[3px] border-border border-l-accent bg-surface-raised px-3 py-1.5 max-md:mb-0 max-md:w-auto">
         <span className="text-xs font-bold uppercase tracking-wider text-ink">{SHELF_LABELS[category]}</span>
         <span className="font-mono text-[0.7rem] tabular-nums text-muted">{projects.length}</span>
       </div>
@@ -29,11 +29,10 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
           className="thin-scrollbar relative z-[1] flex h-[220px] list-none items-end gap-3.5 overflow-x-auto px-2 pb-3.5 pt-6"
           style={{ scrollSnapType: 'x proximity' }}
         >
-          {projects.map((project, i) => (
+          {projects.map((project) => (
             <li key={project.name} className="flex-none">
               <Book
                 project={project}
-                index={i}
                 shelfSize={projects.length}
                 hidden={project.name === openId}
                 onOpen={() => onOpen(project.name)}

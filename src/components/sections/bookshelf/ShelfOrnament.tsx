@@ -8,10 +8,12 @@ import {
   GiCoffeeCup,
   GiDeskLamp,
   GiDna1,
+  GiHeadphones,
   GiJoystick,
   GiMicroscope,
   GiNotebook,
   GiOwl,
+  GiMusicalNotes,
   GiPerspectiveDiceSixFacesRandom,
   GiRobotGolem,
 } from 'react-icons/gi'
@@ -36,6 +38,11 @@ const ORNAMENTS: Record<ShelfCategory, Ornament[]> = {
     { Icon: GiCactusPot, label: 'a small desk plant', quip: "low-maintenance, like this app's backend.", idle: 'sway' },
     { Icon: GiDeskLamp, label: 'a desk lamp', quip: 'burning the midnight build.', idle: 'glow' },
     { Icon: GiNotebook, label: 'a notebook', quip: 'todo: ship it. (checked.)', idle: 'bob' },
+  ],
+  mac: [
+    { Icon: GiMusicalNotes, label: 'a few floating notes', quip: 'side A. always side A.', idle: 'spin' },
+    { Icon: GiHeadphones, label: 'headphones on the shelf', quip: 'now playing: nothing. still listening.', idle: 'bob' },
+    { Icon: GiCoffeeCup, label: 'a coffee mug', quip: 'compiled in 26 hours. caffeine did the rest.', idle: 'pulse' },
   ],
   native: [
     { Icon: GiCoffeeCup, label: 'a coffee mug', quip: "still warm. don't tell React Native.", idle: 'pulse' },

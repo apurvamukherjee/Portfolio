@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { useMagnetic } from '../../hooks/useMagnetic'
+import { iosSpring } from '../../lib/motion'
 interface NeuButtonProps {
   href: string
   children: ReactNode
@@ -21,8 +22,8 @@ export function NeuButton({ href, children, className = '' }: NeuButtonProps) {
       onMouseMove={reduced ? undefined : onMouseMove}
       onMouseLeave={reduced ? undefined : onMouseLeave}
       style={reduced ? undefined : { x, y }}
-      whileTap={{ x: 6, y: 6 }}
-      transition={{ type: 'spring', stiffness: 400, damping: 22 }}
+      whileTap={{ x: 6, y: 6, scale: 0.97 }}
+      transition={iosSpring}
       className={`group relative inline-flex ${className}`}
     >
       <span

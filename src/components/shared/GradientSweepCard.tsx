@@ -1,5 +1,6 @@
 import { useRef, type MouseEvent, type ReactNode } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 interface GradientSweepCardProps {
   children: ReactNode
   className?: string
@@ -40,8 +41,9 @@ export function GradientSweepCard({ children, className = '', tilt = true }: Gra
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={active ? { rotateX, rotateY, transformPerspective: 900 } : undefined}
-      whileHover={reduced ? undefined : { y: -6 }}
-      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+      whileHover={reduced ? undefined : { y: -6, scale: 1.01 }}
+      whileTap={reduced ? undefined : { scale: 0.995 }}
+      transition={iosSpring}
       className={`group relative overflow-hidden bg-surface-raised shadow-card ${className}`}
     >
       <span

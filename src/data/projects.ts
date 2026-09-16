@@ -5,13 +5,14 @@ export interface CaseStudy {
 }
 
 /** Bookshelf grouping — which shelf a project sits on in the Projects section. */
-export type ShelfCategory = "games" | "apps" | "native" | "exp";
+export type ShelfCategory = "games" | "apps" | "mac" | "native" | "exp";
 
-export const SHELF_ORDER: ShelfCategory[] = ["games", "apps", "native", "exp"];
+export const SHELF_ORDER: ShelfCategory[] = ["mac", "games", "apps", "native", "exp"];
 
 export const SHELF_LABELS: Record<ShelfCategory, string> = {
   games: "Multiplayer & Games",
   apps: "Offline-First Apps",
+  mac: "Mac / iOS Apps",
   native: "Native Apps",
   exp: "Early Experiments",
 };
@@ -241,7 +242,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "web",
     name: "Visor",
-    category: "native",
+    category: "mac",
     spineLogo: "/assets/projects/logos/visor.png",
     description:
       "Turns the MacBook notch into a Dynamic Island — built in 26 hours. Hover the dead black bar and it grows into now playing, your day's agenda, and battery; move away and it collapses back into the hardware cutout. Includes a <strong>vinyl mode</strong> with a physically-modelled tonearm, and a screenshot catcher that holds every capture for a minute so you can drag it straight into Slack or Figma. Idles at <strong>0.0% CPU</strong> while playing music.",
