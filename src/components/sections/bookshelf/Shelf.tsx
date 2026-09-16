@@ -25,6 +25,13 @@ const BOARD_STYLE = {
   backgroundRepeat: 'repeat-y',
 }
 
+/** Hover halo. Sits on the li, not the button: the spine clips its own children with
+ *  overflow-hidden, so a glow drawn inside it would never reach past the spine edge. */
+const GLOW_STYLE = {
+  background:
+    'radial-gradient(60% 55% at 50% 78%, color-mix(in srgb, var(--color-accent) 42%, transparent) 0%, transparent 70%)',
+}
+
 export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
   return (
     <div className="flex items-end gap-6 max-md:flex-col max-md:items-stretch max-md:gap-2">
@@ -41,7 +48,12 @@ export function Shelf({ category, projects, openId, onOpen }: ShelfProps) {
           style={{ ...BOARD_STYLE, '--shelf-row-h': `${ROW_H}px` } as CSSProperties}
         >
           {projects.map((project) => (
-            <li key={project.name} className="flex h-[var(--shelf-row-h)] flex-none items-end">
+            <li key={project.name} className="group/book relative isolate flex h-[var(--shelf-row-h)] flex-none items-end">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-[-14px] bottom-0 top-[-10px] -z-[1] rounded-[10px] opacity-0 blur-[14px] transition-opacity duration-300 group-hover/book:opacity-100 group-focus-within/book:opacity-100"
+                style={GLOW_STYLE}
+              />
               <Book
                 project={project}
                 shelfSize={projects.length}
