@@ -32,6 +32,13 @@
   --color-foil: rgba(255, 255, 255, 0.82);
   --color-shelf-line: rgba(255, 255, 255, 0.16);
 
+  /* KPI tile accents. iOS system palette — each tile owns one hue so the four read as a set
+     of distinct cards rather than four copies of the same card. */
+  --color-kpi-repos: #0a84ff;
+  --color-kpi-solved: #30d158;
+  --color-kpi-days: #ff9f0a;
+  --color-kpi-langs: #bf5af2;
+
   /* Single source of truth for the shelf label column. Every shelf's board starts at the
      same x only because the label never sizes to its own text — widen this if a future
      SHELF_LABELS entry outgrows it. */
@@ -69,6 +76,12 @@
   --color-cloth-edge: rgba(0, 0, 0, 0.1);
   --color-foil: rgba(23, 20, 15, 0.55);
   --color-shelf-line: rgba(0, 0, 0, 0.22);
+
+  /* Light-mode variants: iOS's own darker "on light" values, so text on a tint stays legible. */
+  --color-kpi-repos: #0071e3;
+  --color-kpi-solved: #248a3d;
+  --color-kpi-days: #c93400;
+  --color-kpi-langs: #8944ab;
 }
 
 @keyframes headshake {
