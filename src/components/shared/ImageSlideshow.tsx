@@ -1,6 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb'
+import { ImageLightbox, type ZoomSource } from './ImageLightbox'
 
 const INTERVAL_MS = 2200
 
@@ -13,28 +15,50 @@ interface ImageSlideshowProps {
 export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
+  const [zoom, setZoom] = useState<ZoomSource | null>(null)
+  const containerRef = useRef<HTMLDivElement>(null)
   const reduced = useReducedMotion()
   const hasMultiple = images.length > 1
+  const src = images[index]
+  const screenAlt = `${alt} — screen ${index + 1} of ${images.length}`
 
   useEffect(() => {
-    if (!hasMultiple || paused || reduced) return
+    if (!hasMultiple || paused || zoom || reduced) return
     const timer = setInterval(() => setIndex((i) => (i + 1) % images.length), INTERVAL_MS)
     return () => clearInterval(timer)
-  }, [hasMultiple, paused, reduced, images.length])
+  }, [hasMultiple, paused, zoom, reduced, images.length])
 
   const goTo = (next: number) => setIndex((next + images.length) % images.length)
 
+  function openZoom() {
+    const container = containerRef.current
+    if (!container || !src) return
+    const from = container.getBoundingClientRect()
+    const img = container.querySelector<HTMLImageElement>(`img[src="${CSS.escape(src)}"]`)
+    // Not decoded yet: fall back to the box's own aspect so the zoom still has sane geometry.
+    const loaded = img && img.naturalWidth > 0
+    setZoom({
+      src,
+      alt: screenAlt,
+      from,
+      naturalWidth: loaded ? img.naturalWidth : from.width,
+      naturalHeight: loaded ? img.naturalHeight : from.height,
+      fit,
+    })
+  }
+
   return (
     <div
+      ref={containerRef}
       className="group/slide relative h-full w-full overflow-hidden bg-black"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
       <AnimatePresence initial={false}>
         <motion.img
-          key={images[index]}
-          src={images[index]}
-          alt={`${alt} — screen ${index + 1} of ${images.length}`}
+          key={src}
+          src={src}
+          alt={screenAlt}
           loading="lazy"
           decoding="async"
           initial={{ opacity: 0, scale: 1.02 }}
@@ -44,6 +68,19 @@ export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
           className={`absolute inset-0 h-full w-full ${fit === 'cover' ? 'object-cover' : 'object-contain'}`}
         />
       </AnimatePresence>
+
+      {/* Sits under the arrows and dots (later siblings), so those still get their own clicks. */}
+      <button
+        type="button"
+        onClick={openZoom}
+        aria-label={`View ${screenAlt} full size`}
+        className="absolute inset-0 cursor-zoom-in focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-accent"
+      />
+
+      {createPortal(
+        <AnimatePresence>{zoom && <ImageLightbox key={zoom.src} {...zoom} onClose={() => setZoom(null)} />}</AnimatePresence>,
+        document.body,
+      )}
 
       {hasMultiple && (
         <>
