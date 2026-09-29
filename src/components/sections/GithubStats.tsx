@@ -30,9 +30,9 @@ interface Stat {
 }
 
 /** Resume languages first (their preferred casing), then any GitHub-detected language not already covered. */
-function mergeLanguages(resumeLanguages: string[], githubLanguages: string[] | undefined): string[] {
+function mergeLanguages(resumeLanguages: string[], githubLanguages: string[]): string[] {
   const seen = new Set(resumeLanguages.map((lang) => lang.toLowerCase()))
-  const extra = (githubLanguages ?? []).filter((lang) => !seen.has(lang.toLowerCase()))
+  const extra = githubLanguages.filter((lang) => !seen.has(lang.toLowerCase()))
   return [...resumeLanguages, ...extra]
 }
 
@@ -143,33 +143,30 @@ export function GithubStats() {
           ? `${stats.totalContributions.toLocaleString('en-US')} all-time contributions`
           : undefined,
     },
+    {
+      icon: TbCheck,
+      value: DISPLAY_SOLVED,
+      suffix: '+',
+      label: 'LeetCode problems solved',
+      accent: 'solved',
+      detail: leetcode ? `across ${leetcode.totalSubmissions.toLocaleString('en-US')} submissions` : undefined,
+    },
+    {
+      icon: TbFlame,
+      value: DISPLAY_ACTIVE_DAYS,
+      suffix: '+',
+      label: 'Days solving problems',
+      accent: 'days',
+      detail: `${DISPLAY_BEST_STREAK}+ day best streak`,
+    },
+    {
+      icon: TbCode,
+      value: languages.length,
+      label: 'Languages shipped',
+      accent: 'langs',
+      detail: languages.slice(0, 3).join(' · '),
+    },
   ]
-
-  tiles.push({
-    icon: TbCheck,
-    value: DISPLAY_SOLVED,
-    suffix: '+',
-    label: 'LeetCode problems solved',
-    accent: 'solved',
-    detail: leetcode ? `across ${leetcode.totalSubmissions.toLocaleString('en-US')} submissions` : undefined,
-  })
-
-  tiles.push({
-    icon: TbFlame,
-    value: DISPLAY_ACTIVE_DAYS,
-    suffix: '+',
-    label: 'Days solving problems',
-    accent: 'days',
-    detail: `${DISPLAY_BEST_STREAK}+ day best streak`,
-  })
-
-  tiles.push({
-    icon: TbCode,
-    value: languages.length,
-    label: 'Languages shipped',
-    accent: 'langs',
-    detail: languages.slice(0, 3).join(' · '),
-  })
 
   return (
     <motion.div
