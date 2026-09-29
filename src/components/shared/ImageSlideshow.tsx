@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbChevronLeft, TbChevronRight } from 'react-icons/tb'
+
+const INTERVAL_MS = 2200
+
 interface ImageSlideshowProps {
   images: string[]
   alt: string
-  className?: string
-  intervalMs?: number
-  fit?: 'cover' | 'contain'
+  fit: 'cover' | 'contain'
 }
 
-export function ImageSlideshow({ images, alt, className = '', intervalMs = 2200, fit = 'cover' }: ImageSlideshowProps) {
+export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
   const [index, setIndex] = useState(0)
   const [paused, setPaused] = useState(false)
   const reduced = useReducedMotion()
@@ -17,15 +18,15 @@ export function ImageSlideshow({ images, alt, className = '', intervalMs = 2200,
 
   useEffect(() => {
     if (!hasMultiple || paused || reduced) return
-    const timer = setInterval(() => setIndex((i) => (i + 1) % images.length), intervalMs)
+    const timer = setInterval(() => setIndex((i) => (i + 1) % images.length), INTERVAL_MS)
     return () => clearInterval(timer)
-  }, [hasMultiple, paused, reduced, images.length, intervalMs])
+  }, [hasMultiple, paused, reduced, images.length])
 
   const goTo = (next: number) => setIndex((next + images.length) % images.length)
 
   return (
     <div
-      className={`group/slide relative h-full w-full overflow-hidden bg-black ${className}`}
+      className="group/slide relative h-full w-full overflow-hidden bg-black"
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
