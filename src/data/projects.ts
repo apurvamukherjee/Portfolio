@@ -242,6 +242,36 @@ export const projects: Project[] = [
   {
     kind: "gallery",
     variant: "web",
+    name: "Komodo",
+    category: "mac",
+    spineLogo: "/assets/projects/logos/komodo.webp",
+    description:
+      "A native macOS to-do list that collapses into a focus timer. Plan the day on a Board where time has temperature — Backlog, This week, Today — press Start, and the live task follows you as a <strong>Focus Panel</strong> or a 40 pt <strong>floating timer</strong> above every app and Space. Pomodoro sprints, breaks that breathe, a celebration on every Done, and quick add that reads estimates like <code>Write spec 45m</code>. No account, no server — everything lives in SQLite on your Mac.",
+    descriptionIsHtml: true,
+    tech: ["Swift 6", "SwiftUI", "AppKit", "SQLite", "GRDB", "Swift Testing", "XcodeGen"],
+    status: "Ongoing",
+    openSource: true,
+    githubUrl: "https://github.com/apurvamukherjee/komordo-quicktasks",
+    caseStudy: {
+      problem:
+        "Most to-do apps stop at the list: you plan a day, then lose the thread the moment you switch windows, and never learn how long anything actually took.",
+      approach:
+        "The list becomes the timer. One live task drives a Focus Panel docked to the screen edge or a floating pill above every app, and every session is timed against its estimate. The focus dial and odometer digits read wall-clock time instead of counting ticks, so they never drift, and a 30-second heartbeat means even a crash only counts time Komodo was really running. Core logic lives in a separate KomodoCore Swift package tested with Swift Testing, on Swift 6 strict concurrency, with its own Obsidian Spectrum design system — cursor spotlight, border beam, focus dial — that honours Reduce Motion throughout.",
+      impact:
+        "A keyboard-first Mac app with a command palette, global shortcuts, recurring tasks with stable IDs, reminders that fire with the app closed, and one-click zip backups with verified restores — all fully local.",
+    },
+    images: [
+      "/assets/projects/komodo/board.webp",
+      "/assets/projects/komodo/focus-states.webp",
+      "/assets/projects/komodo/floating-timer.webp",
+      "/assets/projects/komodo/inspector.webp",
+      "/assets/projects/komodo/palette.webp",
+      "/assets/projects/komodo/settings.webp",
+    ],
+  },
+  {
+    kind: "gallery",
+    variant: "web",
     name: "Visor",
     category: "mac",
     spineLogo: "/assets/projects/logos/visor.png",
