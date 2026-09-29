@@ -62,7 +62,7 @@ export function Hero() {
 
           <motion.h1
             variants={item}
-            className="mt-2 text-5xl md:text-6xl text-gradient-accent-animated animate-gradient-shift whitespace-nowrap text-[clamp(2.1rem,4.6vw,3.5rem)] font-black leading-tight tracking-tight"
+            className="mt-2 text-5xl md:text-6xl text-gradient-accent-animated animate-gradient-shift whitespace-nowrap text-[clamp(min(2.1rem,8.7vw),4.6vw,3.5rem)] font-black leading-tight tracking-tight"
           >
             <JelloText text="Apurva Mukherjee." />
           </motion.h1>

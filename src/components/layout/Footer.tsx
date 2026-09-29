@@ -25,7 +25,7 @@ export function Footer({ onOpenTerminal }: FooterProps) {
 
         <div className="flex flex-col items-center gap-6">
           <span className="font-mono text-lg font-bold text-gradient-accent">GetinTouch();</span>
-          <div className="flex items-center gap-6">
+          <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {socialLinks.map((link) => {
               const Icon = ICONS[link.icon]
               return (
