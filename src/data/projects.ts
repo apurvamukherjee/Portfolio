@@ -291,8 +291,8 @@ export const projects: Project[] = [
     },
     images: [
       "/assets/projects/visor/home.webp",
+      "/assets/projects/visor/tinted.webp",
       "/assets/projects/visor/closed.webp",
-      "/assets/projects/visor/vinyl.webp",
       "/assets/projects/visor/shelf.webp",
     ],
   },
