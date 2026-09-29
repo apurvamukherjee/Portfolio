@@ -35,7 +35,7 @@ export function Experience() {
               >
                 {experience.site}
               </a>
-              <Chip variant="outline" className="ml-auto">
+              <Chip className="ml-auto">
                 {experience.duration}
               </Chip>
             </div>

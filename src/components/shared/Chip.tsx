@@ -4,7 +4,7 @@ import { iosSpring } from '../../lib/motion'
 
 interface ChipProps {
   children: ReactNode
-  variant?: 'tech' | 'accent' | 'outline'
+  variant?: 'tech' | 'accent'
   dot?: boolean
   className?: string
 }
@@ -14,7 +14,6 @@ export function Chip({ children, variant = 'tech', dot = false, className = '' }
   const variants: Record<NonNullable<ChipProps['variant']>, string> = {
     tech: 'border border-border text-muted',
     accent: 'bg-gradient-to-r from-accent to-accent-deep text-white',
-    outline: 'border border-border text-muted rounded-full',
   }
 
   return (

@@ -119,7 +119,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
             {project.tech.length > 0 && (
               <div className="mt-4 flex flex-wrap gap-2">
                 {project.tech.map((t) => (
-                  <Chip key={t} variant="tech">
+                  <Chip key={t}>
                     {t}
                   </Chip>
                 ))}
@@ -143,7 +143,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
               )}
               {project.liveUrl && <CtaLink href={project.liveUrl}>Live view</CtaLink>}
               {project.status && <Chip variant="accent">● {project.status}</Chip>}
-              {project.openSource && <Chip variant="outline">Open Source</Chip>}
+              {project.openSource && <Chip>Open Source</Chip>}
             </div>
           </section>
 

@@ -41,7 +41,7 @@ export function ProjectCard(project: Project) {
         {project.tech.length > 0 && (
           <div className="flex flex-wrap gap-2">
             {project.tech.map((t) => (
-              <Chip key={t} variant="tech">
+              <Chip key={t}>
                 {t}
               </Chip>
             ))}
@@ -76,7 +76,7 @@ export function ProjectCard(project: Project) {
             </button>
           )}
           {project.status && <Chip variant="accent">● {project.status}</Chip>}
-          {project.openSource && <Chip variant="outline">Open Source</Chip>}
+          {project.openSource && <Chip>Open Source</Chip>}
         </div>
 
         <AnimatePresence initial={false}>

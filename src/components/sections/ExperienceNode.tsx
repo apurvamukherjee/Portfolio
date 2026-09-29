@@ -12,7 +12,7 @@ export function ExperienceNode({ role, icon: Icon, time, status, points, tech }:
       <GradientSweepCard tilt={false} className="flex-1 rounded-lg p-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
           <p className="text-lg font-bold text-ink">{role}</p>
-          <Chip variant={status === 'Current' ? 'accent' : 'outline'} dot={status === 'Current'}>
+          <Chip variant={status === 'Current' ? 'accent' : 'tech'} dot={status === 'Current'}>
             {status}
           </Chip>
           <span className="ml-auto text-sm text-muted">{time}</span>
@@ -29,7 +29,7 @@ export function ExperienceNode({ role, icon: Icon, time, status, points, tech }:
 
         <div className="mt-4 flex flex-wrap gap-2">
           {tech.map((t) => (
-            <Chip key={t} variant="tech">
+            <Chip key={t}>
               {t}
             </Chip>
           ))}

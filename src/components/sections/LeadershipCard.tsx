@@ -12,7 +12,7 @@ export function LeadershipCard({ icon: Icon, rolePill, title, org, description }
         >
           <Icon size={20} />
         </span>
-        <Chip variant="outline">{rolePill}</Chip>
+        <Chip>{rolePill}</Chip>
       </div>
       <h3 className="text-lg font-bold text-ink">{title}</h3>
       <p className="text-sm font-medium text-muted">{org}</p>
