@@ -1,5 +1,5 @@
 import { navLinks } from './nav'
-import { socialLinks } from './social'
+import { socialLinks, type SocialLink } from './social'
 import { site } from './site'
 import type { Theme } from '../hooks/useTheme'
 
@@ -19,9 +19,16 @@ function openExternal(href: string) {
   window.open(href, '_blank', 'noopener,noreferrer')
 }
 
-function findSocial(icon: (typeof socialLinks)[number]['icon']) {
+function findSocial(icon: SocialLink['icon']) {
   return socialLinks.find((l) => l.icon === icon)
 }
+
+const SOCIAL_COMMANDS: { icon: SocialLink['icon']; label: string; keywords: string }[] = [
+  { icon: 'github', label: 'Open GitHub', keywords: 'code repos' },
+  { icon: 'linkedin', label: 'Open LinkedIn', keywords: 'career work' },
+  { icon: 'leetcode', label: 'Open LeetCode', keywords: 'dsa problems coding practice' },
+  { icon: 'instagram', label: 'Open Instagram', keywords: 'social photos' },
+]
 
 export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Command[] {
   const commands: Command[] = navLinks.map((link) => ({
@@ -59,24 +66,9 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
     action: () => openExternal(site.resumeHref),
   })
 
-  const github = findSocial('github')
-  if (github) {
-    commands.push({ id: 'open-github', label: 'Open GitHub', keywords: 'code repos', action: () => openExternal(github.href) })
-  }
-
-  const linkedin = findSocial('linkedin')
-  if (linkedin) {
-    commands.push({ id: 'open-linkedin', label: 'Open LinkedIn', keywords: 'career work', action: () => openExternal(linkedin.href) })
-  }
-
-  const leetcode = findSocial('leetcode')
-  if (leetcode) {
-    commands.push({ id: 'open-leetcode', label: 'Open LeetCode', keywords: 'dsa problems coding practice', action: () => openExternal(leetcode.href) })
-  }
-
-  const instagram = findSocial('instagram')
-  if (instagram) {
-    commands.push({ id: 'open-instagram', label: 'Open Instagram', keywords: 'social photos', action: () => openExternal(instagram.href) })
+  for (const { icon, label, keywords } of SOCIAL_COMMANDS) {
+    const link = findSocial(icon)
+    if (link) commands.push({ id: `open-${icon}`, label, keywords, action: () => openExternal(link.href) })
   }
 
   return commands
