@@ -26,8 +26,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
         initial={reduced ? undefined : { opacity: 0, y: -16 }}
         animate={reduced || introDone ? { opacity: 1, y: 0 } : { opacity: 0, y: -16 }}
         transition={{ duration: 0.5, ease: 'easeOut' }}
-        className="fixed left-1/2 z-50 w-[92%] max-w-5xl -translate-x-1/2 rounded-full border border-border bg-surface/60 px-4 py-2 shadow-card backdrop-blur-xl md:px-6"
-        style={{ top: 'max(1rem, env(safe-area-inset-top))' }}
+        className="fixed left-1/2 top-[max(1rem,env(safe-area-inset-top))] z-50 w-[92%] max-w-5xl -translate-x-1/2 rounded-full border border-border bg-surface/60 px-4 py-2 shadow-card backdrop-blur-xl md:px-6 lg:top-11"
       >
         <div className="flex items-center justify-between gap-4">
           <Logo />

@@ -48,6 +48,7 @@
   --animate-jello: jello 0.9s both;
   --animate-gradient-shift: gradient-shift 3s ease infinite;
   --animate-pulse-dot: pulse-dot 2s infinite;
+  --animate-notch-bar: notch-bar 0.9s ease-in-out infinite alternate;
   --animate-pop-up: pop-up 2.4s ease-out forwards;
   --animate-jelly-flow: jelly-flow 6s ease-in-out infinite;
 
@@ -166,6 +167,15 @@
   }
   50% {
     opacity: 0.2;
+  }
+}
+
+@keyframes notch-bar {
+  from {
+    transform: scaleY(0.3);
+  }
+  to {
+    transform: scaleY(1);
   }
 }
 

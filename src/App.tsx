@@ -12,6 +12,7 @@ import { Navbar } from './components/layout/Navbar'
 import { Footer } from './components/layout/Footer'
 import { FloatingResumeButton } from './components/layout/FloatingResumeButton'
 import { BackToTopButton } from './components/layout/BackToTopButton'
+import { VisorNotch } from './components/layout/VisorNotch'
 import { Hero } from './components/sections/Hero'
 import { About } from './components/sections/About'
 import { Skills } from './components/sections/Skills'
@@ -68,6 +69,7 @@ function App() {
       <CursorSpotlight />
       <ScrollProgressBar />
       <Navbar theme={theme} onToggleTheme={toggle} />
+      <VisorNotch />
 
       <main className="relative">
         <ErrorBoundary>
