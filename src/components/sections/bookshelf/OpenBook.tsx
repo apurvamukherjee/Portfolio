@@ -119,7 +119,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
             </h2>
 
             {project.descriptionIsHtml ? (
-              <p className="mt-3 text-muted" dangerouslySetInnerHTML={{ __html: project.description }} />
+              <p className="rich-text mt-3 text-muted" dangerouslySetInnerHTML={{ __html: project.description }} />
             ) : (
               <p className="mt-3 text-muted">{project.description}</p>
             )}

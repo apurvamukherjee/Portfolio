@@ -41,7 +41,7 @@ export function ProjectCard(project: Project) {
 
         <h3 className="text-2xl font-bold text-ink md:text-3xl">{project.name}</h3>
         {project.descriptionIsHtml ? (
-          <p className="text-muted" dangerouslySetInnerHTML={{ __html: project.description }} />
+          <p className="rich-text text-muted" dangerouslySetInnerHTML={{ __html: project.description }} />
         ) : (
           <p className="text-muted">{project.description}</p>
         )}

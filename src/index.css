@@ -306,3 +306,19 @@
     0 24px 60px -12px rgba(0, 0, 0, 0.55),
     0 0 0 0.5px rgba(0, 0, 0, 0.4);
 }
+
+/* Author-written project descriptions (HTML strings): key phrases glow faintly in the accent. */
+@utility rich-text {
+  & strong {
+    color: var(--color-ink);
+    font-weight: 600;
+    text-shadow: 0 0 14px color-mix(in srgb, var(--color-accent) 40%, transparent);
+  }
+  & code {
+    border-radius: 0.3rem;
+    background: var(--color-surface-raised);
+    padding: 0.05rem 0.35rem;
+    font-size: 0.9em;
+    color: var(--color-ink);
+  }
+}
