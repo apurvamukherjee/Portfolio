@@ -1,5 +1,5 @@
 import type { IconType } from 'react-icons'
-import { TbBrandApple, TbBrandReactNative, TbDeviceGamepad2Filled, TbDeviceMobileFilled, TbFlaskFilled } from 'react-icons/tb'
+import { TbBrandOpenSource, TbBrandReactNative, TbDeviceGamepad2Filled, TbDeviceMobileFilled, TbFlaskFilled } from 'react-icons/tb'
 import type { ShelfCategory } from '../data/projects'
 
 /** Book-cloth tones. Four flat graphite shades assigned by spine identity, not category —
@@ -9,9 +9,9 @@ export const CLOTH = ['bg-cloth-1', 'bg-cloth-2', 'bg-cloth-3', 'bg-cloth-4'] as
 
 /** Small foil-stamp glyph per category, embossed near the base of each book spine. */
 export const CATEGORY_ICON: Record<ShelfCategory, IconType> = {
+  oss: TbBrandOpenSource,
   games: TbDeviceGamepad2Filled,
   apps: TbDeviceMobileFilled,
-  mac: TbBrandApple,
   native: TbBrandReactNative,
   exp: TbFlaskFilled,
 }

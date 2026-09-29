@@ -5,14 +5,14 @@ export interface CaseStudy {
 }
 
 /** Bookshelf grouping — which shelf a project sits on in the Projects section. */
-export type ShelfCategory = "games" | "apps" | "mac" | "native" | "exp";
+export type ShelfCategory = "oss" | "games" | "apps" | "native" | "exp";
 
-export const SHELF_ORDER: ShelfCategory[] = ["mac", "games", "apps", "native", "exp"];
+export const SHELF_ORDER: ShelfCategory[] = ["oss", "games", "apps", "native", "exp"];
 
 export const SHELF_LABELS: Record<ShelfCategory, string> = {
+  oss: "Open Source",
   games: "Multiplayer & Games",
   apps: "Offline-First Apps",
-  mac: "Mac / iOS Apps",
   native: "Native Apps",
   exp: "Early Experiments",
 };
@@ -243,7 +243,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "web",
     name: "Komodo",
-    category: "mac",
+    category: "oss",
     spineLogo: "/assets/projects/logos/komodo.webp",
     description:
       "A native macOS to-do list that collapses into a focus timer. Plan the day on a Board where time has temperature — Backlog, This week, Today — press Start, and the live task follows you as a <strong>Focus Panel</strong> or a 40 pt <strong>floating timer</strong> above every app and Space. Pomodoro sprints, breaks that breathe, a celebration on every Done, and quick add that reads estimates like <code>Write spec 45m</code>. No account, no server — everything lives in SQLite on your Mac.",
@@ -273,7 +273,7 @@ export const projects: Project[] = [
     kind: "gallery",
     variant: "web",
     name: "Visor",
-    category: "mac",
+    category: "oss",
     spineLogo: "/assets/projects/logos/visor.png",
     description:
       "Free, open-source Mac app that turns the MacBook notch into something you can use. Closed, it shows the album cover and a live visualizer; hover and it opens into <strong>Now Playing</strong> beside your week's calendar and reminders. Includes a <strong>vinyl mode</strong> with a tonearm that drops on play, a file <strong>shelf</strong> with AirDrop, notch-native volume and brightness HUDs, a lock/unlock padlock, battery, and a one-click camera mirror.",
