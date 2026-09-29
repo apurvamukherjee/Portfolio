@@ -46,6 +46,8 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
     }
   }, [open])
 
+  const activeCommand = filtered[activeIndex]
+
   function runCommand(index: number) {
     const command = filtered[index]
     if (!command) return
@@ -133,6 +135,33 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
                 </li>
               ))}
             </ul>
+
+            {/* Fixed height so the list above never jumps as previews of different lengths swap. */}
+            <div className="relative h-[5.5rem] overflow-hidden border-t border-border px-5 py-3">
+              <AnimatePresence initial={false} mode="popLayout">
+                <motion.div
+                  key={activeCommand?.id ?? 'hint'}
+                  initial={reduced ? { opacity: 0 } : { opacity: 0, y: 6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={reduced ? { opacity: 0 } : { opacity: 0, y: -6 }}
+                  transition={{ duration: 0.16, ease: appleEase }}
+                  className="flex flex-col gap-1"
+                >
+                  {activeCommand?.preview ? (
+                    <>
+                      <p className="truncate text-xs font-semibold text-ink">{activeCommand.preview.heading}</p>
+                      {activeCommand.preview.lines.slice(0, 3).map((line) => (
+                        <p key={line} className="truncate text-xs text-muted">
+                          {line}
+                        </p>
+                      ))}
+                    </>
+                  ) : (
+                    <p className="text-xs text-muted">↑ ↓ to move · ↵ to run · esc to close</p>
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </div>
           </motion.div>
         </motion.div>
       )}
