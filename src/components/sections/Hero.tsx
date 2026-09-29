@@ -44,7 +44,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="flex min-h-screen w-full items-center justify-center px-6 pb-6 pt-32 sm:px-8 md:px-12 lg:px-16"
+      className="flex min-h-screen w-full items-center justify-center px-6 pb-6 pt-32 sm:px-8 md:px-12 lg:px-16 notch:pt-40"
     >
       <div className="mx-auto grid w-full max-w-6xl grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-10">
         <motion.div

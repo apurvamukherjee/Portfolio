@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion'
 import {
   TbArrowUpRight,
@@ -44,11 +44,12 @@ function readTried(): boolean {
   }
 }
 
-/** A playable web recreation of Visor — the notch app — pinned to the top of the page on desktop. */
+/** A playable web recreation of Visor — the notch app — pinned to the top of the page on tablets and desktops. */
 export function VisorNotch() {
   const reduced = useReducedMotion() ?? false
   const introDone = useIntro()
   const audioRef = useRef<HTMLAudioElement>(null)
+  const notchRef = useRef<HTMLDivElement>(null)
   const hoverTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [expanded, setExpandedState] = useState(false)
   const [tried, setTried] = useState(readTried)
@@ -77,6 +78,17 @@ export function VisorNotch() {
     clearTimeout(hoverTimer.current)
     setExpanded(open)
   }
+
+  // Touch has no mouseleave, and iOS Safari doesn't focus tapped buttons, so blur never fires:
+  // a tap anywhere outside the open island is what closes it on tablets.
+  useEffect(() => {
+    if (!expanded) return
+    const onPointerDown = (e: PointerEvent) => {
+      if (e.target instanceof Node && !notchRef.current?.contains(e.target)) setExpandedState(false)
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => document.removeEventListener('pointerdown', onPointerDown)
+  }, [expanded])
 
   const togglePlay = () => {
     const audio = audioRef.current
@@ -127,7 +139,7 @@ export function VisorNotch() {
         onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
       />
 
-      <div className="pointer-events-none fixed inset-x-0 top-0 z-[61] hidden justify-center lg:flex">
+      <div className="pointer-events-none fixed inset-x-0 top-0 z-[61] hidden justify-center notch:flex">
         <div className="relative">
           {introDone && !tried && !expanded && (
             <>
@@ -147,6 +159,7 @@ export function VisorNotch() {
             </>
           )}
           <motion.div
+            ref={notchRef}
             initial={false}
             animate={{
               width: size.width,
