@@ -150,6 +150,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
               )}
               {project.liveUrl && <CtaLink href={project.liveUrl}>Live view</CtaLink>}
               {project.status && <Chip variant="accent">● {project.status}</Chip>}
+              {project.openSource && <Chip variant="outline">Open Source</Chip>}
             </div>
           </section>
 

@@ -24,6 +24,7 @@ export interface ProjectBase {
   descriptionIsHtml?: boolean;
   tech: string[];
   status?: "Ongoing";
+  openSource?: boolean;
   githubUrl?: string;
   liveUrl?: string;
   category: ShelfCategory;

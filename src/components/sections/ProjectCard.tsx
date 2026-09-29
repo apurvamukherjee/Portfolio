@@ -83,6 +83,7 @@ export function ProjectCard(project: Project) {
             </button>
           )}
           {project.status && <Chip variant="accent">● {project.status}</Chip>}
+          {project.openSource && <Chip variant="outline">Open Source</Chip>}
         </div>
 
         <AnimatePresence initial={false}>
