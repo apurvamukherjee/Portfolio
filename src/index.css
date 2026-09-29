@@ -249,6 +249,25 @@
   animation-name: vt-wipe-down;
 }
 
+/* Hero laptop tilts back and shrinks as it scrolls away. Compositor-only; browsers without
+   scroll-driven animations just see the static illustration. */
+@keyframes hero-recede {
+  to {
+    transform: perspective(1200px) rotateX(14deg) scale(0.88);
+    opacity: 0.35;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .hero-recede {
+      animation: hero-recede linear both;
+      animation-timeline: view();
+      animation-range: cover 50% cover 100%;
+    }
+  }
+}
+
 @layer base {
   * {
     box-sizing: border-box;

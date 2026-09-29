@@ -110,7 +110,9 @@ export function Hero() {
               </motion.span>
             </motion.div>
           )}
-          <HeroIllustration />
+          <div className="hero-recede">
+            <HeroIllustration />
+          </div>
         </motion.div>
       </div>
     </section>
