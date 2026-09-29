@@ -246,24 +246,24 @@ export const projects: Project[] = [
     category: "mac",
     spineLogo: "/assets/projects/logos/visor.png",
     description:
-      "Turns the MacBook notch into a Dynamic Island — built in 26 hours. Hover the dead black bar and it grows into now playing, your day's agenda, and battery; move away and it collapses back into the hardware cutout. Includes a <strong>vinyl mode</strong> with a physically-modelled tonearm, and a screenshot catcher that holds every capture for a minute so you can drag it straight into Slack or Figma. Idles at <strong>0.0% CPU</strong> while playing music.",
+      "Free, open-source Mac app that turns the MacBook notch into something you can use. Closed, it shows the album cover and a live visualizer; hover and it opens into <strong>Now Playing</strong> beside your week's calendar and reminders. Includes a <strong>vinyl mode</strong> with a tonearm that drops on play, a file <strong>shelf</strong> with AirDrop, notch-native volume and brightness HUDs, a lock/unlock padlock, battery, and a one-click camera mirror.",
     descriptionIsHtml: true,
-    tech: ["Swift 6", "SwiftUI", "AppKit", "Core Animation", "EventKit", "ImageIO", "XcodeGen"],
-    githubUrl: "https://github.com/apurvamukherjee/Visor--The-Mac-Island",
+    tech: ["Swift", "SwiftUI", "AppKit", "EventKit", "MediaRemote", "AVFoundation", "XcodeGen"],
+    openSource: true,
+    githubUrl: "https://github.com/apurvamukherjee/visor-mac-island",
     caseStudy: {
       problem:
-        "An always-on overlay welded to the notch has to animate constantly and still cost nothing — a menu-bar widget that drains battery is worse than no widget. The naive SwiftUI implementation of just four bouncing playback bars burned 5% CPU, because animating frame(height:) re-runs the view graph every single frame.",
+        "The notch is a dead black bar on every modern MacBook, while music controls, the calendar and the system HUDs all fight for space somewhere else on screen.",
       approach:
-        "Event-driven only — no polling loops, no global mouse monitors — and nothing animates or ticks when it is off-screen, paused, or the display is asleep. The playback bars moved to CALayer + CABasicAnimation, handed to the render server once so the main thread pays nothing. Artwork is decoded once per track and downsampled with ImageIO, accessibility settings are cached instead of round-tripping to the accessibility server from a view body, and the store diffs before it writes so constant position updates re-render nothing. Architecture is one store, one shape, and a service per feature, with features never importing each other; Reduce Motion is honoured everywhere, including mid-track.",
+        "An always-on overlay welded to the notch that works with any app reporting to macOS Now Playing — including YouTube Music in a browser — or Apple Music and Spotify directly. It replaces the system volume, brightness and keyboard-backlight HUDs, parks dragged files on a shelf that survives restarts, and opens on hover or a two-finger scroll with a haptic tap. Non-notched displays get a floating island, and every permission is optional: skip one and only the feature that needs it stays off.",
       impact:
-        "0.0% idle CPU while playing — measured with `sample` against a real track, not a target. Ships as a signed .dmg with one dependency and 10 test suites covering notch geometry, album colour extraction, calendar mapping, and store behaviour.",
+        "Shipped as a GPL-3.0 open-source app through 39 .dmg builds, a welcome tour that explains each permission before asking, and customisable accents, player buttons and shortcuts.",
     },
     images: [
-      "/assets/projects/visor/expanded.png",
-      "/assets/projects/visor/compact.png",
-      "/assets/projects/visor/agenda.png",
-      "/assets/projects/visor/vinyl.png",
-      "/assets/projects/visor/screenshot-catch.png",
+      "/assets/projects/visor/home.webp",
+      "/assets/projects/visor/closed.webp",
+      "/assets/projects/visor/vinyl.webp",
+      "/assets/projects/visor/shelf.webp",
     ],
   },
   {
