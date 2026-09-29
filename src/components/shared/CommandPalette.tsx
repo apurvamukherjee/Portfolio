@@ -46,10 +46,6 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
     }
   }, [open])
 
-  useEffect(() => {
-    setActiveIndex(0)
-  }, [query])
-
   function runCommand(index: number) {
     const command = filtered[index]
     if (!command) return
@@ -103,7 +99,10 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
               <input
                 ref={inputRef}
                 value={query}
-                onChange={(e) => setQuery(e.target.value)}
+                onChange={(e) => {
+                  setQuery(e.target.value)
+                  setActiveIndex(0)
+                }}
                 onKeyDown={handleKeyDown}
                 placeholder="Type a command or search…"
                 aria-label="Command search"
