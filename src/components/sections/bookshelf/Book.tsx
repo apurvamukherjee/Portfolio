@@ -67,11 +67,16 @@ interface BookProps {
   /** How many books share this shelf — a lone book uses the tallest spine so it reads as anchored to the shelf tag instead of floating below it with no taller neighbor to compare against. */
   shelfSize: number
   hidden: boolean
+  /** Distance from the spine under a finger (0 = this one), or null when no finger is on the shelf. */
+  fan: number | null
   onOpen: () => void
 }
 
+// How much of a full lift the spines around a finger get, by distance from it.
+const FAN_FALLOFF = [1, 0.45, 0.15]
+
 /** One spine on the shelf. Renders an inert placeholder (same footprint) while its OpenBook counterpart owns the shared layout transition, so neighboring books never reflow. */
-export function Book({ project, shelfSize, hidden, onOpen }: BookProps) {
+export function Book({ project, shelfSize, hidden, fan, onOpen }: BookProps) {
   const fine = useFinePointer()
   const reduced = useReducedMotion()
   const seed = nameSeed(project.name)
@@ -88,6 +93,12 @@ export function Book({ project, shelfSize, hidden, onOpen }: BookProps) {
   const build = BUILDS[seed % BUILDS.length]
   const motionChar = MOTIONS[seed % MOTIONS.length]
   const lifted = { y: motionChar.lift, rotate: tilt, zIndex: 5 }
+  const falloff = fan === null ? undefined : FAN_FALLOFF[Math.abs(fan)]
+  // Neighbours lean away from the finger, like spines parting under a hand.
+  const fanned =
+    falloff === undefined || fan === null
+      ? { y: 0, rotate: 0 }
+      : { y: motionChar.lift * falloff, rotate: fan === 0 ? tilt : Math.sign(fan) * 2 * falloff }
 
   return (
     <motion.button
@@ -97,9 +108,11 @@ export function Book({ project, shelfSize, hidden, onOpen }: BookProps) {
       aria-label={`Open ${project.name}`}
       style={{ height, width }}
       className="group relative z-10 flex-none touch-manipulation snap-start overflow-hidden rounded-[2px] shadow-[0_1px_2px_rgba(0,0,0,0.45)] [-webkit-tap-highlight-color:transparent] focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
+      animate={reduced ? undefined : fanned}
       whileHover={!reduced && fine ? lifted : undefined}
       whileFocus={!reduced ? lifted : undefined}
-      whileTap={!reduced ? { y: motionChar.lift / 2, scale: 0.99 } : undefined}
+      // Touch presses already lift through the shelf's fan; a tap state here would pin half a lift on top.
+      whileTap={!reduced && fine ? { y: motionChar.lift / 2, scale: 0.99 } : undefined}
       transition={{ type: 'spring', stiffness: motionChar.stiffness, damping: motionChar.damping }}
     >
       <span
