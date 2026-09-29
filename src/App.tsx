@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useEffect, useRef, useState } from 'react'
 import { useTheme } from './hooks/useTheme'
 import { useReducedMotion } from 'framer-motion'
 import { useCommandPaletteShortcut } from './hooks/useCommandPaletteShortcut'
@@ -31,6 +31,8 @@ const Terminal = lazy(() => import('./components/shared/Terminal').then((m) => (
 
 const INTRO_SESSION_KEY = 'portfolio-intro-seen'
 const SUDO_SEQUENCE = ['s', 'u', 'd', 'o']
+const KONAMI_SEQUENCE = ['arrowup', 'arrowup', 'arrowdown', 'arrowdown', 'arrowleft', 'arrowright', 'arrowleft', 'arrowright', 'b', 'a']
+const KONAMI_MS = 10_000
 
 function hasSeenIntro(): boolean {
   try {
@@ -45,6 +47,8 @@ function App() {
   const reducedMotion = useReducedMotion() ?? false
   const [introDone, setIntroDone] = useState(() => reducedMotion || hasSeenIntro())
   const [overlay, setOverlay] = useState<'none' | 'palette' | 'terminal'>('none')
+  const [konami, setKonami] = useState(false)
+  const konamiTimer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const handleIntroComplete = () => {
     try {
@@ -57,6 +61,12 @@ function App() {
 
   useCommandPaletteShortcut(() => setOverlay((o) => (o === 'palette' ? 'none' : 'palette')))
   useKeySequence(SUDO_SEQUENCE, () => setOverlay('terminal'))
+  useKeySequence(KONAMI_SEQUENCE, () => {
+    setKonami(true)
+    clearTimeout(konamiTimer.current)
+    konamiTimer.current = setTimeout(() => setKonami(false), KONAMI_MS)
+  })
+  useEffect(() => () => clearTimeout(konamiTimer.current), [])
 
   return (
     <IntroContext.Provider value={introDone}>
@@ -65,7 +75,7 @@ function App() {
           <Preloader onComplete={handleIntroComplete} />
         </Suspense>
       )}
-      <MatrixRain theme={theme} />
+      <MatrixRain theme={theme} unlocked={konami} />
       <CursorSpotlight />
       <ScrollProgressBar />
       <Navbar theme={theme} onToggleTheme={toggle} />
