@@ -8,82 +8,29 @@ const CACHE_TTL_MS = 60 * 60 * 1000
 
 export interface GithubStats {
   publicRepos: number
-  totalStars: number
-  followers: number
-  topLanguage: string | null
   /** All languages detected across own (non-fork) repos, sorted most- to least-used. */
   allLanguages: string[]
   /** All-time GitHub contributions. Null if the contributions API is unreachable — never fabricated. */
   totalContributions: number | null
-  /** Consecutive days with at least one contribution, ending today (or yesterday if today has none yet). Null if unavailable. */
-  currentStreak: number | null
-  /** Longest such run across all recorded history. Null if unavailable. */
-  longestStreak: number | null
 }
 
 interface GithubUserResponse {
   public_repos: number
-  followers: number
 }
 
 interface GithubRepoResponse {
   fork: boolean
-  stargazers_count: number
   language: string | null
-}
-
-interface ContributionDay {
-  date: string
-  count: number
 }
 
 interface ContributionsResponse {
   total: Record<string, number>
-  contributions: ContributionDay[]
-}
-
-/**
- * The API returns full calendar years, including future dates past today with count 0 —
- * so "today" can't just be treated as whatever the last array entry happens to be.
- */
-function computeStreaks(days: ContributionDay[]): { current: number; longest: number } {
-  const todayIso = new Date().toISOString().slice(0, 10)
-  const sorted = days
-    .filter((day) => day.date <= todayIso)
-    .slice()
-    .sort((a, b) => a.date.localeCompare(b.date))
-
-  let longest = 0
-  let running = 0
-  for (const day of sorted) {
-    if (day.count > 0) {
-      running++
-      longest = Math.max(longest, running)
-    } else {
-      running = 0
-    }
-  }
-
-  let current = 0
-  let i = sorted.length - 1
-  if (i >= 0 && sorted[i].count === 0) i-- // today might just not be over yet
-  for (; i >= 0; i--) {
-    if (sorted[i].count === 0) break
-    current++
-  }
-
-  return { current, longest }
 }
 
 function isValidStats(value: unknown): value is GithubStats {
   if (typeof value !== 'object' || value === null) return false
   const s = value as Record<string, unknown>
-  return (
-    typeof s.publicRepos === 'number' &&
-    typeof s.totalStars === 'number' &&
-    typeof s.followers === 'number' &&
-    Array.isArray(s.allLanguages)
-  )
+  return typeof s.publicRepos === 'number' && Array.isArray(s.allLanguages)
 }
 
 async function fetchStats(): Promise<GithubStats> {
@@ -100,8 +47,6 @@ async function fetchStats(): Promise<GithubStats> {
   const repos = (await reposRes.value.json()) as GithubRepoResponse[]
   const ownRepos = repos.filter((repo) => !repo.fork)
 
-  const totalStars = ownRepos.reduce((sum, repo) => sum + repo.stargazers_count, 0)
-
   const languageCounts = new Map<string, number>()
   for (const repo of ownRepos) {
     if (!repo.language) continue
@@ -110,29 +55,14 @@ async function fetchStats(): Promise<GithubStats> {
   const allLanguages = [...languageCounts.entries()]
     .sort((a, b) => b[1] - a[1])
     .map(([language]) => language)
-  const topLanguage = allLanguages[0] ?? null
 
   let totalContributions: number | null = null
-  let currentStreak: number | null = null
-  let longestStreak: number | null = null
   if (contribRes.status === 'fulfilled' && contribRes.value.ok) {
     const contributions = (await contribRes.value.json()) as ContributionsResponse
     totalContributions = Object.values(contributions.total).reduce((sum, count) => sum + count, 0)
-    const streaks = computeStreaks(contributions.contributions)
-    currentStreak = streaks.current
-    longestStreak = streaks.longest
   }
 
-  return {
-    publicRepos: user.public_repos,
-    totalStars,
-    followers: user.followers,
-    topLanguage,
-    allLanguages,
-    totalContributions,
-    currentStreak,
-    longestStreak,
-  }
+  return { publicRepos: user.public_repos, allLanguages, totalContributions }
 }
 
 /** Client-side GitHub stats, cached in localStorage for an hour so repeat visits are instant and stay under the unauthenticated rate limit. Never fabricates numbers — falls back to cache or nothing on failure. */
