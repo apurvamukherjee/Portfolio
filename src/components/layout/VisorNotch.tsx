@@ -30,6 +30,8 @@ const TRIED_KEY = 'portfolio-notch-tried'
 const CLOSED = { width: 200, height: 32, radius: 12 }
 const OPEN = { width: 560, height: 188, radius: 28 }
 const BAR_DELAYS = ['0s', '-0.45s', '-0.2s', '-0.7s']
+const WAVE_BARS = 18
+const WAVE_HEIGHT = 26
 
 function formatTime(seconds: number): string {
   const s = Math.floor(seconds)
@@ -57,6 +59,10 @@ export function VisorNotch() {
   const [playing, setPlaying] = useState(false)
   const [time, setTime] = useState(0)
   const [duration, setDuration] = useState(0)
+  const [scrubbing, setScrubbing] = useState(false)
+  const audioCtxRef = useRef<AudioContext | null>(null)
+  const analyserRef = useRef<AnalyserNode | null>(null)
+  const waveRef = useRef<HTMLCanvasElement>(null)
 
   const setExpanded = (open: boolean) => {
     setExpandedState(open)
@@ -90,11 +96,65 @@ export function VisorNotch() {
     return () => document.removeEventListener('pointerdown', onPointerDown)
   }, [expanded])
 
+  // Built on the first Play press: an AudioContext has to start inside a user gesture, and once the
+  // element is routed through it, a suspended context would mean silence.
+  const ensureAnalyser = (audio: HTMLAudioElement) => {
+    if (analyserRef.current || typeof AudioContext === 'undefined') return
+    const ctx = new AudioContext()
+    const analyser = ctx.createAnalyser()
+    analyser.fftSize = 64
+    analyser.smoothingTimeConstant = 0.75
+    ctx.createMediaElementSource(audio).connect(analyser)
+    analyser.connect(ctx.destination)
+    audioCtxRef.current = ctx
+    analyserRef.current = analyser
+  }
+
   const togglePlay = () => {
     const audio = audioRef.current
     if (!audio) return
-    if (audio.paused) void audio.play()
-    else audio.pause()
+    if (audio.paused) {
+      ensureAnalyser(audio)
+      void audio.play()
+    } else {
+      audio.pause()
+    }
+  }
+
+  // Waveform over the cover art. Only runs while the island is open and music is playing.
+  useEffect(() => {
+    const canvas = waveRef.current
+    const analyser = analyserRef.current
+    if (!expanded || !playing || reduced || !canvas || !analyser) return
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+    const dpr = window.devicePixelRatio || 1
+    canvas.width = canvas.clientWidth * dpr
+    canvas.height = WAVE_HEIGHT * dpr
+    ctx.scale(dpr, dpr)
+    const bins = new Uint8Array(analyser.frequencyBinCount)
+    const barWidth = canvas.clientWidth / WAVE_BARS
+    let raf = 0
+    const draw = () => {
+      analyser.getByteFrequencyData(bins)
+      ctx.clearRect(0, 0, canvas.clientWidth, WAVE_HEIGHT)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.9)'
+      for (let i = 0; i < WAVE_BARS; i++) {
+        const level = (bins[i + 1] ?? 0) / 255
+        const h = Math.max(2, level * WAVE_HEIGHT)
+        ctx.fillRect(i * barWidth + 1, WAVE_HEIGHT - h, barWidth - 2, h)
+      }
+      raf = requestAnimationFrame(draw)
+    }
+    raf = requestAnimationFrame(draw)
+    return () => cancelAnimationFrame(raf)
+  }, [expanded, playing, reduced])
+
+  const startScrub = () => {
+    setScrubbing(true)
+    const stop = () => setScrubbing(false)
+    window.addEventListener('pointerup', stop, { once: true })
+    window.addEventListener('pointercancel', stop, { once: true })
   }
 
   const seek = (seconds: number) => {
@@ -125,6 +185,8 @@ export function VisorNotch() {
         preload="none"
         onPlay={() => {
           setPlaying(true)
+          // Resumed from media keys / lock screen with no click: make sure the graph isn't asleep.
+          void audioCtxRef.current?.resume()
           if ('mediaSession' in navigator) {
             navigator.mediaSession.metadata = new MediaMetadata({
               title: TRACK.title,
@@ -215,6 +277,14 @@ export function VisorNotch() {
                       className="group/cover relative h-[104px] w-[104px] flex-none overflow-hidden rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
                     >
                       <img src={TRACK.cover} alt="" className="h-full w-full object-cover" />
+                      <canvas
+                        ref={waveRef}
+                        aria-hidden
+                        className={`pointer-events-none absolute inset-x-1.5 bottom-1.5 w-[calc(100%-0.75rem)] transition-opacity duration-300 ${
+                          playing && !reduced ? 'opacity-100' : 'opacity-0'
+                        }`}
+                        style={{ height: WAVE_HEIGHT }}
+                      />
                       <span className="absolute inset-0 flex items-center justify-center bg-black/55 text-[11px] font-semibold opacity-0 transition-opacity group-hover/cover:opacity-100 group-focus-visible/cover:opacity-100">
                         Open project
                       </span>
@@ -224,16 +294,29 @@ export function VisorNotch() {
                       <p className="truncate text-[15px] font-semibold leading-tight">{TRACK.title}</p>
                       <p className="truncate text-[13px] text-white/55">{TRACK.artist}</p>
 
-                      <input
-                        type="range"
-                        min={0}
-                        max={duration || 0}
-                        step={0.1}
-                        value={time}
-                        onChange={(e) => seek(Number(e.target.value))}
-                        aria-label="Seek"
-                        className="mt-3 h-1 w-full cursor-pointer accent-white"
-                      />
+                      <div className="relative mt-3">
+                        {scrubbing && duration > 0 && (
+                          <span
+                            aria-hidden
+                            className="pointer-events-none absolute bottom-full mb-1.5 -translate-x-1/2 rounded-md bg-white px-1.5 py-0.5 font-mono text-[10px] font-semibold tabular-nums text-black"
+                            style={{ left: `${(time / duration) * 100}%` }}
+                          >
+                            {formatTime(time)}
+                          </span>
+                        )}
+                        <input
+                          type="range"
+                          min={0}
+                          max={duration || 0}
+                          step={0.1}
+                          value={time}
+                          onChange={(e) => seek(Number(e.target.value))}
+                          onPointerDown={startScrub}
+                          aria-label="Seek"
+                          aria-valuetext={`${formatTime(time)} of ${duration ? formatTime(duration) : 'unknown'}`}
+                          className="block h-1 w-full cursor-pointer accent-white"
+                        />
+                      </div>
                       <div className="mt-1 flex justify-between font-mono text-[10px] tabular-nums text-white/45">
                         <span>{formatTime(time)}</span>
                         <span>{duration ? formatTime(duration) : '--:--'}</span>
