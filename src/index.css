@@ -32,7 +32,6 @@
   --color-cloth-2: #3d3d48;
   --color-cloth-3: #2b2b34;
   --color-cloth-4: #454551;
-  --color-cloth-edge: rgba(255, 255, 255, 0.07);
   --color-foil: rgba(255, 255, 255, 0.82);
   --color-shelf-line: rgba(255, 255, 255, 0.16);
 
@@ -78,7 +77,6 @@
   --color-cloth-2: #d8d1c3;
   --color-cloth-3: #c4bbab;
   --color-cloth-4: #ded8cc;
-  --color-cloth-edge: rgba(0, 0, 0, 0.1);
   --color-foil: rgba(23, 20, 15, 0.55);
   --color-shelf-line: rgba(0, 0, 0, 0.22);
 
