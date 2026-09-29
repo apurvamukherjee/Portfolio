@@ -7,6 +7,7 @@ import { BADGE_BG, PLACEHOLDER_BG } from '../../../lib/projectStyles'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
 import { Chip } from '../../shared/Chip'
 import { CtaLink } from '../../shared/CtaLink'
+import { CaseStudy } from '../../shared/CaseStudy'
 import { ImageSlideshow } from '../../shared/ImageSlideshow'
 import { MacBookFrame } from '../../shared/MacBookFrame'
 import { BookLoader } from './BookLoader'
@@ -171,20 +172,8 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
                 )}
 
                 {project.caseStudy ? (
-                  <div className="mt-6 flex flex-col gap-3 text-sm text-muted">
-                    <p>
-                      <span className="font-semibold text-ink">Problem — </span>
-                      {project.caseStudy.problem}
-                    </p>
-                    <p>
-                      <span className="font-semibold text-ink">Approach — </span>
-                      {project.caseStudy.approach}
-                    </p>
-                    <p>
-                      <span className="font-semibold text-ink">Impact — </span>
-                      {project.caseStudy.impact}
-                    </p>
-                  </div>
+                  // Held until the book has opened, or the stagger would play under the loader cover.
+                  <CaseStudy caseStudy={project.caseStudy} delay={0.6} className="mt-6" />
                 ) : (
                   <p className="mt-6 text-sm italic text-muted">No case study written up for this one yet.</p>
                 )}

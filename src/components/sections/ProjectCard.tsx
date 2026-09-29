@@ -8,6 +8,7 @@ import { ImageSlideshow } from '../shared/ImageSlideshow'
 import { MacBookFrame } from '../shared/MacBookFrame'
 import { CtaLink } from '../shared/CtaLink'
 import { Chip } from '../shared/Chip'
+import { CaseStudy } from '../shared/CaseStudy'
 
 export function ProjectCard(project: Project) {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false)
@@ -95,20 +96,7 @@ export function ProjectCard(project: Project) {
               transition={{ duration: 0.3, ease: 'easeInOut' }}
               className="overflow-hidden"
             >
-              <div className="mt-4 flex flex-col gap-3 border-t border-border pt-4 text-sm text-muted">
-                <p>
-                  <span className="font-semibold text-ink">Problem — </span>
-                  {caseStudy.problem}
-                </p>
-                <p>
-                  <span className="font-semibold text-ink">Approach — </span>
-                  {caseStudy.approach}
-                </p>
-                <p>
-                  <span className="font-semibold text-ink">Impact — </span>
-                  {caseStudy.impact}
-                </p>
-              </div>
+              <CaseStudy caseStudy={caseStudy} className="mt-4 border-t border-border pt-4" />
             </motion.div>
           )}
         </AnimatePresence>
