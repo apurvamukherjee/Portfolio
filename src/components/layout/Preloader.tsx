@@ -1,5 +1,5 @@
 import { useEffect, useEffectEvent, useState } from 'react'
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { FACTS } from '../../data/facts'
 
@@ -16,25 +16,21 @@ interface PreloaderProps {
 /** One-time intro: loader animation, "By Apurva", and a random fact that types in, holds, then erases before the site reveals. */
 export function Preloader({ onComplete }: PreloaderProps) {
   return (
-    <AnimatePresence>
-      <motion.div
-        exit={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-        onClick={onComplete}
-        className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-4 bg-black px-6"
+    <div
+      onClick={onComplete}
+      className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-4 bg-black px-6"
+    >
+      <DotLottieReact src="/assets/loader.lottie" autoplay loop className="h-44 w-44 sm:h-56 sm:w-56" />
+      <motion.p
+        initial={{ opacity: 0, y: 8 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="text-xl font-semibold tracking-wide text-white sm:text-2xl"
       >
-        <DotLottieReact src="/assets/loader.lottie" autoplay loop className="h-44 w-44 sm:h-56 sm:w-56" />
-        <motion.p
-          initial={{ opacity: 0, y: 8 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-xl font-semibold tracking-wide text-white sm:text-2xl"
-        >
-          By <span className="text-accent">Apurva</span>
-        </motion.p>
-        <TypedFact onDone={onComplete} />
-      </motion.div>
-    </AnimatePresence>
+        By <span className="text-accent">Apurva</span>
+      </motion.p>
+      <TypedFact onDone={onComplete} />
+    </div>
   )
 }
 
