@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useMotionValueEvent, useScroll, useSpring, useReducedMotion } from 'framer-motion'
+import { motion, useMotionValueEvent, useScroll, useSpring, useReducedMotion, useTransform } from 'framer-motion'
 import { experience } from '../../data/experience'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
@@ -29,6 +29,11 @@ export function Experience() {
   const [reachedCount, setReachedCount] = useState(0)
   // Where each dot sits along the track (0–1). Measured lazily, dropped whenever the timeline resizes.
   const stopsRef = useRef<number[] | null>(null)
+  const trackRef = useRef<HTMLDivElement>(null)
+  const trackHeightRef = useRef(0)
+  // Glowing head riding the tip of the line: a translate on its own layer, so scrolling never repaints it.
+  const headY = useTransform(progress, (v) => v * trackHeightRef.current)
+  const headOpacity = useTransform(progress, [0, 0.02, 0.97, 1], [0, 1, 1, 0])
 
   function syncReached(value: number) {
     const timeline = timelineRef.current
@@ -48,6 +53,7 @@ export function Experience() {
     if (!timeline) return
     const observer = new ResizeObserver(() => {
       stopsRef.current = null
+      trackHeightRef.current = trackRef.current?.offsetHeight ?? 0
     })
     observer.observe(timeline)
     // A reload mid-page lands with progress already set, and no change event would fire for it.
@@ -95,6 +101,7 @@ export function Experience() {
               variants={staggerContainer(0.15)}
             >
               <div
+                ref={trackRef}
                 aria-hidden
                 className="absolute bottom-[22px] left-[22px] top-[22px] w-0.5 overflow-hidden rounded-full bg-border"
               >
@@ -103,6 +110,15 @@ export function Experience() {
                   style={{ height: '100%', scaleY: reduced ? 1 : progress }}
                 />
               </div>
+              {!reduced && (
+                // Sits under the dots (z-5 vs z-10), so each checkpoint swallows it as it passes.
+                <motion.span
+                  aria-hidden
+                  data-timeline-head
+                  className="pointer-events-none absolute left-[23px] top-[22px] z-[5] h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent shadow-[0_0_16px_5px_color-mix(in_srgb,var(--color-accent)_55%,transparent)] will-change-transform"
+                  style={{ y: headY, opacity: headOpacity }}
+                />
+              )}
 
               {experience.roles.map((role, i) => (
                 <motion.div key={role.role} variants={withMotionPreference(fadeUp, reduced)}>
