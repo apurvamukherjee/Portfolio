@@ -166,7 +166,7 @@ export function VisorNotch() {
             onKeyDown={(e) => {
               if (e.key === 'Escape') setExpandedNow(false)
             }}
-            className={`pointer-events-auto relative overflow-hidden bg-black text-white ${
+            className={`pointer-events-auto relative overflow-hidden bg-black text-white contain-layout contain-paint ${
               expanded ? 'shadow-[0_18px_40px_rgba(0,0,0,0.45)]' : ''
             }`}
           >
@@ -174,8 +174,8 @@ export function VisorNotch() {
               {expanded ? (
                 <motion.div
                   key="open"
-                  initial={{ opacity: 0, filter: reduced ? 'none' : 'blur(6px)' }}
-                  animate={{ opacity: 1, filter: 'blur(0px)' }}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: reduced ? 0 : 0.2, delay: reduced ? 0 : 0.06 }}
                   className="flex h-[188px] w-[560px] flex-col px-5 pb-4 pt-2"
