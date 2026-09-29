@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type KeyboardEvent } from 'react'
+import { useEffect, useEffectEvent, useRef, useState, type KeyboardEvent } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { runTerminalCommand } from '../../data/terminalCommands'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
@@ -12,11 +12,57 @@ interface TranscriptLine {
   id: number
   type: 'input' | 'output'
   text: string
+  /** Offset and length (ms) of this line's typing, relative to when its reply started. Absent = shown whole. */
+  typing?: { start: number; duration: number }
 }
 
 const PROMPT = 'guest@apurva-portfolio:~$'
+// A reply never takes longer than this to type, however long it is; short ones type at MAX_MS_PER_CHAR.
+const REPLY_BUDGET_MS = 900
+const MAX_MS_PER_CHAR = 14
 
 let lineId = 0
+
+function typedLines(lines: string[], animate: boolean): TranscriptLine[] {
+  const total = lines.reduce((n, line) => n + line.length, 0)
+  const msPerChar = Math.min(MAX_MS_PER_CHAR, REPLY_BUDGET_MS / Math.max(total, 1))
+  let start = 0
+  return lines.map((text) => {
+    const duration = text.length * msPerChar
+    const line: TranscriptLine = { id: lineId++, type: 'output', text, typing: animate ? { start, duration } : undefined }
+    start += duration
+    return line
+  })
+}
+
+/** Reveals `text` over `duration` ms after `start` ms, driven by rAF so it tracks real frame time. */
+function TypedText({ text, start, duration }: { text: string; start: number; duration: number }) {
+  const [shown, setShown] = useState(0)
+
+  useEffect(() => {
+    const t0 = performance.now()
+    let raf = 0
+    const tick = (now: number) => {
+      const progress = duration > 0 ? (now - t0 - start) / duration : 1
+      const count = Math.min(text.length, Math.max(0, Math.floor(progress * text.length)))
+      setShown(count)
+      if (count < text.length) raf = requestAnimationFrame(tick)
+    }
+    raf = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(raf)
+  }, [text, start, duration])
+
+  const typing = shown > 0 && shown < text.length
+  return (
+    <>
+      <span aria-hidden>
+        {text.slice(0, shown)}
+        {typing && <span className="animate-pulse-dot text-[#28c840]">▋</span>}
+      </span>
+      <span className="sr-only">{text}</span>
+    </>
+  )
+}
 
 /**
  * macOS traffic lights. Real ones hide their glyphs until the window group is hovered, which is
@@ -47,33 +93,50 @@ export function Terminal({ open, onClose }: TerminalProps) {
   const [historyIndex, setHistoryIndex] = useState(0)
   const inputRef = useRef<HTMLInputElement>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const contentRef = useRef<HTMLDivElement>(null)
 
   useLockBodyScroll(open)
 
-  useEffect(() => {
-    if (!open) return
-    setTranscript([{ id: lineId++, type: 'output', text: "Welcome. Type 'help' to see available commands." }])
+  // Effect event so a reduced-motion change mid-session doesn't wipe the transcript.
+  const resetSession = useEffectEvent(() => {
+    setTranscript(typedLines(["Welcome. Type 'help' to see available commands."], !reduced))
     setInput('')
     setHistory([])
     setHistoryIndex(0)
+  })
+
+  useEffect(() => {
+    if (!open) return
+    resetSession()
     const id = requestAnimationFrame(() => inputRef.current?.focus())
     return () => cancelAnimationFrame(id)
   }, [open])
 
+  // Follows content growth rather than transcript changes, so it also keeps up while a reply types.
   useEffect(() => {
-    const el = scrollRef.current
-    if (el) el.scrollTop = el.scrollHeight
-  }, [transcript])
+    const scroller = scrollRef.current
+    const content = contentRef.current
+    if (!open || !scroller || !content) return
+    const observer = new ResizeObserver(() => {
+      scroller.scrollTop = scroller.scrollHeight
+    })
+    observer.observe(content)
+    return () => observer.disconnect()
+  }, [open])
 
   function appendOutput(lines: string[]) {
     if (lines.length === 0) return
-    setTranscript((prev) => [...prev, ...lines.map((text) => ({ id: lineId++, type: 'output' as const, text }))])
+    setTranscript((prev) => [...prev, ...typedLines(lines, !reduced)])
   }
 
   function submit() {
     const raw = input
     const trimmed = raw.trim()
-    setTranscript((prev) => [...prev, { id: lineId++, type: 'input', text: raw }])
+    // A new command finishes whatever reply is still typing, like a real terminal flushing output.
+    setTranscript((prev) => [
+      ...prev.map((line) => (line.typing ? { ...line, typing: undefined } : line)),
+      { id: lineId++, type: 'input', text: raw },
+    ])
     setInput('')
 
     if (trimmed) {
@@ -149,23 +212,27 @@ export function Terminal({ open, onClose }: TerminalProps) {
             </div>
 
             <div ref={scrollRef} className="thin-scrollbar flex-1 overflow-y-auto px-4 py-3 leading-relaxed">
-              {transcript.map((line) => (
-                <motion.div
-                  key={line.id}
-                  initial={reduced ? false : { opacity: 0, y: 2 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.18, ease: appleEase }}
-                  className="whitespace-pre-wrap"
-                >
-                  {line.type === 'input' ? (
-                    <>
-                      <span className="text-[#28c840]">{PROMPT}</span> <span className="text-white/90">{line.text}</span>
-                    </>
-                  ) : (
-                    <span className="text-white/65">{line.text}</span>
-                  )}
-                </motion.div>
-              ))}
+              <div ref={contentRef}>
+                {transcript.map((line) => (
+                  <motion.div
+                    key={line.id}
+                    initial={reduced ? false : { opacity: 0, y: 2 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.18, ease: appleEase }}
+                    className="whitespace-pre-wrap"
+                  >
+                    {line.type === 'input' ? (
+                      <>
+                        <span className="text-[#28c840]">{PROMPT}</span> <span className="text-white/90">{line.text}</span>
+                      </>
+                    ) : (
+                      <span className="text-white/65">
+                        {line.typing ? <TypedText text={line.text} {...line.typing} /> : line.text}
+                      </span>
+                    )}
+                  </motion.div>
+                ))}
+              </div>
             </div>
 
             <div className="flex items-center gap-2 border-t border-white/10 px-4 py-3">
