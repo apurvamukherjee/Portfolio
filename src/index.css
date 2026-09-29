@@ -220,6 +220,35 @@
   animation: vt-circle-reveal 0.6s ease-in-out forwards;
 }
 
+/* Section jumps (data-vt set by jumpToSection): the new page wipes in over a still old one.
+   The old snapshot never moves, so fixed chrome that looks the same in both stays put. */
+@keyframes vt-wipe-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+@keyframes vt-wipe-down {
+  from {
+    clip-path: inset(0 0 100% 0);
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+  }
+}
+
+:root[data-vt]::view-transition-new(root) {
+  clip-path: none;
+  animation: vt-wipe-up 0.55s cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+:root[data-vt="up"]::view-transition-new(root) {
+  animation-name: vt-wipe-down;
+}
+
 @layer base {
   * {
     box-sizing: border-box;

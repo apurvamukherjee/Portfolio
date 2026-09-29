@@ -8,6 +8,7 @@ import { Logo } from './Logo'
 import { Hamburger } from './Hamburger'
 import { MobileMenu } from './MobileMenu'
 import { ThemeToggle } from '../shared/ThemeToggle'
+import { jumpToSection } from '../../lib/sectionTransition'
 
 interface NavbarProps {
   theme: Theme
@@ -37,6 +38,9 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
                 <li key={link.id} className="relative">
                   <a
                     href={`#${link.id}`}
+                    onClick={(e) => {
+                      if (jumpToSection(link.id)) e.preventDefault()
+                    }}
                     className={`relative font-mono text-sm transition-colors duration-200 ${
                       activeId === link.id ? 'text-gradient-accent font-semibold' : 'text-ink/80 hover:text-ink'
                     }`}
