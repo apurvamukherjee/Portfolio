@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import { TbBrandGithub, TbChevronDown } from 'react-icons/tb'
 import type { Project } from '../../data/projects'
-import { BADGE_BG, PLACEHOLDER_BG } from '../../lib/projectStyles'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { ImageSlideshow } from '../shared/ImageSlideshow'
 import { MacBookFrame } from '../shared/MacBookFrame'
@@ -12,19 +11,12 @@ import { CaseStudy } from '../shared/CaseStudy'
 
 export function ProjectCard(project: Project) {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false)
-  const caseStudy = project.kind === 'gallery' ? project.caseStudy : undefined
+  const { caseStudy } = project
 
   return (
     <GradientSweepCard className="flex flex-col overflow-hidden rounded-lg md:flex-row">
       <div className="flex flex-1 flex-col gap-4 p-6 md:p-8">
-        {project.kind === 'placeholder' ? (
-          <div
-            aria-hidden
-            className={`flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white ${BADGE_BG[project.accent]}`}
-          >
-            {project.badge}
-          </div>
-        ) : project.logoSrc ? (
+        {project.logoSrc ? (
           <img
             src={project.logoSrc}
             alt={`${project.name} logo`}
@@ -102,15 +94,7 @@ export function ProjectCard(project: Project) {
         </AnimatePresence>
       </div>
 
-      {project.kind === 'placeholder' ? (
-        <div
-          className={`relative min-h-[220px] flex-1 overflow-hidden bg-gradient-to-br ${PLACEHOLDER_BG[project.accent]} to-black`}
-        >
-          <div className="flex h-full w-full items-center justify-center p-6 text-center text-sm text-white/80">
-            {project.placeholderText}
-          </div>
-        </div>
-      ) : project.variant === 'app' ? (
+      {project.variant === 'app' ? (
         <div className="relative flex flex-none items-center justify-center overflow-hidden bg-black p-6 md:w-72">
           <div className="relative aspect-[9/19] w-40 overflow-hidden rounded-[1.75rem] border-4 border-white/10 sm:w-44">
             <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="contain" />

@@ -17,7 +17,7 @@ export const SHELF_LABELS: Record<ShelfCategory, string> = {
   exp: "Early Experiments",
 };
 
-export interface ProjectBase {
+export interface Project {
   name: string;
   description: string;
   /** When true, `description` is trusted HTML (author-authored) and rendered as-is instead of escaped text. */
@@ -30,27 +30,15 @@ export interface ProjectBase {
   category: ShelfCategory;
   /** The project's own logo/icon, shown as a tinted background on its book spine. Omit to fall back to a flat category-color spine. */
   spineLogo?: string;
+  /** 'app' = tall phone screenshots (shown uncropped in a phone-shaped frame); 'web' = landscape browser screenshots (cropped to fill). */
+  variant?: "app" | "web";
+  logoSrc?: string;
+  images: string[];
+  caseStudy?: CaseStudy;
 }
-
-export type Project =
-  | (ProjectBase & {
-      kind: "placeholder";
-      badge: string;
-      placeholderText: string;
-      accent: "red" | "blue" | "violet";
-    })
-  | (ProjectBase & {
-      kind: "gallery";
-      /** 'app' = tall phone screenshots (shown uncropped in a phone-shaped frame); 'web' = landscape browser screenshots (cropped to fill). */
-      variant?: "app" | "web";
-      logoSrc?: string;
-      images: string[];
-      caseStudy?: CaseStudy;
-    });
 
 export const projects: Project[] = [
   {
-    kind: "gallery",
     name: "Monopolis",
     category: "games",
     spineLogo: "/assets/projects/logos/monopolis.svg",
@@ -77,7 +65,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     name: "KeyStrike",
     category: "games",
     spineLogo: "/assets/projects/logos/keystrike.svg",
@@ -105,7 +92,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     variant: "app",
     name: "LearnMo",
     category: "apps",
@@ -134,7 +120,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     name: "Kiwami",
     category: "apps",
     spineLogo: "/assets/projects/logos/kiwami.webp",
@@ -160,7 +145,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     variant: "app",
     name: "LifeOS",
     category: "apps",
@@ -187,7 +171,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     name: "Pixelpanic",
     category: "games",
     spineLogo: "/assets/projects/logos/pixelpanic.webp",
@@ -215,7 +198,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     variant: "app",
     name: "Zenith",
     category: "apps",
@@ -240,7 +222,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     variant: "web",
     name: "Komodo",
     category: "oss",
@@ -270,7 +251,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     variant: "web",
     name: "Visor",
     category: "oss",
@@ -297,7 +277,6 @@ export const projects: Project[] = [
     ],
   },
   {
-    kind: "gallery",
     variant: "app",
     name: "FitCart",
     category: "native",
@@ -327,7 +306,6 @@ export const projects: Project[] = [
     },
   },
   {
-    kind: "gallery",
     name: "Code Synth",
     category: "exp",
     spineLogo: "/assets/projects/logos/codesynth.webp",
@@ -346,7 +324,6 @@ export const projects: Project[] = [
     },
   },
   {
-    kind: "gallery",
     name: "Kimu",
     category: "exp",
     description:
@@ -365,7 +342,6 @@ export const projects: Project[] = [
     liveUrl: "https://chat-app-alpha-ivory-12.vercel.app/",
   },
   {
-    kind: "gallery",
     name: "Aim Trainer Game",
     category: "exp",
     description:
@@ -378,7 +354,6 @@ export const projects: Project[] = [
     liveUrl: "https://apurvamukherjee.github.io/AIm-Trainer-Game/",
   },
   {
-    kind: "gallery",
     name: "Gemini Clone",
     category: "exp",
     description:

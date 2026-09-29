@@ -15,15 +15,3 @@ export const CATEGORY_ICON: Record<ShelfCategory, IconType> = {
   native: TbBrandReactNative,
   exp: TbFlaskFilled,
 }
-
-export const BADGE_BG: Record<'red' | 'blue' | 'violet', string> = {
-  red: 'bg-red-600',
-  blue: 'bg-blue-600',
-  violet: 'bg-violet-600',
-}
-
-export const PLACEHOLDER_BG: Record<'red' | 'blue' | 'violet', string> = {
-  red: 'from-red-950',
-  blue: 'from-blue-950',
-  violet: 'from-violet-950',
-}

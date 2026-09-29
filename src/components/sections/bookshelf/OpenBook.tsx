@@ -3,7 +3,6 @@ import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbBrandGithub, TbX } from 'react-icons/tb'
 import type { Project } from '../../../data/projects'
 import { SHELF_LABELS } from '../../../data/projects'
-import { BADGE_BG, PLACEHOLDER_BG } from '../../../lib/projectStyles'
 import { useLockBodyScroll } from '../../../hooks/useLockBodyScroll'
 import { Chip } from '../../shared/Chip'
 import { CtaLink } from '../../shared/CtaLink'
@@ -93,14 +92,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1], delay: settled ? 0.04 : 0 }}
         >
           <section className="thin-scrollbar flex-1 overflow-y-auto border-b border-border p-6 pt-14 md:border-b-0 md:border-r md:p-8 md:pt-8">
-            {project.kind === 'placeholder' ? (
-              <div
-                aria-hidden
-                className={`flex h-12 w-12 items-center justify-center rounded-full text-xl font-bold text-white ${BADGE_BG[project.accent]}`}
-              >
-                {project.badge}
-              </div>
-            ) : project.logoSrc ? (
+            {project.logoSrc ? (
               <img src={project.logoSrc} alt="" className="h-12 w-12 rounded-full bg-white object-contain p-1" />
             ) : (
               <div
@@ -156,34 +148,24 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           </section>
 
           <section className="thin-scrollbar flex-1 overflow-y-auto p-6 md:p-8">
-            {project.kind === 'gallery' ? (
-              <>
-                <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted">Screens</p>
-                {project.variant === 'app' ? (
-                  <div className="relative mx-auto aspect-[9/19] w-40 overflow-hidden rounded-[1.75rem] border-4 border-white/10 bg-black shadow-card sm:w-48">
-                    <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="contain" />
-                  </div>
-                ) : (
-                  <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-card">
-                    <MacBookFrame>
-                      <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="cover" />
-                    </MacBookFrame>
-                  </div>
-                )}
-
-                {project.caseStudy ? (
-                  // Held until the book has opened, or the stagger would play under the loader cover.
-                  <CaseStudy caseStudy={project.caseStudy} delay={0.6} className="mt-6" />
-                ) : (
-                  <p className="mt-6 text-sm italic text-muted">No case study written up for this one yet.</p>
-                )}
-              </>
-            ) : (
-              <div
-                className={`flex min-h-[220px] items-center justify-center rounded-lg bg-gradient-to-br p-6 text-center text-sm text-white/80 ${PLACEHOLDER_BG[project.accent]} to-black`}
-              >
-                {project.placeholderText}
+            <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted">Screens</p>
+            {project.variant === 'app' ? (
+              <div className="relative mx-auto aspect-[9/19] w-40 overflow-hidden rounded-[1.75rem] border-4 border-white/10 bg-black shadow-card sm:w-48">
+                <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="contain" />
               </div>
+            ) : (
+              <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-card">
+                <MacBookFrame>
+                  <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="cover" />
+                </MacBookFrame>
+              </div>
+            )}
+
+            {project.caseStudy ? (
+              // Held until the book has opened, or the stagger would play under the loader cover.
+              <CaseStudy caseStudy={project.caseStudy} delay={0.6} className="mt-6" />
+            ) : (
+              <p className="mt-6 text-sm italic text-muted">No case study written up for this one yet.</p>
             )}
           </section>
         </motion.div>
