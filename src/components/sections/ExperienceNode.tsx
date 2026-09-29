@@ -1,13 +1,37 @@
+import { motion, useReducedMotion } from 'framer-motion'
 import type { ExperienceRole } from '../../data/experience'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { Chip } from '../shared/Chip'
 
-export function ExperienceNode({ role, icon: Icon, time, status, points, tech }: ExperienceRole) {
+interface ExperienceNodeProps extends ExperienceRole {
+  /** True once the timeline's progress line has reached this role's dot. */
+  reached: boolean
+}
+
+export function ExperienceNode({ role, icon: Icon, time, status, points, tech, reached }: ExperienceNodeProps) {
+  const reduced = useReducedMotion()
+
   return (
     <div className="relative flex gap-5">
-      <span className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent-deep text-white ring-4 ring-surface-raised">
+      <motion.span
+        data-timeline-dot
+        initial={false}
+        animate={reached ? { scale: 1, opacity: 1 } : { scale: 0.8, opacity: 0.45 }}
+        // Only scale gets the bouncy spring: an underdamped opacity would visibly flicker around 1.
+        transition={{ scale: { type: 'spring', stiffness: 520, damping: 16 }, opacity: { duration: 0.25 } }}
+        className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accent to-accent-deep text-white ring-4 ring-surface-raised"
+      >
+        {!reduced && reached && (
+          <motion.span
+            aria-hidden
+            className="pointer-events-none absolute inset-0 rounded-full border-2 border-accent"
+            initial={{ scale: 1, opacity: 0.8 }}
+            animate={{ scale: 1.9, opacity: 0 }}
+            transition={{ duration: 0.7, ease: 'easeOut' }}
+          />
+        )}
         <Icon size={20} />
-      </span>
+      </motion.span>
 
       <GradientSweepCard tilt={false} className="flex-1 rounded-lg p-5">
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2">

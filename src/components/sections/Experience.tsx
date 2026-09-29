@@ -1,16 +1,60 @@
-import { useRef } from 'react'
-import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion'
+import { useEffect, useRef, useState } from 'react'
+import { motion, useMotionValueEvent, useScroll, useSpring, useReducedMotion } from 'framer-motion'
 import { experience } from '../../data/experience'
 import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { Chip } from '../shared/Chip'
 import { ExperienceNode } from './ExperienceNode'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
+
+// Matches the track's inset: it runs from the first dot's centre to the last one's.
+const TRACK_INSET = 22
+
+/** Sum of offsetTops up to `ancestor` — unlike getBoundingClientRect, ignores the entrance transforms. */
+function offsetTopWithin(node: HTMLElement, ancestor: HTMLElement): number {
+  let top = 0
+  let current: HTMLElement | null = node
+  while (current && current !== ancestor) {
+    top += current.offsetTop
+    current = current.offsetParent instanceof HTMLElement ? current.offsetParent : null
+  }
+  return top
+}
+
 export function Experience() {
   const reduced = useReducedMotion()
   const timelineRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: timelineRef, offset: ['start 0.8', 'end 0.3'] })
   const progress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })
+  const [reachedCount, setReachedCount] = useState(0)
+  // Where each dot sits along the track (0–1). Measured lazily, dropped whenever the timeline resizes.
+  const stopsRef = useRef<number[] | null>(null)
+
+  function syncReached(value: number) {
+    const timeline = timelineRef.current
+    if (!timeline) return
+    if (!stopsRef.current) {
+      const track = timeline.offsetHeight - TRACK_INSET * 2
+      const dots = timeline.querySelectorAll<HTMLElement>('[data-timeline-dot]')
+      stopsRef.current = Array.from(dots, (dot) => offsetTopWithin(dot, timeline) / track)
+    }
+    setReachedCount(stopsRef.current.filter((stop) => value > stop).length)
+  }
+
+  useMotionValueEvent(progress, 'change', syncReached)
+
+  useEffect(() => {
+    const timeline = timelineRef.current
+    if (!timeline) return
+    const observer = new ResizeObserver(() => {
+      stopsRef.current = null
+    })
+    observer.observe(timeline)
+    // A reload mid-page lands with progress already set, and no change event would fire for it.
+    syncReached(progress.get())
+    return () => observer.disconnect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   return (
     <section id="experience" className="w-full px-6 py-24 md:px-16">
@@ -60,9 +104,9 @@ export function Experience() {
                 />
               </div>
 
-              {experience.roles.map((role) => (
+              {experience.roles.map((role, i) => (
                 <motion.div key={role.role} variants={withMotionPreference(fadeUp, reduced)}>
-                  <ExperienceNode {...role} />
+                  <ExperienceNode {...role} reached={reduced || i < reachedCount} />
                 </motion.div>
               ))}
             </motion.div>
