@@ -67,18 +67,21 @@ export function Skills() {
             viewport={viewportOnce}
             variants={withMotionPreference(fadeUp, reduced)}
           >
-            <div className="relative mb-2 flex items-center gap-4">
+            <div className="relative mb-1 flex items-center gap-4">
               <span
                 aria-hidden
-                className="select-none text-5xl font-black leading-none text-transparent md:text-6xl"
-                style={{ WebkitTextStroke: '1px var(--color-accent)', opacity: 0.55 }}
+                className="w-14 select-none text-center text-5xl font-black leading-none text-transparent md:text-6xl"
+                style={{ WebkitTextStroke: '1px var(--color-accent)', opacity: 0.7 }}
               >
                 {category.kanji}
               </span>
-              <div>
-                <h3 className="text-gradient-accent text-xl font-black tracking-widest md:text-2xl">{category.heading}</h3>
-                <p className="font-mono text-xs text-muted">{category.reading}</p>
+              <div className="min-w-0">
+                <h3 className="text-xl font-bold tracking-wide text-ink md:text-2xl">{category.heading}</h3>
+                <p className="font-mono text-xs text-muted">
+                  <span className="text-accent">0{i + 1}</span> · {category.reading}
+                </p>
               </div>
+              <span aria-hidden className="h-px flex-1 bg-gradient-to-r from-accent/60 to-transparent" />
             </div>
             <SkillMarquee skills={category.skills} reverse={i % 2 === 1} />
           </motion.div>
