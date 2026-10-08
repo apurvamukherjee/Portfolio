@@ -76,7 +76,7 @@ export function About() {
         <SectionHeading tag="AboutMe" />
 
         <motion.div
-          className="mt-8 flex w-full flex-col items-center gap-12 md:flex-row md:items-start"
+          className="mt-8 flex w-full flex-col items-center gap-12 md:flex-row md:items-center md:gap-14"
           initial="hidden"
           whileInView="visible"
           viewport={viewportOnce}
@@ -84,7 +84,7 @@ export function About() {
         >
           <motion.div
             variants={withMotionPreference(fadeUp, reduced)}
-            className="flex flex-col gap-5 md:w-3/5"
+            className="flex flex-col gap-5 md:w-1/2"
           >
             <p className="text-lg leading-relaxed text-ink md:text-xl">
               CSE, KIIT '26. <Highlight order={0} to="skills">Software engineer</Highlight>{" "}
@@ -95,20 +95,18 @@ export function About() {
               <Highlight order={2} to="projects">50+ reusable React components</Highlight>.
             </p>
             <p className="text-lg leading-relaxed text-muted md:text-xl">
-              <Highlight order={3} to="experience">Full-time SWE at Mind Webs Venture</Highlight>{" "}
-              since Aug 2026: React, React Native, Node.js, MongoDB. Path: UI/UX
-              intern, Founder's Office, engineering intern. Pitched at{" "}
-              <Highlight order={4} to="leadership">India Mobile Congress 2025</Highlight>, judged{" "}
-              <Highlight order={5} to="leadership">DriveBlaze Hackathon</Highlight>. Side
+              Pitched at{" "}
+              <Highlight order={3} to="leadership">India Mobile Congress 2025</Highlight>, judged{" "}
+              <Highlight order={4} to="leadership">DriveBlaze Hackathon</Highlight>. Side
               projects: 8-player multiplayer Monopoly, and a macOS app that
-              turns the <Highlight order={6} to="home" action={openNotch}>MacBook notch</Highlight> into a
-              music player.
+              turns the <Highlight order={5} to="home" action={openNotch}>MacBook notch</Highlight> into a
+              music player. Off the clock: Honda sports bike and trekking.
             </p>
           </motion.div>
 
           <motion.div
             variants={withMotionPreference(fadeDown, reduced)}
-            className="relative w-full max-w-xs flex-shrink-0 md:w-2/5"
+            className="relative w-full max-w-sm flex-shrink-0 md:ml-auto md:w-1/2 md:max-w-md"
           >
             <PortraitFrame src="/assets/img/graduation.jpeg" alt="Apurva Mukherjee at his KIIT graduation" />
           </motion.div>

@@ -85,7 +85,7 @@ function Gate({ reduced, ring, lit }: { reduced: boolean; ring: number; lit: boo
   })
 
   return (
-    <svg viewBox="0 0 400 620" className="absolute inset-0 z-10 h-full w-full overflow-visible" aria-hidden focusable="false">
+    <svg viewBox="0 0 400 620" className="absolute inset-0 z-10 h-full w-full overflow-visible transition-[filter] duration-300 group-has-focus-visible:[filter:drop-shadow(0_0_8px_var(--color-accent))]" aria-hidden focusable="false">
       <defs>
         <linearGradient id={grad} x1="0" x2="1">
           <stop offset="0" stopColor="#000" stopOpacity="0.35" />
@@ -176,7 +176,7 @@ export function PortraitFrame({ src, alt }: { src: string; alt: string }) {
   }
 
   return (
-    <div className="relative mx-auto w-full max-w-xs" style={{ perspective: 1000 }}>
+    <div className="group relative mx-auto w-full" style={{ perspective: 1000 }}>
       <motion.div
         role="button"
         tabIndex={0}
@@ -189,7 +189,7 @@ export function PortraitFrame({ src, alt }: { src: string; alt: string }) {
         onClick={ring}
         onKeyDown={onKey}
         style={{ rotateX: reduced ? 0 : rotateX, rotateY: reduced ? 0 : rotateY, touchAction: 'pan-y' }}
-        className="relative aspect-[400/620] w-full cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-surface"
+        className="relative aspect-[400/620] w-full cursor-pointer select-none outline-none"
       >
         <motion.div className="absolute overflow-hidden bg-surface" style={{ left: '17%', right: '17%', top: '30.8%', bottom: '4.5%', x: reduced ? 0 : photoX, y: reduced ? 0 : photoY, scale: 1.06 }}>
           <img src={src} alt={alt} draggable={false} className="h-full w-full object-cover" style={{ objectPosition: '50% 60%' }} />
