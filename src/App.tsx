@@ -71,7 +71,7 @@ function App() {
   return (
     <IntroContext.Provider value={introDone}>
       {!introDone && (
-        <Suspense fallback={<div className="fixed inset-0 z-[999] bg-black" />}>
+        <Suspense fallback={<div className="fixed inset-0 z-[999] bg-surface" />}>
           <Preloader onComplete={handleIntroComplete} />
         </Suspense>
       )}

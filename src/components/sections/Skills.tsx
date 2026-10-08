@@ -17,7 +17,7 @@ function Dragon({ progress }: { progress: ReturnType<typeof useScroll>['scrollYP
       stroke="var(--color-accent)"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.16]"
+      className="pointer-events-none absolute inset-0 h-full w-full opacity-[0.16] [[data-theme=light]_&]:opacity-[0.3]"
     >
       <circle cx="930" cy="200" r="120" strokeWidth="1" opacity="0.6" />
       <motion.path

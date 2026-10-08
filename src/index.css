@@ -68,16 +68,16 @@
   --color-surface: #f2ede4;
   --color-surface-raised: rgba(0, 0, 0, 0.04);
   --color-muted: #55524b;
-  --color-border: rgba(0, 0, 0, 0.14);
+  --color-border: rgba(0, 0, 0, 0.2);
   --color-shadow: rgba(0, 0, 0, 0.16);
   --color-accent: #d40000;
   --color-accent-deep: #6b0000;
 
-  --color-cloth-1: #cfc7b8;
-  --color-cloth-2: #d8d1c3;
-  --color-cloth-3: #c4bbab;
-  --color-cloth-4: #ded8cc;
-  --color-foil: rgba(23, 20, 15, 0.55);
+  --color-cloth-1: #a89f8c;
+  --color-cloth-2: #b5ad9a;
+  --color-cloth-3: #9a917e;
+  --color-cloth-4: #bfb7a5;
+  --color-foil: rgba(23, 20, 15, 0.82);
   --color-shelf-line: rgba(0, 0, 0, 0.22);
 
   /* Light-mode variants: iOS's own darker "on light" values, so text on a tint stays legible. */
@@ -511,6 +511,14 @@
 .skill-tile:hover .skill-tile-icon {
   color: var(--brand);
   filter: drop-shadow(0 0 10px color-mix(in srgb, var(--brand) 60%, transparent));
+}
+[data-theme="light"] .skill-tile {
+  background:
+    radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, var(--brand) 32%, transparent), transparent 65%),
+    #fffaf0;
+}
+[data-theme="light"] .skill-tile-icon {
+  color: color-mix(in srgb, var(--brand) 85%, var(--color-ink));
 }
 .skill-tile-corner {
   position: absolute;

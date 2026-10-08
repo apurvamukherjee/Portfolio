@@ -14,6 +14,7 @@ export function useTheme() {
 
   useEffect(() => {
     document.documentElement.setAttribute('data-theme', theme)
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'light' ? '#f2ede4' : '#000000')
     try {
       localStorage.setItem(STORAGE_KEY, theme)
     } catch {

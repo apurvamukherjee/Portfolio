@@ -27,7 +27,7 @@ export function FloatingResumeButton() {
       transition={{ type: 'spring', stiffness: 420, damping: 24 }}
       className={`fixed z-40 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-black bg-gradient-to-b from-accent to-accent-deep ${isScrolling ? 'pointer-events-none' : ''}`}
       style={{
-        boxShadow: '0 4px 0 0 #1a0000, 0 10px 20px rgba(255,0,0,0.3)',
+        boxShadow: '0 4px 0 0 #1a0000, 0 10px 20px var(--color-shadow)',
         bottom: 'max(1.25rem, env(safe-area-inset-bottom))',
         left: 'max(1.25rem, env(safe-area-inset-left))',
       }}

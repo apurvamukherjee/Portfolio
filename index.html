@@ -26,7 +26,7 @@
       (function () {
         try {
           var saved = localStorage.getItem('portfolio-theme');
-          var theme = saved === 'light' ? 'light' : 'dark';
+          var theme = saved ? (saved === 'light' ? 'light' : 'dark') : (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
           document.documentElement.setAttribute('data-theme', theme);
         } catch (e) {
           document.documentElement.setAttribute('data-theme', 'dark');

@@ -18,14 +18,14 @@ export function Preloader({ onComplete }: PreloaderProps) {
   return (
     <div
       onClick={onComplete}
-      className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-4 bg-black px-6"
+      className="fixed inset-0 z-[999] flex flex-col items-center justify-center gap-4 bg-surface px-6"
     >
-      <DotLottieReact src="/assets/loader.lottie" autoplay loop className="h-44 w-44 sm:h-56 sm:w-56" />
+      <DotLottieReact src="/assets/loader.lottie" autoplay loop className="h-44 w-44 sm:h-56 sm:w-56 [[data-theme=light]_&]:invert" />
       <motion.p
         initial={{ opacity: 0, y: 8 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.5 }}
-        className="text-xl font-semibold tracking-wide text-white sm:text-2xl"
+        className="text-xl font-semibold tracking-wide text-ink sm:text-2xl"
       >
         By <span className="text-accent">Apurva</span>
       </motion.p>
@@ -63,7 +63,7 @@ function TypedFact({ onDone }: { onDone: () => void }) {
   return (
     <p
       aria-label={`Fact: ${fact}`}
-      className="mt-4 min-h-[4.5rem] max-w-xl text-center font-mono text-xs leading-relaxed text-white/70 sm:text-sm"
+      className="mt-4 min-h-[4.5rem] max-w-xl text-center font-mono text-xs leading-relaxed text-ink/70 sm:text-sm"
     >
       <span aria-hidden>
         <span className="text-accent">facts: </span>
