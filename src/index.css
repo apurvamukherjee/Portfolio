@@ -531,3 +531,18 @@
 .skill-tile:hover .skill-tile-corner {
   opacity: 0.9;
 }
+
+.dragon-art {
+  --o: 0.3;
+  opacity: var(--o);
+  animation: dragon-breathe 7s ease-in-out infinite;
+}
+[data-theme="light"] .dragon-art {
+  --o: 0.4;
+}
+@keyframes dragon-breathe {
+  50% { opacity: calc(var(--o) * 0.7); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dragon-art { animation: none; }
+}

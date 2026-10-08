@@ -15,12 +15,14 @@ export function Skills() {
 
   const scrollReveal = useTransform(scrollYProgress, [0.05, 0.7], [-18, 100])
   const scrollDrift = useTransform(scrollYProgress, [0, 1], [40, -40])
+  const scrollGlow = useTransform(scrollYProgress, [0.1, 0.45, 0.85], [0.2, 1, 0.4])
+  const fullGlow = useMotionValue(0.5)
   const fullReveal = useMotionValue(100)
   const noDrift = useMotionValue(0)
 
   return (
     <section ref={ref} id="skills" className="relative w-full overflow-hidden py-24">
-      <Dragon reveal={reduced ? fullReveal : scrollReveal} drift={reduced ? noDrift : scrollDrift} />
+      <Dragon reveal={reduced ? fullReveal : scrollReveal} drift={reduced ? noDrift : scrollDrift} glow={reduced ? fullGlow : scrollGlow} />
       <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 md:px-16">
         <SectionHeading tag="Skills" />
         <p className="w-full font-mono text-xs text-muted md:text-sm">
