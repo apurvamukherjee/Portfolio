@@ -1,8 +1,12 @@
-import { useState, type PointerEvent } from 'react'
+import { useId, useState, type KeyboardEvent, type PointerEvent } from 'react'
 import { motion, useMotionValue, useReducedMotion, useSpring, useTransform } from 'framer-motion'
 
 const PETALS = 9
-const BURST = 16
+const BURST = 18
+const LANTERNS = [
+  { x: 112, delay: 1.2, swing: 1 },
+  { x: 288, delay: 1.35, swing: -1 },
+] as const
 
 function Petals({ count, burst }: { count: number; burst?: boolean }) {
   return Array.from({ length: count }, (_, i) => (
@@ -12,7 +16,7 @@ function Petals({ count, burst }: { count: number; burst?: boolean }) {
       className="sakura-petal"
       style={{
         left: `${(i * 37 + (burst ? 11 : 5)) % 100}%`,
-        animationDelay: `${burst ? (i % 4) * 0.08 : i * 0.9}s`,
+        animationDelay: `${burst ? (i % 5) * 0.07 : i * 0.9}s`,
         animationDuration: `${burst ? 2.2 : 7 + (i % 4)}s`,
         animationIterationCount: burst ? 1 : 'infinite',
         ['--drift' as string]: `${(i % 2 ? 1 : -1) * (20 + (i % 5) * 12)}px`,
@@ -21,131 +25,187 @@ function Petals({ count, burst }: { count: number; burst?: boolean }) {
   ))
 }
 
-const LACQUER = 'bg-gradient-to-r from-black/25 via-transparent to-black/30'
-
-function Lantern({ side, reduced }: { side: 'l' | 'r'; reduced: boolean }) {
+function Lantern({ x, delay, swing, ring, lit, reduced }: { x: number; delay: number; swing: number; ring: number; lit: boolean; reduced: boolean }) {
   return (
-    <motion.div
-      aria-hidden
-      className={`absolute top-[78px] z-10 flex flex-col items-center ${side === 'l' ? 'left-7' : 'right-7'}`}
-      style={{ originY: 0, translateZ: 30 }}
-      initial={reduced ? false : { y: -60, opacity: 0 }}
-      whileInView={reduced ? undefined : { y: 0, opacity: 1, rotate: side === 'l' ? [0, 9, -7, 9, 0] : [0, -9, 7, -9, 0] }}
+    <motion.g
+      initial={reduced ? false : { y: -70, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
       viewport={{ once: true }}
-      transition={{ y: { type: 'spring', stiffness: 120, damping: 9, delay: 1.1 }, opacity: { delay: 1.1 }, rotate: { delay: 1.5, duration: 3.6, repeat: Infinity, ease: 'easeInOut' } }}
+      transition={{ type: 'spring', stiffness: 110, damping: 10, delay }}
     >
-      <span className="h-3 w-px bg-black/60" />
-      <span className="lantern-glow flex h-9 w-7 items-center justify-center rounded-[45%] border border-black/40 bg-accent font-serif text-[11px] text-white">
-        祭
-      </span>
-      <span className="h-1.5 w-3 bg-black/60" />
-    </motion.div>
+      <motion.g
+        animate={reduced ? undefined : { rotate: [0, 3 * swing, -3 * swing, 0] }}
+        transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut', delay }}
+        style={{ originX: 0.5, originY: 0 }}
+      >
+        <motion.g
+          key={ring}
+          animate={ring && !reduced ? { rotate: [0, 20 * swing, -15 * swing, 9 * swing, -4 * swing, 0] } : undefined}
+          transition={{ duration: 2.4, ease: 'easeOut' }}
+          style={{ originX: 0.5, originY: 0 }}
+        >
+          <line x1={x} y1="192" x2={x} y2="206" stroke="#111" strokeWidth="1.5" />
+          <motion.ellipse
+            cx={x}
+            cy="226"
+            rx="30"
+            ry="30"
+            fill="#ffb347"
+            animate={reduced ? { opacity: lit ? 0.45 : 0.2 } : { opacity: lit ? [0.35, 0.65, 0.35] : [0.12, 0.28, 0.12] }}
+            transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+            style={{ filter: 'blur(9px)' }}
+          />
+          <rect x={x - 8} y="204" width="16" height="5" rx="1" fill="#111" />
+          <ellipse cx={x} cy="226" rx="14" ry="18" className="fill-accent" stroke="#111" strokeWidth="1" />
+          <path d={`M${x - 14} 226 H${x + 14} M${x - 12} 217 H${x + 12} M${x - 12} 235 H${x + 12}`} stroke="#111" strokeOpacity="0.35" strokeWidth="0.8" />
+          <rect x={x - 8} y="241" width="16" height="5" rx="1" fill="#111" />
+          <text x={x} y="230" textAnchor="middle" fontSize="12" fill="#fff" fontFamily="serif">祭</text>
+        </motion.g>
+      </motion.g>
+    </motion.g>
   )
 }
 
-function Gate({ reduced }: { reduced: boolean }) {
+function Gate({ reduced, ring, lit }: { reduced: boolean; ring: number; lit: boolean }) {
+  const uid = useId()
+  const grad = `lacquer-${uid}`
+  const view = { once: true } as const
   const rise = (delay: number) => ({
     initial: reduced ? false : { scaleY: 0 },
     whileInView: { scaleY: 1 },
-    viewport: { once: true },
-    transition: { type: 'spring' as const, stiffness: 90, damping: 14, delay },
-    style: { originY: 1, translateZ: 20 },
+    viewport: view,
+    transition: { type: 'spring' as const, stiffness: 80, damping: 15, delay },
+    style: { originX: 0.5, originY: 1 },
   })
   const drop = (delay: number) => ({
-    initial: reduced ? false : { y: -50, opacity: 0 },
+    initial: reduced ? false : { y: -60, opacity: 0 },
     whileInView: { y: 0, opacity: 1 },
-    viewport: { once: true },
-    transition: { type: 'spring' as const, stiffness: 140, damping: 12, delay },
+    viewport: view,
+    transition: { type: 'spring' as const, stiffness: 130, damping: 13, delay },
   })
 
   return (
-    <>
-      <motion.span aria-hidden className={`absolute bottom-0 left-0 top-6 w-3.5 bg-accent ${LACQUER}`} {...rise(0)} />
-      <motion.span aria-hidden className={`absolute bottom-0 right-0 top-6 w-3.5 bg-accent ${LACQUER}`} {...rise(0.1)} />
-      <span aria-hidden className="absolute bottom-0 left-[-3px] h-3 w-5 bg-black/80" />
-      <span aria-hidden className="absolute bottom-0 right-[-3px] h-3 w-5 bg-black/80" />
+    <svg viewBox="0 0 400 620" className="absolute inset-0 z-10 h-full w-full overflow-visible" aria-hidden focusable="false">
+      <defs>
+        <linearGradient id={grad} x1="0" x2="1">
+          <stop offset="0" stopColor="#000" stopOpacity="0.35" />
+          <stop offset="0.45" stopColor="#fff" stopOpacity="0.12" />
+          <stop offset="1" stopColor="#000" stopOpacity="0.4" />
+        </linearGradient>
+      </defs>
+      <ellipse cx="200" cy="600" rx="170" ry="9" fill="#000" opacity="0.22" />
 
-      <motion.svg aria-hidden viewBox="0 0 400 44" className="absolute -left-6 -right-6 -top-1 z-10 w-[calc(100%+3rem)] drop-shadow-lg" {...drop(0.5)}>
-        <path d="M0 6 Q80 22 200 22 Q320 22 400 6 L394 20 Q320 34 200 34 Q80 34 6 20Z" fill="#111" />
-        <path d="M10 22 Q90 32 200 32 L200 40 Q90 40 14 30Z M390 22 Q310 32 200 32 L200 40 Q310 40 386 30Z" className="fill-accent" />
-      </motion.svg>
+      {[
+        'M48 100 L72 100 L58 582 L34 582Z',
+        'M328 100 L352 100 L366 582 L342 582Z',
+      ].map((d) => (
+        <motion.g key={d} {...rise(d.startsWith('M48') ? 0 : 0.12)}>
+          <path d={d} className="fill-accent" />
+          <path d={d} fill={`url(#${grad})`} />
+        </motion.g>
+      ))}
+      <rect x="30" y="580" width="32" height="14" rx="2" fill="#111" />
+      <rect x="338" y="580" width="32" height="14" rx="2" fill="#111" />
 
-      <motion.span
-        aria-hidden
-        className="absolute left-1/2 top-[42px] z-10 flex h-[34px] w-8 -translate-x-1/2 items-center justify-center border border-amber-300/80 bg-black/85 font-serif text-[10px] leading-none text-amber-200 [writing-mode:vertical-rl]"
-        {...drop(0.9)}
+      <motion.g {...(reduced ? {} : { initial: { scaleX: 0 }, whileInView: { scaleX: 1 }, viewport: view, transition: { duration: 0.7, delay: 0.7, ease: 'easeOut' as const } })}>
+        <rect x="18" y="172" width="364" height="20" className="fill-accent" />
+        <rect x="18" y="172" width="364" height="20" fill="#000" opacity="0.14" />
+        <path d="M52 192 L72 192 L72 202Z M348 192 L328 192 L328 202Z" fill="#111" />
+      </motion.g>
+
+      <motion.g {...drop(0.9)}>
+        <rect x="182" y="124" width="36" height="48" fill="#111" stroke="#f5c542" strokeWidth="1.5" />
+        <text x="200" y="146" textAnchor="middle" fontSize="15" fill="#f5c542" fontFamily="serif">卒</text>
+        <text x="200" y="164" textAnchor="middle" fontSize="15" fill="#f5c542" fontFamily="serif">業</text>
+      </motion.g>
+
+      <motion.g {...drop(0.5)}>
+        <path d="M14 78 C70 92 130 95 200 95 C270 95 330 92 386 78 L382 106 C330 120 270 122 200 122 C130 122 70 120 18 106Z" className="fill-accent" />
+        <path d="M14 78 C70 92 130 95 200 95 C270 95 330 92 386 78 L382 106 C330 120 270 122 200 122 C130 122 70 120 18 106Z" fill="#000" opacity="0.1" />
+        <path d="M-6 30 C44 56 120 62 200 62 C280 62 356 56 406 30 L400 58 C350 82 280 86 200 86 C120 86 50 82 0 58Z" fill="#141414" />
+        <path d="M-6 30 C44 56 120 62 200 62 C280 62 356 56 406 30" fill="none" stroke="#fff" strokeOpacity="0.18" strokeWidth="1.2" />
+      </motion.g>
+
+      {LANTERNS.map((l) => (
+        <Lantern key={l.x} {...l} ring={ring} lit={lit} reduced={reduced} />
+      ))}
+
+      <motion.g
+        initial={reduced ? false : { scale: 2.6, opacity: 0, rotate: -24 }}
+        whileInView={{ scale: 1, opacity: 1, rotate: -8 }}
+        viewport={view}
+        transition={{ type: 'spring', stiffness: 240, damping: 14, delay: 1.6 }}
+        style={{ originX: 0.5, originY: 0.5 }}
       >
-        卒業
-      </motion.span>
-      <motion.span aria-hidden className={`absolute left-0 right-0 top-[78px] h-2.5 bg-accent ${LACQUER}`} initial={reduced ? false : { scaleX: 0 }} whileInView={{ scaleX: 1 }} viewport={{ once: true }} transition={{ duration: 0.6, delay: 0.7, ease: 'easeOut' }} />
-
-      <Lantern side="l" reduced={reduced} />
-      <Lantern side="r" reduced={reduced} />
-    </>
+        <rect x="84" y="528" width="46" height="46" rx="3" className="fill-accent" />
+        <text x="107" y="561" textAnchor="middle" fontSize="32" fontWeight="700" fill="#fff" fontFamily="serif">卒</text>
+      </motion.g>
+    </svg>
   )
 }
 
-/** Torii-gate portrait frame: tilts toward the cursor, drifts sakura, and bursts petals on click. */
+/** Torii portrait: gate parts follow real shinmei/ise anatomy. Tilt is mouse-only (a finger can't hover and tilt fights scroll); tap/Enter rings the lanterns. */
 export function PortraitFrame({ src, alt }: { src: string; alt: string }) {
-  const reduced = useReducedMotion()
+  const reduced = !!useReducedMotion()
   const [bursts, setBursts] = useState(0)
+  const [lit, setLit] = useState(false)
   const mx = useMotionValue(0)
   const my = useMotionValue(0)
-  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-10, 10]), { stiffness: 150, damping: 15 })
-  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [10, -10]), { stiffness: 150, damping: 15 })
+  const spring = { stiffness: 140, damping: 16 }
+  const rotateY = useSpring(useTransform(mx, [-0.5, 0.5], [-7, 7]), spring)
+  const rotateX = useSpring(useTransform(my, [-0.5, 0.5], [7, -7]), spring)
+  const photoX = useSpring(useTransform(mx, [-0.5, 0.5], [6, -6]), spring)
+  const photoY = useSpring(useTransform(my, [-0.5, 0.5], [6, -6]), spring)
 
   const onMove = (e: PointerEvent<HTMLDivElement>) => {
+    if (reduced || e.pointerType === 'touch') return
     const r = e.currentTarget.getBoundingClientRect()
     mx.set((e.clientX - r.left) / r.width - 0.5)
     my.set((e.clientY - r.top) / r.height - 0.5)
   }
-  const reset = () => {
+  const settle = () => {
     mx.set(0)
     my.set(0)
+    setLit(false)
+  }
+  const ring = () => setBursts((b) => b + 1)
+  const onKey = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key !== 'Enter' && e.key !== ' ') return
+    e.preventDefault()
+    ring()
   }
 
   return (
-    <div style={{ perspective: 900 }} className="relative mx-auto w-full max-w-xs pb-3">
+    <div className="relative mx-auto w-full max-w-xs" style={{ perspective: 1000 }}>
       <motion.div
-        onPointerMove={reduced ? undefined : onMove}
-        onPointerLeave={reset}
-        onClick={() => setBursts((b) => b + 1)}
-        style={reduced ? undefined : { rotateX, rotateY, transformStyle: 'preserve-3d' }}
-        className="group relative cursor-pointer"
+        role="button"
+        tabIndex={0}
+        aria-label="Graduation portrait — activate to ring the lanterns"
+        onPointerMove={onMove}
+        onPointerEnter={(e) => e.pointerType !== 'touch' && setLit(true)}
+        onPointerLeave={settle}
+        onFocus={() => setLit(true)}
+        onBlur={settle}
+        onClick={ring}
+        onKeyDown={onKey}
+        style={{ rotateX: reduced ? 0 : rotateX, rotateY: reduced ? 0 : rotateY, touchAction: 'pan-y' }}
+        className="relative aspect-[400/620] w-full cursor-pointer select-none outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4 focus-visible:ring-offset-surface"
       >
-        <Gate reduced={!!reduced} />
-        <div className="relative mx-5 mt-[88px] overflow-hidden border border-accent/60 bg-surface">
-          <img src={src} alt={alt} className="aspect-[9/14] w-full object-cover" style={{ objectPosition: '50% 60%' }} />
-          <span aria-hidden className="shoji-grid pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-          <span aria-hidden className="pointer-events-none absolute inset-2 border border-white/30" />
-          {!reduced && (
-            <div className="pointer-events-none absolute inset-0 overflow-hidden">
-              <Petals count={PETALS} />
-              {bursts > 0 && <Petals key={bursts} count={BURST} burst />}
-            </div>
-          )}
-        </div>
+        <motion.div className="absolute overflow-hidden bg-surface" style={{ left: '17%', right: '17%', top: '30.8%', bottom: '4.5%', x: reduced ? 0 : photoX, y: reduced ? 0 : photoY, scale: 1.06 }}>
+          <img src={src} alt={alt} draggable={false} className="h-full w-full object-cover" style={{ objectPosition: '50% 60%' }} />
+          <span aria-hidden className="shoji-grid pointer-events-none absolute inset-0 transition-opacity duration-500" style={{ opacity: lit ? 1 : 0 }} />
+        </motion.div>
 
-        <motion.span
-          aria-hidden
-          initial={reduced ? false : { scale: 2.4, opacity: 0, rotate: -20 }}
-          whileInView={{ scale: 1, opacity: 1, rotate: -8 }}
-          viewport={{ once: true }}
-          transition={{ type: 'spring', stiffness: 260, damping: 14, delay: 0.4 }}
-          className="absolute -bottom-4 left-0 flex h-12 w-12 items-center justify-center rounded-sm bg-accent font-serif text-2xl font-bold text-white shadow-card"
-          style={{ translateZ: 40 }}
-        >
-          卒
-        </motion.span>
+        <Gate reduced={reduced} ring={bursts} lit={lit} />
 
-        <span
-          aria-hidden
-          className="absolute -right-9 top-24 font-serif text-sm tracking-[0.3em] text-accent"
-          style={{ writingMode: 'vertical-rl' }}
-        >
-          卒業 · 二〇二六
-        </span>
+        {!reduced && (
+          <div aria-hidden className="pointer-events-none absolute inset-0 z-20 overflow-hidden">
+            <Petals count={PETALS} />
+            {bursts > 0 && <Petals key={bursts} count={BURST} burst />}
+          </div>
+        )}
       </motion.div>
+      <p aria-hidden className="mt-3 text-center font-serif text-xs tracking-[0.4em] text-accent">卒業 · 二〇二六</p>
     </div>
   )
 }

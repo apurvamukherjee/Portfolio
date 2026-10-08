@@ -70,30 +70,22 @@ export function About() {
             className="flex flex-col gap-5 md:w-3/5"
           >
             <p className="text-lg leading-relaxed text-ink md:text-xl">
-              I'm Apurva, a KIIT University graduate and{" "}
-              <Highlight order={0}>software engineer</Highlight> in Kolkata who likes owning a feature from the{" "}
-              <Highlight order={1}>first sketch to the final deploy</Highlight>.
-              I started poking at code at KIIT in 2022 and never
-              really stopped. These days I design the systems, write the APIs
-              behind them, and build the web and mobile screens people actually
-              tap on. Somewhere along the way that added up to live production
-              apps and more than{" "}
-              <Highlight order={2}>50 reusable React components</Highlight>.
+              CSE, KIIT '26. <Highlight order={0}>Software engineer</Highlight>{" "}
+              in Kolkata building for the web, with{" "}
+              <Highlight order={1}>clean architecture</Highlight> and code that
+              doesn't break. I own features end to end: system design, APIs,
+              React and React Native UI. Shipped live production apps and{" "}
+              <Highlight order={2}>50+ reusable React components</Highlight>.
             </p>
             <p className="text-lg leading-relaxed text-muted md:text-xl">
-              I took the scenic route here. I started as a UI/UX intern, spent
-              a stint in the Founder's Office running client calls and sprints,
-              then moved into engineering as an intern. Since August 2026 I've
-              been a{" "}
-              <Highlight order={3}>full-time Software Engineer</Highlight> at
-              Mind Webs Venture, shipping with React, React Native, Node.js and
-              MongoDB. I've pitched our product for four days straight at{" "}
-              <Highlight order={4}>India Mobile Congress 2025</Highlight> in
-              Delhi and judged student teams at{" "}
-              <Highlight order={5}>DriveBlaze Hackathon</Highlight>. After hours
-              I build things like a multiplayer Monopoly for up to eight friends
-              and a Mac app that turns the{" "}
-              <Highlight order={6}>MacBook notch</Highlight> into a music player.
+              <Highlight order={3}>Full-time SWE at Mind Webs Venture</Highlight>{" "}
+              since Aug 2026: React, React Native, Node.js, MongoDB. Path: UI/UX
+              intern, Founder's Office, engineering intern. Pitched at{" "}
+              <Highlight order={4}>India Mobile Congress 2025</Highlight>, judged{" "}
+              <Highlight order={5}>DriveBlaze Hackathon</Highlight>. Side
+              projects: 8-player multiplayer Monopoly, and a macOS app that
+              turns the <Highlight order={6}>MacBook notch</Highlight> into a
+              music player.
             </p>
           </motion.div>
 
