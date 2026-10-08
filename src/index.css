@@ -444,3 +444,36 @@
   0%, 100% { box-shadow: 0 0 6px 1px rgba(255, 120, 60, 0.35); }
   50% { box-shadow: 0 0 18px 6px rgba(255, 150, 70, 0.65); }
 }
+
+.shell-scan::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.04), transparent);
+  animation: shell-scan 6s linear infinite;
+}
+@keyframes shell-scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(260%); }
+}
+
+.chip-nudge {
+  animation: chip-nudge 6s ease-in-out infinite;
+}
+@keyframes chip-nudge {
+  0%, 22%, 100% { box-shadow: 0 0 0 0 transparent; }
+  8% { box-shadow: 0 0 0 4px rgba(255, 0, 0, 0.3); color: var(--color-accent); border-color: var(--color-accent); }
+}
+
+.skill-reel {
+  animation: skill-reel var(--dur) linear infinite;
+  will-change: transform;
+}
+.skill-reel-wrap:hover .skill-reel {
+  animation-play-state: paused;
+}
+@keyframes skill-reel {
+  to { transform: translateY(-50%); }
+}
