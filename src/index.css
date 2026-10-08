@@ -515,7 +515,7 @@
 [data-theme="light"] .skill-tile {
   background:
     radial-gradient(120% 90% at 50% 120%, color-mix(in srgb, var(--brand) 32%, transparent), transparent 65%),
-    #fffaf0;
+    rgba(255, 250, 240, 0.72);
 }
 [data-theme="light"] .skill-tile-icon {
   color: color-mix(in srgb, var(--brand) 85%, var(--color-ink));
@@ -530,4 +530,17 @@
 }
 .skill-tile:hover .skill-tile-corner {
   opacity: 0.9;
+}
+
+.dragon-whisker {
+  transform-box: fill-box;
+  transform-origin: 0 50%;
+  animation: whisker 4s ease-in-out infinite alternate;
+}
+@keyframes whisker {
+  from { transform: rotate(-4deg); }
+  to { transform: rotate(5deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dragon-whisker { animation: none; }
 }
