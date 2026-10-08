@@ -40,22 +40,25 @@ function Dragon({ progress }: { progress: ReturnType<typeof useScroll>['scrollYP
   )
 }
 
+const total = skillCategories.reduce((n, c) => n + c.skills.length, 0)
+
 export function Skills() {
   const reduced = useReducedMotion()
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
-  // Rows drift against their marquee direction as you scroll, for a layered parallax.
-  const driftA = useTransform(scrollYProgress, [0, 1], [60, -60])
-  const driftB = useTransform(scrollYProgress, [0, 1], [-60, 60])
 
   return (
     <section ref={ref} id="skills" className="relative w-full overflow-hidden py-24">
       {!reduced && <Dragon progress={scrollYProgress} />}
       <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 md:px-16">
         <SectionHeading tag="Skills" />
+        <p className="w-full font-mono text-xs text-muted md:text-sm">
+          <span className="text-accent">$</span> stack --count <span className="text-accent">→</span> {total} tools / {skillCategories.length} lanes
+          <span className="hidden sm:inline"> · hover to throttle</span>
+        </p>
       </div>
 
-      <div className="relative mt-12 flex flex-col gap-14">
+      <div className="relative mx-auto mt-10 flex max-w-5xl flex-col gap-10 px-6 md:px-16">
         {skillCategories.map((category, i) => (
           <motion.div
             key={category.heading}
@@ -64,7 +67,7 @@ export function Skills() {
             viewport={viewportOnce}
             variants={withMotionPreference(fadeUp, reduced)}
           >
-            <div className="relative mx-auto mb-4 flex max-w-5xl items-center gap-4 px-6 md:px-16">
+            <div className="relative mb-2 flex items-center gap-4">
               <span
                 aria-hidden
                 className="select-none text-5xl font-black leading-none text-transparent md:text-6xl"
@@ -77,9 +80,7 @@ export function Skills() {
                 <p className="font-mono text-xs text-muted">{category.reading}</p>
               </div>
             </div>
-            <motion.div style={reduced ? undefined : { x: i % 2 ? driftB : driftA }}>
-              <SkillMarquee skills={category.skills} reverse={i % 2 === 1} />
-            </motion.div>
+            <SkillMarquee skills={category.skills} reverse={i % 2 === 1} />
           </motion.div>
         ))}
       </div>

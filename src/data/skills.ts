@@ -136,3 +136,16 @@ export const skillCategories: SkillCategory[] = [
     ],
   },
 ]
+
+/** Brand hues for the light tint on each marquee tile. Near-black/white brands are omitted and fall back to the theme ink. */
+export const brandColors: Record<string, string> = {
+  'HTML / CSS': '#e34f26', JavaScript: '#f7df1e', TypeScript: '#3178c6', 'React.js': '#61dafb',
+  'Ant Design': '#1677ff', 'Framer Motion': '#0055ff', 'Tailwind CSS': '#38bdf8', Svelte: '#ff3e00',
+  Zustand: '#d9a441', PWA: '#7c3aed', 'React Native': '#61dafb', 'Node.js': '#5fa04e',
+  MongoDB: '#47a248', 'REST APIs': '#818cf8', SwiftUI: '#f05138', Capacitor: '#53b9ff', Zod: '#3068b7',
+  'Git / GitHub': '#f05032', Docker: '#2496ed', Vite: '#646cff', Firebase: '#ffca28', MySQL: '#4479a1',
+  'Web Audio API': '#22d3ee', 'Gemini API': '#8e75ff', Supabase: '#3ecf8e', SQLite: '#44a3d8',
+  'Dexie / IndexedDB': '#5aa0d8', Xcode: '#1c78d4', C: '#5c6bc0', Java: '#f89820', Swift: '#f05138',
+  Python: '#ffd43b', SQL: '#f29111', Figma: '#f24e1e', 'UI/UX Design': '#f472b6',
+  'Design Systems': '#a78bfa', 'Responsive Design': '#34d399',
+}

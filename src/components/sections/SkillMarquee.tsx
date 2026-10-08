@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
-import type { Skill } from '../../data/skills'
+import { brandColors, type Skill } from '../../data/skills'
 
 interface SkillMarqueeProps {
   skills: Skill[]
@@ -46,23 +46,31 @@ export function SkillMarquee({ skills, reverse = false, secondsPerItem = 3.2 }: 
     >
       <ul
         ref={trackRef}
-        className={`flex w-max py-3 ${reduced ? '' : 'marquee-track'}`}
+        className={`flex w-max pb-8 pt-3 ${reduced ? '' : 'marquee-track'}`}
         style={{
           ['--dur' as string]: `${half.length * secondsPerItem}s`,
           ['--dir' as string]: reverse ? 'reverse' : 'normal',
         }}
       >
         {items.map(({ name, icon: Icon }, i) => (
-          <li key={i} aria-hidden={i >= skills.length || undefined} className="mr-4 shrink-0">
+          <li key={i} aria-hidden={i >= skills.length || undefined} className="mr-5 shrink-0">
             <motion.div
-              whileHover={reduced ? undefined : { y: -4, scale: 1.04 }}
+              title={name}
+              aria-label={name}
+              whileHover={reduced ? undefined : { y: -6, scale: 1.08 }}
               transition={{ type: 'spring', stiffness: 380, damping: 26 }}
-              className="group flex items-center gap-3 rounded-full border border-border bg-surface-raised py-2 pl-2 pr-5 backdrop-blur transition-colors duration-300 hover:border-accent hover:shadow-[0_0_24px_-6px_var(--color-accent)]"
+              style={{ ['--brand' as string]: brandColors[name] ?? 'var(--color-ink)' }}
+              className="skill-tile group relative flex h-24 w-24 items-center justify-center rounded-2xl border border-border md:h-28 md:w-28"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/5 text-muted transition-all duration-300 group-hover:rotate-[360deg] group-hover:bg-accent/15 group-hover:text-accent">
-                <Icon size={20} />
+              <span aria-hidden className="skill-tile-corner left-2 top-2 border-l border-t" />
+              <span aria-hidden className="skill-tile-corner bottom-2 right-2 border-b border-r" />
+              <Icon
+                className="skill-tile-icon h-11 w-11 transition-all duration-300 group-hover:scale-110 md:h-12 md:w-12"
+                aria-hidden
+              />
+              <span className="pointer-events-none absolute -bottom-6 whitespace-nowrap font-mono text-[11px] text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
+                {name}
               </span>
-              <span className="whitespace-nowrap text-sm font-semibold text-ink">{name}</span>
             </motion.div>
           </li>
         ))}
