@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { SectionHeading } from "../shared/SectionHeading";
 import { GithubStats } from "./GithubStats";
+import { PortraitFrame } from "./PortraitFrame";
 import {
   fadeUp,
   fadeDown,
@@ -69,10 +70,10 @@ export function About() {
             className="flex flex-col gap-5 md:w-3/5"
           >
             <p className="text-lg leading-relaxed text-ink md:text-xl">
-              I'm Apurva, a <Highlight order={0}>software engineer</Highlight>{" "}
-              in Kolkata who likes owning a feature from the{" "}
+              I'm Apurva, a KIIT University graduate and{" "}
+              <Highlight order={0}>software engineer</Highlight> in Kolkata who likes owning a feature from the{" "}
               <Highlight order={1}>first sketch to the final deploy</Highlight>.
-              I started poking at code at KIIT University in 2022 and never
+              I started poking at code at KIIT in 2022 and never
               really stopped. These days I design the systems, write the APIs
               behind them, and build the web and mobile screens people actually
               tap on. Somewhere along the way that added up to live production
@@ -98,21 +99,9 @@ export function About() {
 
           <motion.div
             variants={withMotionPreference(fadeDown, reduced)}
-            className="group relative w-full max-w-xs flex-shrink-0 md:w-2/5"
+            className="relative w-full max-w-xs flex-shrink-0 md:w-2/5"
           >
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -inset-2 border-l-2 border-t-2 border-accent transition-transform duration-500 group-hover:-translate-x-3 group-hover:-translate-y-3"
-            />
-            <span
-              aria-hidden
-              className="pointer-events-none absolute -inset-2 border-b-2 border-r-2 border-accent transition-transform duration-500 group-hover:translate-x-3 group-hover:translate-y-3"
-            />
-            <img
-              src="/assets/img/me.jpeg"
-              alt="Apurva Mukherjee"
-              className="relative w-full object-cover"
-            />
+            <PortraitFrame src="/assets/img/graduation.jpeg" alt="Apurva Mukherjee at his KIIT graduation" />
           </motion.div>
         </motion.div>
 

@@ -431,3 +431,27 @@
   0%, 94%, 100% { transform: scaleY(1); }
   97% { transform: scaleY(0.1); }
 }
+
+.sakura-petal {
+  position: absolute;
+  top: -12px;
+  width: 9px;
+  height: 11px;
+  background: #ffb7c5;
+  border-radius: 150% 0 150% 0;
+  opacity: 0;
+  animation-name: sakura-fall;
+  animation-timing-function: ease-in-out;
+  animation-fill-mode: both;
+}
+@keyframes sakura-fall {
+  0% { transform: translate(0, 0) rotate(0); opacity: 0; }
+  10% { opacity: 0.9; }
+  100% { transform: translate(var(--drift), 420px) rotate(540deg); opacity: 0; }
+}
+.shoji-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.28) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px);
+  background-size: 25% 20%;
+}

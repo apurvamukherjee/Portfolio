@@ -5,7 +5,7 @@ const ACTIONS = [
   { say: "Hey! I'm Apurva 👋", body: { y: [0, -14, 0, -8, 0] } },
   { say: 'Whee! 🌀', body: { rotateY: [0, 360] } },
   { say: 'Analyst mode 📊', body: { scale: [1, 1.12, 1], rotate: [0, -6, 6, 0] } },
-  { say: 'Student for life 🎓', body: { y: [0, -6, 0] } },
+  { say: 'Graduate! 🎓', body: { y: [0, -6, 0] } },
   { say: 'Crunching the numbers… 🤔', body: { rotate: [0, 8, -8, 0] } },
 ] as const satisfies readonly { say: string; body: TargetAndTransition }[]
 
@@ -14,7 +14,7 @@ const THINK_INDEX = 4
 const SKIN = '#f2c29b'
 const HOODIE = '#ff3b3b'
 
-/** 2D analyst-and-student mascot: waves, blinks, tracks the cursor, and cycles through actions on click. */
+/** 2D analyst-and-graduate mascot: waves, blinks, tracks the cursor, and cycles through actions on click. */
 export function Logo() {
   const [step, setStep] = useState(-1)
   const [active, setActive] = useState(false)
