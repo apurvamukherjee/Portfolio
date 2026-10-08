@@ -6,6 +6,13 @@ import { SectionHeading } from '../shared/SectionHeading'
 import { ProjectCard } from './ProjectCard'
 import { Bookshelf } from './bookshelf/Bookshelf'
 import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
+// Mirrors the GitHub pinned repos; List view only, the shelf keeps its category order.
+const PINNED = ['Visor', 'Zenith', 'KeyStrike', 'Pixelpanic', 'Monopolis', 'Kiwami']
+const listProjects = [
+  ...PINNED.flatMap((n) => projects.filter((p) => p.name === n)),
+  ...projects.filter((p) => !PINNED.includes(p.name)),
+]
+
 type ProjectsView = 'shelf' | 'list'
 const VIEW_STORAGE_KEY = 'portfolio:projects-view'
 const VIEW_OPTIONS = [
@@ -80,7 +87,7 @@ export function Projects() {
             viewport={viewportOnce}
             variants={staggerContainer(0.1)}
           >
-            {projects.map((project) => (
+            {listProjects.map((project) => (
               <motion.div key={project.name} variants={withMotionPreference(fadeUp, reduced)}>
                 <ProjectCard {...project} />
               </motion.div>

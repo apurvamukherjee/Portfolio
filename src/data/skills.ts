@@ -57,12 +57,16 @@ export const knownLanguages = ['JavaScript', 'TypeScript', 'HTML/CSS', 'Swift', 
 
 export interface SkillCategory {
   heading: string
+  kanji: string
+  reading: string
   skills: Skill[]
 }
 
 export const skillCategories: SkillCategory[] = [
   {
     heading: 'Frontend',
+    kanji: '匠',
+    reading: 'takumi · craft',
     skills: [
       { name: 'HTML / CSS', icon: SiHtml5 },
       { name: 'JavaScript', icon: SiJavascript },
@@ -80,6 +84,8 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     heading: 'Mobile & Backend',
+    kanji: '道',
+    reading: 'michi · path',
     skills: [
       { name: 'React Native', icon: TbBrandReactNative },
       { name: 'Node.js', icon: SiNodedotjs },
@@ -96,6 +102,8 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     heading: 'Tools & Infrastructure',
+    kanji: '具',
+    reading: 'gu · tools',
     skills: [
       { name: 'Git / GitHub', icon: SiGit },
       { name: 'Docker', icon: SiDocker },
@@ -113,6 +121,8 @@ export const skillCategories: SkillCategory[] = [
   },
   {
     heading: 'Languages & Design',
+    kanji: '言',
+    reading: 'kotoba · language',
     skills: [
       { name: 'C', icon: TbLetterC },
       { name: 'Java', icon: SiOpenjdk },
