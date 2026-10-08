@@ -100,7 +100,7 @@ export function About() {
               <Highlight order={4} to="leadership">DriveBlaze Hackathon</Highlight>. Side
               projects: 8-player multiplayer Monopoly, and a macOS app that
               turns the <Highlight order={5} to="home" action={openNotch}>MacBook notch</Highlight> into a
-              music player. Off the clock: Honda sports bike and trekking.
+              music player. Off the clock: a Stage 2 2014 Honda CBR250R and close-call treks in Uttarakhand.
             </p>
           </motion.div>
 
