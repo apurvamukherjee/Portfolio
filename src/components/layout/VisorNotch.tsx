@@ -1,7 +1,10 @@
+import type { CSSProperties } from 'react'
 import { useEffect, useRef, useState } from 'react'
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from 'framer-motion'
 import {
   TbArrowUpRight,
+  TbHome,
+  TbShoppingBag,
   TbPlayerPauseFilled,
   TbPlayerPlayFilled,
   TbPlayerSkipBackFilled,
@@ -28,7 +31,12 @@ const SKIP_SECONDS = 15
 const TRIED_KEY = 'portfolio-notch-tried'
 
 const CLOSED = { width: 200, height: 32, radius: 12 }
-const OPEN = { width: 560, height: 188, radius: 28 }
+const OPEN = { width: 640, height: 196, radius: 26 }
+const TABS = [
+  { id: 'home', label: 'Home', Icon: TbHome },
+  { id: 'shelf', label: 'Shelf', Icon: TbShoppingBag },
+] as const
+const VISOR_ACCENT = '#ff2d55'
 const BAR_DELAYS = ['0s', '-0.45s', '-0.2s', '-0.7s']
 const WAVE_BARS = 18
 const WAVE_HEIGHT = 26
@@ -56,6 +64,7 @@ export function VisorNotch() {
   const [expanded, setExpandedState] = useState(false)
   const [tried, setTried] = useState(readTried)
   const [bookOpen, setBookOpen] = useState(false)
+  const [tab, setTab] = useState<(typeof TABS)[number]['id']>('home')
   const [playing, setPlaying] = useState(false)
   const [time, setTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -241,10 +250,15 @@ export function VisorNotch() {
             onKeyDown={(e) => {
               if (e.key === 'Escape') setExpandedNow(false)
             }}
-            className={`pointer-events-auto relative overflow-hidden bg-black text-white contain-layout contain-paint ${
-              expanded ? 'shadow-[0_18px_40px_rgba(0,0,0,0.45)]' : ''
+            style={{ '--visor-accent': VISOR_ACCENT } as CSSProperties}
+            className={`pointer-events-auto relative bg-black text-white ${
+              expanded ? 'shadow-[0_12px_40px_rgba(0,0,0,0.45)]' : ''
             }`}
           >
+            {/* Inverse corners flare the notch into the screen edge, like the real app. */}
+            <span aria-hidden className="absolute -left-2.5 top-0 h-2.5 w-2.5 bg-[radial-gradient(circle_at_0_100%,transparent_9.5px,#000_10px)]" />
+            <span aria-hidden className="absolute -right-2.5 top-0 h-2.5 w-2.5 bg-[radial-gradient(circle_at_100%_100%,transparent_9.5px,#000_10px)]" />
+            <div className="absolute inset-0 overflow-hidden" style={{ borderBottomLeftRadius: size.radius, borderBottomRightRadius: size.radius }}>
             <AnimatePresence initial={false} mode="popLayout">
               {expanded ? (
                 <motion.div
@@ -253,21 +267,43 @@ export function VisorNotch() {
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
                   transition={{ duration: reduced ? 0 : 0.2, delay: reduced ? 0 : 0.06 }}
-                  className="flex h-[188px] w-[560px] flex-col px-5 pb-4 pt-2"
+                  className="flex h-[196px] w-[640px] flex-col px-[22px] pb-4 pt-1.5"
                 >
-                  <div className="flex h-7 items-center justify-between text-[11px] text-white/50">
-                    <span className="font-semibold text-white/80">Visor</span>
-                    {visor && (
-                      <button
-                        type="button"
-                        onClick={openProject}
-                        className="flex items-center gap-1 rounded-full px-2 py-0.5 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-1 focus-visible:outline-white"
+                  <div className="flex h-[30px] items-center justify-between">
+                    <div role="tablist" className="flex gap-1">
+                      {TABS.map(({ id, label, Icon }) => (
+                        <button
+                          key={id}
+                          type="button"
+                          role="tab"
+                          aria-selected={tab === id}
+                          aria-label={label}
+                          onClick={() => setTab(id)}
+                          className={`grid h-6 w-[38px] place-items-center rounded-xl transition-colors ${
+                            tab === id ? 'bg-white/[0.12] text-white' : 'text-white/55 hover:text-white'
+                          }`}
+                        >
+                          <Icon size={16} aria-hidden />
+                        </button>
+                      ))}
+                    </div>
+                    {visor?.liveUrl && (
+                      <a
+                        href={visor.liveUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] text-white/60 transition-colors hover:bg-white/10 hover:text-white focus-visible:outline focus-visible:outline-1 focus-visible:outline-white"
                       >
                         View project <TbArrowUpRight size={12} aria-hidden />
-                      </button>
+                      </a>
                     )}
                   </div>
 
+                  {tab === 'shelf' ? (
+                    <p className="mt-2 grid flex-1 place-items-center rounded-2xl border border-dashed border-white/20 text-[13px] text-white/50">
+                      Drop files here to park them on the shelf
+                    </p>
+                  ) : (
                   <div className="mt-2 flex flex-1 gap-4">
                     <button
                       type="button"
@@ -359,14 +395,14 @@ export function VisorNotch() {
                         {week.map((d, i) => (
                           <div
                             key={d.toDateString()}
-                            className={`flex flex-col items-center rounded-lg py-1 ${i === 2 ? 'bg-accent/25' : ''}`}
+                            className={`flex flex-col items-center rounded-lg py-1 ${i === 2 ? 'bg-[color-mix(in_srgb,var(--visor-accent)_35%,transparent)]' : ''}`}
                           >
                             <span className="text-[10px] text-white/50">
                               {d.toLocaleString('en', { weekday: 'short' })}
                             </span>
                             <span
                               className={`mt-0.5 flex h-6 w-6 items-center justify-center rounded-full text-xs font-semibold ${
-                                i === 2 ? 'bg-accent' : 'text-white/80'
+                                i === 2 ? 'bg-[var(--visor-accent)]' : 'text-white/80'
                               }`}
                             >
                               {d.getDate()}
@@ -377,6 +413,7 @@ export function VisorNotch() {
                       <p className="mt-auto text-center text-[11px] text-white/45">No events today</p>
                     </div>
                   </div>
+                  )}
                 </motion.div>
               ) : (
                 <motion.button
@@ -396,7 +433,7 @@ export function VisorNotch() {
                     {BAR_DELAYS.map((delay) => (
                       <span
                         key={delay}
-                        className={`h-full w-[3px] origin-bottom rounded-full bg-white/85 ${
+                        className={`h-full w-[3px] origin-bottom rounded-full bg-[var(--visor-accent)] ${
                           playing ? 'animate-notch-bar motion-reduce:animate-none' : 'scale-y-[0.3]'
                         }`}
                         style={{ animationDelay: delay }}
@@ -406,6 +443,7 @@ export function VisorNotch() {
                 </motion.button>
               )}
             </AnimatePresence>
+            </div>
           </motion.div>
         </div>
       </div>

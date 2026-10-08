@@ -261,6 +261,7 @@ export const projects: Project[] = [
     tech: ["Swift", "SwiftUI", "AppKit", "EventKit", "MediaRemote", "AVFoundation", "XcodeGen"],
     openSource: true,
     githubUrl: "https://github.com/apurvamukherjee/visor-mac-island",
+    liveUrl: "https://apurvamukherjee.github.io/visor-mac-island/",
     caseStudy: {
       problem:
         "The notch is a dead black bar on every modern MacBook, while music controls, the calendar and the system HUDs all fight for space somewhere else on screen.",
