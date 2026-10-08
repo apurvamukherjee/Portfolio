@@ -1,4 +1,4 @@
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import { useBattery } from './battery';
 import { Closed, closedWidth } from './Closed';
 import { Home } from './Home';
@@ -59,9 +59,27 @@ export function Island() {
     closeTimer.current = setTimeout(() => setOpen(false), CLOSE_DELAY_MS);
   };
 
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Touch has no hover-leave, and a programmatically opened island (see openNotch) was never hovered.
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: PointerEvent) => {
+      if (!rootRef.current?.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => e.key === 'Escape' && setOpen(false);
+    document.addEventListener('pointerdown', onDown);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('pointerdown', onDown);
+      document.removeEventListener('keydown', onKey);
+    };
+  }, [open, setOpen]);
+
   const size = open ? OPEN : { w: closedWidth(transient, timer), h: CLOSED_H };
   return (
     <div
+      ref={rootRef}
       className={`island${open ? ' is-open' : ''}`}
       style={{ width: size.w, height: size.h, '--accent': ACCENT } as React.CSSProperties}
       onPointerEnter={(e) => e.pointerType === 'mouse' && enter()}
