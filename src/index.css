@@ -531,16 +531,3 @@
 .skill-tile:hover .skill-tile-corner {
   opacity: 0.9;
 }
-
-.dragon-whisker {
-  transform-box: fill-box;
-  transform-origin: 0 50%;
-  animation: whisker 4s ease-in-out infinite alternate;
-}
-@keyframes whisker {
-  from { transform: rotate(-4deg); }
-  to { transform: rotate(5deg); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .dragon-whisker { animation: none; }
-}

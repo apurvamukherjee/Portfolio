@@ -13,12 +13,14 @@ export function Skills() {
   const ref = useRef<HTMLElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
 
-  const scrollDraw = useTransform(scrollYProgress, [0.08, 0.8], [0, 1])
-  const fullDraw = useMotionValue(1)
+  const scrollReveal = useTransform(scrollYProgress, [0.05, 0.7], [-18, 100])
+  const scrollDrift = useTransform(scrollYProgress, [0, 1], [40, -40])
+  const fullReveal = useMotionValue(100)
+  const noDrift = useMotionValue(0)
 
   return (
     <section ref={ref} id="skills" className="relative w-full overflow-hidden py-24">
-      <Dragon draw={reduced ? fullDraw : scrollDraw} />
+      <Dragon reveal={reduced ? fullReveal : scrollReveal} drift={reduced ? noDrift : scrollDrift} />
       <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 md:px-16">
         <SectionHeading tag="Skills" />
         <p className="w-full font-mono text-xs text-muted md:text-sm">
