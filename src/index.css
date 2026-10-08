@@ -436,3 +436,11 @@
     linear-gradient(90deg, rgba(255, 255, 255, 0.28) 1px, transparent 1px);
   background-size: 25% 20%;
 }
+
+.lantern-glow {
+  animation: lantern-glow 2.4s ease-in-out infinite;
+}
+@keyframes lantern-glow {
+  0%, 100% { box-shadow: 0 0 6px 1px rgba(255, 120, 60, 0.35); }
+  50% { box-shadow: 0 0 18px 6px rgba(255, 150, 70, 0.65); }
+}
