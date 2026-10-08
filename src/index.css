@@ -413,25 +413,6 @@
   }
 }
 
-.mascot-wave {
-  transform-box: view-box;
-  transform-origin: 58px 70px;
-  animation: mascot-wave 1.6s ease-in-out infinite;
-}
-.mascot-blink {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: mascot-blink 4s infinite;
-}
-@keyframes mascot-wave {
-  0%, 100% { transform: rotate(-4deg); }
-  50% { transform: rotate(22deg); }
-}
-@keyframes mascot-blink {
-  0%, 94%, 100% { transform: scaleY(1); }
-  97% { transform: scaleY(0.1); }
-}
-
 .sakura-petal {
   position: absolute;
   top: -12px;
