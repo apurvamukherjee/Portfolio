@@ -118,7 +118,7 @@ export function Hero() {
           </motion.div>
 
           <motion.ul variants={item} className="mt-8 flex flex-wrap gap-2 font-mono text-xs text-muted">
-            {[`Kolkata, IN · ${time} IST`, "SWE @ Mind Webs Venture", "CSE, KIIT '26"].map((chip, i) => (
+            {[`Kolkata, IN · ${time} IST`, "CSE, KIIT '26"].map((chip, i) => (
               <li key={chip} className="flex items-center gap-2 rounded-full border border-border bg-surface-raised px-3 py-1.5">
                 {i === 0 && <span aria-hidden className="h-1.5 w-1.5 animate-pulse-dot rounded-full bg-[#28c840] motion-reduce:animate-none" />}
                 {chip}
