@@ -1,22 +1,27 @@
-/* Ported from the Visor website's island (visor-mac-island/website/src/notch). */
 .island {
   --accent: #ff2d55;
   --ease: cubic-bezier(0.32, 0.72, 0.24, 1.02);
-  position: relative;
+  position: fixed; top: 0; left: 50%; transform: translateX(-50%); z-index: 61;
+  max-width: calc(100vw - 16px);
   background: #000; color: #fff; border-radius: 0 0 12px 12px;
   transition: width 0.45s var(--ease), height 0.45s var(--ease), border-radius 0.45s var(--ease), box-shadow 0.3s;
 }
 .island.is-open { border-radius: 0 0 26px 26px; box-shadow: 0 12px 40px rgb(0 0 0 / 0.45); }
 
+/* The concave "ears" where the notch meets the top edge of the screen. */
 .island::before, .island::after {
   content: ''; position: absolute; top: 0; width: 10px; height: 10px; pointer-events: none;
 }
 .island::before { left: -10px; background: radial-gradient(circle at 0 100%, transparent 9.5px, #000 10px); }
 .island::after { right: -10px; background: radial-gradient(circle at 100% 100%, transparent 9.5px, #000 10px); }
 
+.island-hit { all: unset; position: absolute; inset: 0; cursor: pointer; }
+.island-hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: inherit; }
+
 .island-open { position: absolute; inset: 0; padding: 6px 22px 16px; display: flex; flex-direction: column; animation: island-in 0.35s 0.08s both; }
 @keyframes island-in { from { opacity: 0; filter: blur(6px); } }
 
+/* Closed live activity: cover on the left wing, visualizer on the right. */
 .closed { position: absolute; inset: 0; display: flex; align-items: center; justify-content: space-between; padding: 0 12px; animation: island-in 0.3s both; }
 
 .cover { position: relative; display: block; flex: none; }
@@ -100,6 +105,11 @@
 
 @media (max-width: 680px) { .calendar { display: none; } }
 
+.closed-hud { gap: 12px; }
+.closed-hud-icon { width: 22px; text-align: center; font-size: 14px; }
+.closed-hud-bar { width: 110px; height: 6px; border-radius: 3px; background: rgb(255 255 255 / 0.2); overflow: hidden; }
+.closed-hud-bar i { display: block; height: 100%; background: var(--accent); transition: width 0.08s linear; }
+
 .shelf { flex: 1; display: flex; gap: 12px; padding-top: 8px; min-height: 0; }
 .shelf-zone { margin: 0; border: 2px dashed rgb(255 255 255 / 0.18); border-radius: 18px; }
 .shelf-airdrop { flex: none; width: 140px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; font-size: 13px; }
@@ -111,11 +121,25 @@
 .shelf-files img.is-thumb { object-fit: cover; border-radius: 6px; border: 2px solid #fff; box-shadow: 0 2px 6px rgb(0 0 0 / 0.5); }
 .shelf-files span { width: 100%; font-size: 11px; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: rgb(255 255 255 / 0.8); }
 
+/* Sneak peek: the song runs under the camera across the widened notch. */
+.closed-peek { gap: 10px; }
+.closed-peek-text { flex: 1; min-width: 0; padding-left: 4px; font-size: 12px; color: rgb(255 255 255 / 0.75); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; text-align: left; }
+.closed-peek-text b { color: #fff; }
 
-.island-hit { all: unset; position: absolute; inset: 0; cursor: pointer; }
-.island-hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: inherit; }
-.island-link { display: flex; align-items: center; gap: 3px; margin-right: 10px; font-size: 11px; color: rgb(255 255 255 / 0.6); text-decoration: none; }
+.closed-lock { justify-content: flex-start; padding-left: 12px; }
+.closed-lock-shackle { transform-origin: 16px 11px; transition: transform 0.35s cubic-bezier(0.3, 1.4, 0.5, 1); }
+.closed-lock svg.is-open .closed-lock-shackle { transform: translateY(-2px) rotate(28deg); }
+
+.closed-download svg { margin-right: 2px; }
+.closed-download-ring { stroke-dasharray: 100; stroke-dashoffset: 100; animation: download-fill 2.6s ease-in-out forwards; }
+@keyframes download-fill { to { stroke-dashoffset: 0; } }
+.closed-join { gap: 12px; }
+.closed-join-title { flex: 1; font-size: 12px; color: rgb(255 255 255 / 0.8); text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.closed-join-pill { padding: 2px 10px; border-radius: 10px; background: #34c759; font-size: 12px; font-weight: 700; }
+.closed-timer { font-size: 13px; font-weight: 600; color: #ff9f0a; font-variant-numeric: tabular-nums; }
+
+/* Same cut-off as the portfolio's `notch` variant: below it the navbar has the top edge to itself. */
+@media not all and (min-width: 744px) and (min-height: 600px) { .island { display: none; } }
+.island-header { gap: 12px; }
+.island-link { margin-left: auto; font-size: 11px; color: rgb(255 255 255 / 0.6); text-decoration: none; }
 .island-link:hover { color: #fff; }
-.island-right { display: flex; align-items: center; }
-.shelf-generic { width: 40px; height: 46px; border-radius: 6px; background: rgb(255 255 255 / 0.18); }
-.cover { padding: 0; border: 0; background: none; cursor: pointer; }
