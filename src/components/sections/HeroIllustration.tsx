@@ -1,37 +1,7 @@
-import { useEffect, useRef, useState, type MouseEvent } from 'react'
+import { useEffect, useRef, useState, type PointerEvent } from 'react'
+import { HeroShell } from './HeroShell'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type TargetAndTransition, useReducedMotion } from 'framer-motion'
 type Wobble = 'none' | 'close' | 'minimize' | 'maximize'
-
-const SNIPPETS = [
-  <>
-    <p className="text-white/90">
-      <span className="text-accent">const</span> dev = <span className="text-accent">new</span> Engineer();
-    </p>
-    <p className="text-white/90">
-      dev.<span className="text-accent">build</span>(<span className="text-emerald-400">'ideas'</span>);
-    </p>
-    <p className="text-white/90">
-      dev.<span className="text-accent">ship</span>();
-    </p>
-  </>,
-  <>
-    <p className="text-white/90">
-      <span className="text-accent">while</span> (awake) {'{'}
-    </p>
-    <p className="pl-4 text-white/90">
-      learn(); build(); <span className="text-emerald-400">ship</span>();
-    </p>
-    <p className="text-white/90">{'}'}</p>
-  </>,
-  <>
-    <p className="text-white/90">
-      <span className="text-accent">export default</span> function
-    </p>
-    <p className="text-white/90">
-      Apurva() {'{'} <span className="text-accent">return</span> <span className="text-emerald-400">'shipped'</span>; {'}'}
-    </p>
-  </>,
-]
 
 const WOBBLE_LABEL: Record<Exclude<Wobble, 'none'>, string> = {
   close: 'nice try — not closing that easily',
@@ -48,14 +18,7 @@ export function HeroIllustration() {
   const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [10, -10]), { stiffness: 150, damping: 20 })
   const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-10, 10]), { stiffness: 150, damping: 20 })
 
-  const [snippetIndex, setSnippetIndex] = useState(0)
   const [wobble, setWobble] = useState<Wobble>('none')
-
-  useEffect(() => {
-    if (reduced) return
-    const timer = setInterval(() => setSnippetIndex((i) => (i + 1) % SNIPPETS.length), 3800)
-    return () => clearInterval(timer)
-  }, [reduced])
 
   useEffect(() => {
     if (wobble === 'none') return
@@ -63,8 +26,8 @@ export function HeroIllustration() {
     return () => clearTimeout(timer)
   }, [wobble])
 
-  function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
-    if (reduced || !ref.current) return
+  function handleMouseMove(e: PointerEvent<HTMLDivElement>) {
+    if (reduced || !ref.current || e.pointerType === 'touch') return
     const rect = ref.current.getBoundingClientRect()
     x.set((e.clientX - rect.left) / rect.width - 0.5)
     y.set((e.clientY - rect.top) / rect.height - 0.5)
@@ -85,8 +48,8 @@ export function HeroIllustration() {
   return (
     <div
       ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
+      onPointerMove={handleMouseMove}
+      onPointerLeave={handleMouseLeave}
       className="relative mx-auto w-full max-w-xl"
       style={{ perspective: 1200 }}
     >
@@ -132,25 +95,7 @@ export function HeroIllustration() {
             </AnimatePresence>
           </div>
 
-          <div className="relative min-h-[130px] overflow-hidden rounded-lg bg-black/40 p-5 text-base leading-relaxed sm:text-lg">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={snippetIndex}
-                initial={{ opacity: 0, y: 8 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: 0.4 }}
-                className="space-y-2"
-              >
-                {SNIPPETS[snippetIndex]}
-              </motion.div>
-            </AnimatePresence>
-            <motion.span
-              animate={reduced ? undefined : { opacity: [1, 0] }}
-              transition={reduced ? undefined : { duration: 0.8, repeat: Infinity, repeatType: 'reverse' }}
-              className="mt-1 inline-block h-4 w-2.5 bg-accent align-middle"
-            />
-          </div>
+          <HeroShell />
         </div>
         <div className="mx-auto h-4 w-full rounded-b-2xl bg-gradient-to-b from-[#2a2a30] to-[#151518]" />
         <div className="mx-auto h-2 w-1/3 rounded-b-md bg-[#0d0d10]" />
