@@ -262,7 +262,7 @@ export const projects: Project[] = [
     status: "Ongoing",
     openSource: true,
     githubUrl: "https://github.com/apurvamukherjee/kettle-ui",
-    liveUrl: "https://kettle-ui-git-main-sameapurvas-projects.vercel.app/",
+    liveUrl: "https://kettle-ui.vercel.app/",
     caseStudy: {
       problem:
         "Most component libraries ship as a package you can't edit. Copy-paste kits leave you to wire up the colour tokens, keyframes and helper hooks each component depends on, so a pasted component often renders wrong.",
