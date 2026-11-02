@@ -252,6 +252,31 @@ export const projects: Project[] = [
   },
   {
     variant: "web",
+    name: "Kettle UI",
+    category: "oss",
+    spineLogo: "/assets/projects/logos/kettle.webp",
+    description:
+      "A React component library with ink outlines, hard offset shadows and spring animations, shipped as a <strong>shadcn registry</strong>: <code>npx shadcn add @kettle/pill-button</code> copies the source, npm packages, colour tokens and keyframes into your project. 21 components, among them a toy-train hero scene, strummable guitar strings, a box of items you can fling, a swipe deck and a <strong>cursor lab</strong> with six custom cursors.",
+    descriptionIsHtml: true,
+    tech: ["React 19", "TypeScript", "Next.js", "Tailwind CSS v4", "Motion", "shadcn registry"],
+    status: "Ongoing",
+    openSource: true,
+    githubUrl: "https://github.com/apurvamukherjee/kettle-ui",
+    caseStudy: {
+      problem:
+        "Most component libraries ship as a package you can't edit. Copy-paste kits leave you to wire up the colour tokens, keyframes and helper hooks each component depends on, so a pasted component often renders wrong.",
+      approach:
+        "Kettle UI is a shadcn registry. A build script lists every item with its npm and registry dependencies, and shadcn build turns that into one JSON file per item with the source inlined. Every item depends on a kettle-theme item that carries the CSS variables and keyframes, so a single add produces a component that renders correctly. Helper hooks like use-on-screen and use-fine-pointer come along automatically. Cursors and mouse dragging turn off on touch screens, and every loop respects prefers-reduced-motion.",
+      impact:
+        "21 components installable with one command each, or all at once with @kettle/kettle-all. The docs site and a motion gallery are built as a static Next.js export.",
+    },
+    images: [
+      "/assets/projects/kettle/docs.webp",
+      "/assets/projects/kettle/gallery.webp",
+    ],
+  },
+  {
+    variant: "web",
     name: "Visor",
     category: "oss",
     spineLogo: "/assets/projects/logos/visor.png",
