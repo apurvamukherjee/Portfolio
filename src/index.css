@@ -527,3 +527,98 @@
 @media (prefers-reduced-motion: reduce) {
   .dragon-art { animation: none; }
 }
+
+/* ── Hero hover effects ─────────────────────────────────────────────────────────────────────
+   Pointer position arrives as --x / --y (set from JS without re-rendering). Everything is gated
+   on (hover: hover) so touch devices never get stuck in a hovered state. */
+
+/* Name: an accent copy of the text, visible only in a soft circle around the cursor. */
+.name-spotlight {
+  -webkit-mask-image: radial-gradient(160px circle at var(--x, 50%) var(--y, 50%), #000 0%, rgba(0, 0, 0, 0.6) 35%, transparent 70%);
+  mask-image: radial-gradient(160px circle at var(--x, 50%) var(--y, 50%), #000 0%, rgba(0, 0, 0, 0.6) 35%, transparent 70%);
+}
+@media (hover: none) {
+  .name-spotlight { display: none; }
+}
+
+@keyframes dot-hop {
+  0%, 100% { transform: translateY(0) scale(1); }
+  30% { transform: translateY(-0.32em) scale(1.15, 0.9); }
+  55% { transform: translateY(0) scale(0.9, 1.12); }
+  75% { transform: translateY(-0.08em) scale(1); }
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .group\/name:hover .name-dot {
+    animation: dot-hop 0.7s cubic-bezier(0.32, 0.72, 0, 1);
+    text-shadow: 0 0 18px color-mix(in srgb, var(--color-accent) 70%, transparent);
+  }
+}
+
+/* A band of light that sweeps across once on hover. */
+.hover-shine {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+}
+.hover-shine::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(110deg, transparent 25%, rgba(255, 255, 255, var(--shine, 0.35)) 50%, transparent 75%);
+  transform: translateX(-130%);
+  pointer-events: none;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .hover-shine::after { transition: transform 0.9s cubic-bezier(0.32, 0.72, 0, 1); }
+  .hover-shine:hover::after { transform: translateX(130%); }
+}
+
+/* A soft accent glow that follows the cursor inside the element. */
+.cursor-glow::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: radial-gradient(120px circle at var(--x, 50%) var(--y, 50%), color-mix(in srgb, var(--color-accent) 22%, transparent), transparent 70%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  pointer-events: none;
+}
+.cursor-glow { isolation: isolate; }
+@media (hover: hover) {
+  .cursor-glow:hover::before { opacity: 1; }
+}
+
+/* Tech names in the hero lead: brand colour + an underline that draws in from the left. */
+.tech-word {
+  background-image: linear-gradient(var(--brand), var(--brand));
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1.5px;
+  transition: color 0.25s ease, background-size 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@media (hover: hover) {
+  .tech-word:hover {
+    color: var(--brand);
+    background-size: 100% 1.5px;
+  }
+}
+
+/* Meta row: a red line runs along the top of a cell while it's hovered. */
+.meta-cell::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: -1px;
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(90deg, var(--color-accent), transparent);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.32, 0.72, 0, 1);
+}
+@media (hover: hover) {
+  .meta-cell:hover::before { transform: scaleX(1); }
+}

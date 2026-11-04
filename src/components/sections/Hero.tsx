@@ -6,6 +6,7 @@ import { site } from "../../data/site";
 import { socialLinks } from "../../data/social";
 import { experience } from "../../data/experience";
 import { HeroIllustration } from "./HeroIllustration";
+import { GlowButton, IconLink, MagneticButton, ScrambleText, SpotlightName, TechWord } from "./HeroEffects";
 import {
   fadeUp,
   fadeIn,
@@ -61,26 +62,26 @@ export function Hero() {
             href={experience.siteUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-2 rounded-full border border-border bg-surface-raised py-1.5 pl-2.5 pr-3.5 text-xs font-medium text-muted transition-colors hover:border-accent/50 hover:text-ink"
+            style={{ ["--shine" as string]: 0.12 }}
+            className="hover-shine group inline-flex items-center gap-2 rounded-full border border-border bg-surface-raised py-1.5 pl-2.5 pr-3.5 text-xs font-medium text-muted transition-[border-color,color,box-shadow] duration-300 hover:border-accent/50 hover:text-ink hover:shadow-[0_0_24px_-6px_var(--color-accent)]"
           >
             <span aria-hidden className="relative flex h-2 w-2">
               <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#28c840] opacity-60 motion-reduce:hidden" />
               <span className="relative inline-flex h-2 w-2 rounded-full bg-[#28c840]" />
             </span>
             {currentRole} at <span className="text-ink">{experience.name}</span>
-            <TbArrowRight aria-hidden className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+            <TbArrowRight aria-hidden className="h-3.5 w-3.5 transition-transform duration-300 group-hover:-rotate-45 group-hover:text-accent" />
           </motion.a>
 
           <motion.p variants={item} className="mt-8 font-mono text-sm text-accent md:text-base">
-            {site.greeting}
+            <ScrambleText text={site.greeting} play={introDone} className="cursor-default" />
           </motion.p>
 
           <motion.h1
             variants={item}
             className="mt-2 text-[clamp(2.6rem,9vw,4.25rem)] font-extrabold leading-[1.02] tracking-[-0.035em] text-ink [text-wrap:balance] lg:text-[clamp(3rem,4.6vw,4.25rem)]"
           >
-            {site.name}
-            <span className="text-accent">.</span>
+            <SpotlightName name={site.name} />
           </motion.h1>
 
           <motion.p
@@ -88,43 +89,34 @@ export function Hero() {
             className="mt-6 max-w-[34rem] text-lg leading-relaxed text-muted md:text-xl"
           >
             <span className="font-medium text-ink">Full-stack engineer</span> in Kolkata. I design and
-            build production-grade web &amp; mobile apps with React, React Native and Node.js
-            — end to end, from system design to deployment.
+            build production-grade web &amp; mobile apps with{" "}
+            <TechWord color="#61dafb">React</TechWord>, <TechWord color="#a78bfa">React Native</TechWord> and{" "}
+            <TechWord color="#6cc24a">Node.js</TechWord> — end to end, from system design to deployment.
           </motion.p>
 
           <motion.div variants={item} className="mt-9 flex flex-wrap items-center gap-3">
-            <a
+            <MagneticButton
               href="#projects"
               onClick={(e) => {
                 if (jumpToSection("projects")) e.preventDefault();
               }}
-              className="group inline-flex h-12 items-center gap-2 rounded-full bg-accent px-5 sm:px-6 text-sm font-semibold text-white shadow-[0_10px_30px_-10px_var(--color-accent)] transition-[transform,box-shadow,background-color] hover:-translate-y-0.5 hover:shadow-[0_14px_34px_-10px_var(--color-accent)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent active:translate-y-0"
             >
               View my work
-              <TbArrowRight aria-hidden className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </a>
-            <a
-              href={MAIL}
-              className="inline-flex h-12 items-center gap-2 rounded-full border border-border bg-surface-raised px-5 sm:px-6 text-sm font-semibold text-ink transition-colors hover:border-ink/40 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
-            >
-              <TbMail aria-hidden className="h-4 w-4" />
+              <TbArrowRight aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </MagneticButton>
+            <GlowButton href={MAIL}>
+              <TbMail aria-hidden className="h-4 w-4 transition-transform duration-300 group-hover:-rotate-12 group-hover:scale-110 group-hover:text-accent" />
               Get in touch
-            </a>
+            </GlowButton>
 
             <span aria-hidden className="mx-1 hidden h-6 w-px bg-border sm:block" />
 
             <ul className="hidden items-center gap-1 sm:flex">
               {SOCIALS.map(({ label, href, Icon }) => (
                 <li key={label}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label={label}
-                    className="flex h-11 w-11 items-center justify-center rounded-full text-muted transition-colors hover:bg-surface-raised hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
-                  >
+                  <IconLink href={href} label={label}>
                     <Icon className="h-5 w-5" />
-                  </a>
+                  </IconLink>
                 </li>
               ))}
             </ul>
@@ -132,16 +124,26 @@ export function Hero() {
 
           <motion.dl
             variants={item}
-            className="mt-12 grid w-full max-w-[34rem] grid-cols-3 gap-4 border-t border-border pt-6"
+            className="mt-12 grid w-full max-w-[34rem] grid-cols-3 gap-4"
           >
             {[
-              { k: "Based in", v: "Kolkata, IN", sub: `${time} IST` },
+              {
+                k: "Based in",
+                v: "Kolkata, IN",
+                sub: (
+                  <>
+                    {time.slice(0, 2)}
+                    <span className="animate-pulse-dot motion-reduce:animate-none">:</span>
+                    {time.slice(3)} IST
+                  </>
+                ),
+              },
               { k: "Education", v: "Computer Sci.", sub: "KIIT · '26" },
               { k: "Focus", v: "Full-stack", sub: "Web · Mobile" },
             ].map(({ k, v, sub }) => (
-              <div key={k} className="min-w-0">
-                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted sm:text-[11px]">{k}</dt>
-                <dd className="mt-1.5 truncate text-sm font-semibold text-ink sm:text-base">{v}</dd>
+              <div key={k} className="meta-cell group relative min-w-0 cursor-default border-t border-border pt-5">
+                <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted transition-colors duration-300 group-hover:text-accent sm:text-[11px]">{k}</dt>
+                <dd className="mt-1.5 truncate text-sm font-semibold text-ink transition-transform duration-300 group-hover:translate-x-1 sm:text-base">{v}</dd>
                 <dd className="truncate font-mono text-[11px] text-muted sm:text-xs">{sub}</dd>
               </div>
             ))}

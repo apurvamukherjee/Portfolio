@@ -21,7 +21,7 @@ const WHOAMI: [string, ReactNode][] = [
   ['edu', "CSE, KIIT '26"],
   ['base', 'Kolkata, IN'],
   ['ride', 'Honda CBR250R, Stage 2'],
-  ['github', '2,844 contributions in 2026'],
+  ['github', '3,349 contributions, last year'],
   [
     'status',
     <span key="s" className="inline-flex items-center gap-1.5 text-[#5ee07a]">
