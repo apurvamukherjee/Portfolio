@@ -1,0 +1,64 @@
+1
+00:00:03,500 --> 00:00:05,405
+Namaste. Welcome to my corner of the internet.
+
+2
+00:00:05,505 --> 00:00:09,905
+Every detail reacts to you.
+
+3
+00:00:09,905 --> 00:00:14,917
+Hover the name, the words, the buttons.
+
+4
+00:00:15,017 --> 00:00:18,170
+A live terminal lives in the hero.
+
+5
+00:00:18,270 --> 00:00:23,815
+Skills, projects… even sudo hire-me.
+
+6
+00:00:23,915 --> 00:00:28,315
+Dark or light, one click away.
+
+7
+00:00:28,315 --> 00:00:32,796
+A full palette swap, not an inverted filter.
+
+8
+00:00:32,896 --> 00:00:39,121
+About me, with live GitHub stats.
+
+9
+00:00:39,221 --> 00:00:45,493
+Forty-four tools, guarded by a dragon.
+
+10
+00:00:45,593 --> 00:00:50,744
+A career timeline that fills in as you scroll.
+
+11
+00:00:50,844 --> 00:00:54,544
+Projects sit on a bookshelf.
+
+12
+00:00:54,544 --> 00:00:59,308
+Pull one out for the full story.
+
+13
+00:00:59,408 --> 00:01:03,566
+Or skip the scroll: press Cmd+K and ask.
+
+14
+00:01:03,666 --> 00:01:09,574
+Hackathons judged, stages pitched, communities built.
+
+15
+00:01:09,974 --> 00:01:15,598
+Same site, in your pocket.
+
+16
+00:01:15,598 --> 00:01:21,221
+Every interaction, sized for a thumb.
+
