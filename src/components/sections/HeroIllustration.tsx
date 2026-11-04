@@ -103,9 +103,7 @@ export function HeroIllustration() {
           </div>
         </div>
 
-        <div className="p-3 sm:p-4">
-          <HeroShell />
-        </div>
+        <HeroShell />
       </motion.div>
     </div>
   )
