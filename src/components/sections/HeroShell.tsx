@@ -108,7 +108,7 @@ export function HeroShell() {
           role="log"
           aria-live="off"
           aria-label="Interactive terminal demo"
-          className="thin-scrollbar h-[280px] overflow-y-auto rounded-lg bg-black/40 p-4 font-mono text-[13px] leading-relaxed sm:text-sm"
+          className="thin-scrollbar h-[280px] overflow-y-auto rounded-lg bg-black/40 p-4 font-mono text-[12px] leading-relaxed sm:text-[13px]"
         >
           <p className="whitespace-nowrap text-white/90">
             <span className="text-[#28c840]">~/apurva</span> <span className="text-accent">$</span> {typed}
@@ -131,7 +131,7 @@ export function HeroShell() {
         {!reduced && <span aria-hidden className="shell-scan pointer-events-none absolute inset-0 overflow-hidden rounded-lg" />}
       </div>
       <div className="mt-3 flex flex-wrap gap-2">
-        {COMMANDS.map((c, i) => (
+        {COMMANDS.map((c) => (
           <button
             key={c}
             type="button"
@@ -141,9 +141,8 @@ export function HeroShell() {
               setCmd(c)
               setRuns((n) => n + 1)
             }}
-            style={{ animationDelay: `${i * 1.2}s` }}
-            className={`min-h-9 rounded-md border px-2.5 py-1 font-mono text-xs transition-colors hover:border-accent hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
-              cmd === c ? 'border-accent text-accent' : `border-white/15 text-white/60 ${busy ? '' : 'chip-nudge motion-reduce:animate-none'}`
+            className={`min-h-9 rounded-md border px-2.5 py-1 font-mono text-xs transition-colors hover:border-accent/70 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
+              cmd === c ? 'border-accent/70 bg-accent/10 text-white' : 'border-white/10 bg-white/[0.02] text-white/55'
             }`}
           >
             {c}

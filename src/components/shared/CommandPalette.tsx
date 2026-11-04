@@ -47,6 +47,11 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
   }, [open])
 
   const activeCommand = filtered[activeIndex]
+  const listRef = useRef<HTMLUListElement>(null)
+
+  useEffect(() => {
+    listRef.current?.children[activeIndex]?.scrollIntoView({ block: 'nearest' })
+  }, [activeIndex])
 
   function runCommand(index: number) {
     const command = filtered[index]
@@ -115,7 +120,7 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
               </kbd>
             </div>
 
-            <ul role="listbox" className="max-h-80 overflow-y-auto p-2">
+            <ul ref={listRef} role="listbox" aria-label="Commands" className="max-h-80 overflow-y-auto p-2">
               {filtered.length === 0 && (
                 <li className="px-3 py-6 text-center text-sm text-muted">No matching commands</li>
               )}

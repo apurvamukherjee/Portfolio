@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { navLinks } from '../../data/nav'
 import { useScrollSpy } from '../../hooks/useScrollSpy'
@@ -10,6 +10,9 @@ import { MobileMenu } from './MobileMenu'
 import { ThemeToggle } from '../shared/ThemeToggle'
 import { jumpToSection } from '../../lib/sectionTransition'
 
+// Module-level so useScrollSpy's effect dependency stays referentially stable across renders.
+const SECTION_IDS = navLinks.map((l) => l.id)
+
 interface NavbarProps {
   theme: Theme
   onToggleTheme: () => void
@@ -17,7 +20,8 @@ interface NavbarProps {
 
 export function Navbar({ theme, onToggleTheme }: NavbarProps) {
   const [menuOpen, setMenuOpen] = useState(false)
-  const activeId = useScrollSpy(navLinks.map((l) => l.id))
+  const closeMenu = useCallback(() => setMenuOpen(false), [])
+  const activeId = useScrollSpy(SECTION_IDS)
   const introDone = useIntro()
   const reduced = useReducedMotion()
 
@@ -59,12 +63,12 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
 
           <div className="flex items-center gap-3">
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
-            <Hamburger open={menuOpen} onClick={() => setMenuOpen((o) => !o)} />
+            <Hamburger open={menuOpen} controls="mobile-menu" onClick={() => setMenuOpen((o) => !o)} />
           </div>
         </div>
       </motion.header>
 
-      <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} links={navLinks} activeId={activeId} />
+      <MobileMenu open={menuOpen} onClose={closeMenu} links={navLinks} activeId={activeId} />
     </>
   )
 }

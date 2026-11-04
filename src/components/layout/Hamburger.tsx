@@ -1,15 +1,17 @@
 interface HamburgerProps {
   open: boolean
+  controls?: string
   onClick: () => void
 }
 
-export function Hamburger({ open, onClick }: HamburgerProps) {
+export function Hamburger({ open, controls, onClick }: HamburgerProps) {
   return (
     <button
       type="button"
       onClick={onClick}
       aria-label={open ? 'Close menu' : 'Open menu'}
       aria-expanded={open}
+      aria-controls={controls}
       className="flex h-11 w-11 flex-col items-center justify-center gap-1.5 lg:hidden"
     >
       <span

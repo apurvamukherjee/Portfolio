@@ -24,7 +24,7 @@ export function Footer({ onOpenTerminal }: FooterProps) {
         <p className="font-mono text-xl italic text-white/70 md:text-2xl">"{site.footerQuote}"</p>
 
         <div className="flex flex-col items-center gap-6">
-          <span className="font-mono text-lg font-bold text-gradient-accent">GetinTouch();</span>
+          <span className="font-mono text-lg font-bold text-gradient-accent">getInTouch();</span>
           <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
             {socialLinks.map((link) => {
               const Icon = ICONS[link.icon]
@@ -32,8 +32,7 @@ export function Footer({ onOpenTerminal }: FooterProps) {
                 <motion.a
                   key={link.label}
                   href={link.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  {...(link.href.startsWith('mailto:') ? {} : { target: '_blank', rel: 'noopener noreferrer' })}
                   aria-label={link.label}
                   whileHover={{ scale: 1.12, y: -3 }}
                   whileTap={{ scale: 0.94 }}

@@ -25,15 +25,15 @@ export function FloatingResumeButton() {
       whileTap={{ y: 3 }}
       animate={{ opacity: isScrolling ? 0.4 : 1, scale: reduced ? 1 : isScrolling ? 0.85 : 1 }}
       transition={{ type: 'spring', stiffness: 420, damping: 24 }}
-      className={`fixed z-40 flex h-16 w-16 items-center justify-center rounded-2xl border-2 border-black bg-gradient-to-b from-accent to-accent-deep ${isScrolling ? 'pointer-events-none' : ''}`}
+      className={`fixed z-40 flex h-12 w-12 items-center justify-center rounded-xl border-2 border-black bg-gradient-to-b sm:h-16 sm:w-16 sm:rounded-2xl from-accent to-accent-deep ${isScrolling ? 'pointer-events-none' : ''}`}
       style={{
         boxShadow: '0 4px 0 0 #1a0000, 0 10px 20px var(--color-shadow)',
         bottom: 'max(1.25rem, env(safe-area-inset-bottom))',
         left: 'max(1.25rem, env(safe-area-inset-left))',
       }}
     >
-      <span className="relative flex h-11 w-11 items-center justify-center rounded-full border-2 border-white/70 text-white">
-        <TbFileDescription size={20} />
+      <span className="relative flex h-8 w-8 items-center sm:h-11 sm:w-11 justify-center rounded-full border-2 border-white/70 text-white">
+        <TbFileDescription size={18} />
         <AnimatePresence>
           {stamped && (
             <motion.span
