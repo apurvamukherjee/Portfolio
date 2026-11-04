@@ -88,10 +88,14 @@ export function Hero() {
             variants={item}
             className="mt-6 max-w-[34rem] text-lg leading-relaxed text-muted md:text-xl"
           >
-            <span className="font-medium text-ink">Full-stack engineer</span> in Kolkata. I design and
-            build production-grade web &amp; mobile apps with{" "}
-            <TechWord color="#61dafb">React</TechWord>, <TechWord color="#a78bfa">React Native</TechWord> and{" "}
-            <TechWord color="#6cc24a">Node.js</TechWord> — end to end, from system design to deployment.
+            <ScrambleText text="Full-stack engineer" play={introDone} delay={500} className="cursor-default font-medium text-ink" />{" "}
+            in Kolkata. I design and build{" "}
+            <ScrambleText text="production-grade" play={introDone} delay={700} className="cursor-default text-ink/80" /> web
+            &amp; mobile apps with <TechWord color="#61dafb" play={introDone} delay={850}>React</TechWord>,{" "}
+            <TechWord color="#a78bfa" play={introDone} delay={950}>React Native</TechWord> and{" "}
+            <TechWord color="#6cc24a" play={introDone} delay={1050}>Node.js</TechWord> —{" "}
+            <ScrambleText text="end to end" play={introDone} delay={1150} className="cursor-default text-ink/80" />, from system
+            design to <ScrambleText text="deployment" play={introDone} delay={1250} className="cursor-default text-ink/80" />.
           </motion.p>
 
           <motion.div variants={item} className="mt-9 flex flex-wrap items-center gap-3">

@@ -15,20 +15,33 @@ const GLYPHS = '!<>-_\\/[]{}=+*^?#01'
 const SCRAMBLE_MS = 650
 
 /**
- * Text that "decodes" from random glyphs into itself: once when `play` turns true, and again on
- * every hover. Fixed-width (monospace) text keeps the width steady while it scrambles.
+ * Text that "decodes" from random glyphs into itself: once when `play` turns true (after `delay`
+ * ms), and again on every hover. The real text keeps its place in the layout and the scramble is
+ * drawn over it, so even in a proportional font the line never reflows.
  */
-export function ScrambleText({ text, play, className = '' }: { text: string; play: boolean; className?: string }) {
+export function ScrambleText({
+  text,
+  play = false,
+  delay = 0,
+  className = '',
+}: {
+  text: string
+  play?: boolean
+  delay?: number
+  className?: string
+}) {
   const reduced = useReducedMotion()
   const [out, setOut] = useState(text)
   const raf = useRef(0)
+  const timer = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   const run = useCallback(() => {
     if (reduced) return
     cancelAnimationFrame(raf.current)
     const t0 = performance.now()
+    const duration = Math.max(SCRAMBLE_MS, text.length * 28)
     const tick = (now: number) => {
-      const p = Math.min(1, (now - t0) / SCRAMBLE_MS)
+      const p = Math.min(1, (now - t0) / duration)
       const settled = Math.floor(p * text.length)
       setOut(
         [...text]
@@ -41,13 +54,21 @@ export function ScrambleText({ text, play, className = '' }: { text: string; pla
   }, [reduced, text])
 
   useEffect(() => {
-    if (play) run()
-    return () => cancelAnimationFrame(raf.current)
-  }, [play, run])
+    if (play) timer.current = setTimeout(run, delay)
+    return () => {
+      clearTimeout(timer.current)
+      cancelAnimationFrame(raf.current)
+    }
+  }, [play, delay, run])
 
   return (
-    <span className={className} onPointerEnter={run} aria-label={text}>
-      <span aria-hidden>{out}</span>
+    <span className={`relative inline-block whitespace-nowrap ${className}`} onPointerEnter={run}>
+      {/* The real words: they set the size and are what screen readers announce and what gets copied.
+          Drawn transparent so only the overlay shows; selection colours them back in. */}
+      <span className="text-transparent selection:text-white">{text}</span>
+      <span aria-hidden className="pointer-events-none absolute left-0 top-0 select-none">
+        {out}
+      </span>
     </span>
   )
 }
@@ -128,10 +149,10 @@ export function IconLink({ href, label, children }: { href: string; label: strin
 }
 
 /** An inline tech name: lights up in its brand colour with an underline that draws in on hover. */
-export function TechWord({ children, color }: { children: ReactNode; color: string }) {
+export function TechWord({ children, color, play, delay }: { children: string; color: string; play?: boolean; delay?: number }) {
   return (
     <span className="tech-word cursor-default font-medium text-ink/85" style={{ ['--brand' as string]: color }}>
-      {children}
+      <ScrambleText text={children} play={play} delay={delay} />
     </span>
   )
 }
