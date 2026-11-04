@@ -16,7 +16,7 @@ interface MatrixRainProps {
  * The falling-code background is a dark-mode signature — its fade trail continuously
  * layers translucent black, which reads fine on a black canvas but fights a light
  * background over time. So it only animates in dark mode; light mode gets a static,
- * non-animated backdrop instead of a rain effect that's constantly muddying the page.
+ * non-animated backdrop instead: a faint dot grid on warm paper with two soft colour washes.
  */
 export function MatrixRain({ theme, unlocked }: MatrixRainProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -102,7 +102,14 @@ export function MatrixRain({ theme, unlocked }: MatrixRainProps) {
   if (!active) {
     return (
       <>
-        <div className="fixed inset-0 -z-10 bg-surface" aria-hidden />
+        <div className={`fixed inset-0 -z-10 bg-surface ${theme === 'light' ? 'paper-bg' : ''}`} aria-hidden>
+          {theme === 'light' && (
+            <>
+              <span className="paper-glow paper-glow-a" />
+              <span className="paper-glow paper-glow-b" />
+            </>
+          )}
+        </div>
         {toast}
       </>
     )

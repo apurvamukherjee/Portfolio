@@ -622,3 +622,48 @@
 @media (hover: hover) {
   .meta-cell:hover::before { transform: scaleX(1); }
 }
+
+/* ── Light-mode backdrop ─────────────────────────────────────────────────────────────────────
+   Static and compositor-cheap: a faint dot grid on the paper colour, faded out toward the edges
+   so it never competes with content, plus two blurred washes for depth. */
+.paper-bg {
+  overflow: hidden;
+}
+.paper-bg::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(rgba(23, 20, 15, 0.13) 1px, transparent 1.2px);
+  background-size: 24px 24px;
+  -webkit-mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 25%, transparent 80%);
+  mask-image: radial-gradient(ellipse 85% 75% at 50% 35%, #000 25%, transparent 80%);
+}
+.paper-bg::after {
+  /* A whisper of grain so large flat areas don't read as banded. */
+  content: '';
+  position: absolute;
+  inset: 0;
+  opacity: 0.35;
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.09 0 0 0 0 0.08 0 0 0 0 0.06 0 0 0 0.05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.paper-glow {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(90px);
+  pointer-events: none;
+}
+.paper-glow-a {
+  top: -18vh;
+  right: -10vw;
+  width: 55vw;
+  height: 55vh;
+  background: color-mix(in srgb, var(--color-accent) 9%, transparent);
+}
+.paper-glow-b {
+  bottom: -20vh;
+  left: -12vw;
+  width: 50vw;
+  height: 50vh;
+  background: rgba(214, 160, 90, 0.14);
+}
