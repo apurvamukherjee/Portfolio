@@ -8,7 +8,6 @@ import { Chip } from '../../shared/Chip'
 import { CtaLink } from '../../shared/CtaLink'
 import { CaseStudy } from '../../shared/CaseStudy'
 import { ImageSlideshow } from '../../shared/ImageSlideshow'
-import { MacBookFrame } from '../../shared/MacBookFrame'
 import { BookLoader } from './BookLoader'
 
 interface OpenBookProps {
@@ -19,6 +18,7 @@ interface OpenBookProps {
 export function OpenBook({ project, onClose }: OpenBookProps) {
   const reduced = useReducedMotion() ?? false
   const [settled, setSettled] = useState(reduced)
+  const [shot, setShot] = useState(0)
   const titleId = useId()
   const closeBtnRef = useRef<HTMLButtonElement>(null)
   const previousFocusRef = useRef<Element | null>(null)
@@ -48,10 +48,13 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
   useEffect(() => {
     function onKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose()
+      const count = project.images.length
+      if (e.key === 'ArrowRight') setShot((i) => (i + 1) % count)
+      if (e.key === 'ArrowLeft') setShot((i) => (i - 1 + count) % count)
     }
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
-  }, [onClose])
+  }, [onClose, project.images.length])
 
   return (
     <motion.div
@@ -91,7 +94,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           animate={{ opacity: settled ? 1 : 0, y: settled ? 0 : 8 }}
           transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1], delay: settled ? 0.04 : 0 }}
         >
-          <section className="thin-scrollbar flex-1 overflow-y-auto border-b border-border p-6 pt-14 md:border-b-0 md:border-r md:p-8 md:pt-8">
+          <section className="thin-scrollbar p-6 md:flex-1 md:overflow-y-auto md:border-r md:p-8">
             {project.logoSrc ? (
               <img src={project.logoSrc} alt="" className="h-12 w-12 rounded-full bg-white object-contain p-1" />
             ) : (
@@ -147,19 +150,52 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
             </div>
           </section>
 
-          <section className="thin-scrollbar flex-1 overflow-y-auto p-6 md:p-8">
-            <p className="mb-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-muted">Screens</p>
-            {project.variant === 'app' ? (
-              <div className="relative mx-auto aspect-[9/19] w-40 overflow-hidden rounded-[1.75rem] border-4 border-white/10 bg-black shadow-card sm:w-48">
-                <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="contain" />
+          <section className="thin-scrollbar order-first border-b border-border p-4 pt-14 sm:p-6 sm:pt-14 md:order-none md:flex-[1.6] md:overflow-y-auto md:border-b-0 md:p-8">
+            <div className="rounded-xl border border-border bg-surface-raised p-3 sm:p-4">
+              <div
+                className={
+                  project.variant === 'app'
+                    ? 'relative mx-auto aspect-[9/19] h-[min(60vh,560px)] overflow-hidden rounded-[2rem] border-4 border-white/10 bg-black shadow-card'
+                    : 'relative aspect-video w-full overflow-hidden rounded-lg bg-black shadow-card'
+                }
+              >
+                <ImageSlideshow
+                  images={project.images}
+                  alt={`${project.name} preview`}
+                  fit="contain"
+                  index={shot}
+                  onIndexChange={setShot}
+                  autoplay={false}
+                  showDots={false}
+                />
               </div>
-            ) : (
-              <div className="relative aspect-video w-full overflow-hidden rounded-lg shadow-card">
-                <MacBookFrame>
-                  <ImageSlideshow images={project.images} alt={`${project.name} preview`} fit="cover" />
-                </MacBookFrame>
+
+              <div className="mt-3 flex items-center justify-between text-xs text-muted">
+                <span className="tabular-nums">
+                  {shot + 1} / {project.images.length}
+                </span>
+                <span>Click image to enlarge{project.images.length > 1 && ' · ← → to browse'}</span>
               </div>
-            )}
+
+              {project.images.length > 1 && (
+                <div className="thin-scrollbar mt-3 flex gap-2 overflow-x-auto pb-1">
+                  {project.images.map((src, i) => (
+                    <button
+                      key={src}
+                      type="button"
+                      onClick={() => setShot(i)}
+                      aria-label={`Show screen ${i + 1}`}
+                      aria-current={i === shot}
+                      className={`shrink-0 overflow-hidden rounded-md border-2 bg-black transition-all ${
+                        project.variant === 'app' ? 'aspect-[9/19] w-12' : 'aspect-video w-24'
+                      } ${i === shot ? 'border-accent opacity-100' : 'border-transparent opacity-50 hover:opacity-90'}`}
+                    >
+                      <img src={src} alt="" loading="lazy" className="h-full w-full object-cover" />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
 
             {project.caseStudy ? (
               // Held until the book has opened, or the stagger would play under the loader cover.

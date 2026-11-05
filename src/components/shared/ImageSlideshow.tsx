@@ -10,10 +10,28 @@ interface ImageSlideshowProps {
   images: string[]
   alt: string
   fit: 'cover' | 'contain'
+  /** Controlled mode: the parent owns the index (e.g. to drive its own thumbnails). */
+  index?: number
+  onIndexChange?: (index: number) => void
+  autoplay?: boolean
+  showDots?: boolean
 }
 
-export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
-  const [index, setIndex] = useState(0)
+export function ImageSlideshow({
+  images,
+  alt,
+  fit,
+  index: controlledIndex,
+  onIndexChange,
+  autoplay = true,
+  showDots = true,
+}: ImageSlideshowProps) {
+  const [internalIndex, setInternalIndex] = useState(0)
+  const index = controlledIndex ?? internalIndex
+  const setIndex = (next: number) => {
+    setInternalIndex(next)
+    onIndexChange?.(next)
+  }
   const [paused, setPaused] = useState(false)
   const [zoom, setZoom] = useState<ZoomSource | null>(null)
   const containerRef = useRef<HTMLDivElement>(null)
@@ -23,10 +41,14 @@ export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
   const screenAlt = `${alt} — screen ${index + 1} of ${images.length}`
 
   useEffect(() => {
-    if (!hasMultiple || paused || zoom || reduced) return
-    const timer = setInterval(() => setIndex((i) => (i + 1) % images.length), INTERVAL_MS)
-    return () => clearInterval(timer)
-  }, [hasMultiple, paused, zoom, reduced, images.length])
+    if (!autoplay || !hasMultiple || paused || zoom || reduced) return
+    const timer = setTimeout(() => {
+      const next = (index + 1) % images.length
+      setInternalIndex(next)
+      onIndexChange?.(next)
+    }, INTERVAL_MS)
+    return () => clearTimeout(timer)
+  }, [autoplay, hasMultiple, paused, zoom, reduced, images.length, index, onIndexChange])
 
   const goTo = (next: number) => setIndex((next + images.length) % images.length)
 
@@ -101,7 +123,7 @@ export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
             <TbChevronRight size={18} />
           </button>
 
-          <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
+          {showDots && <div className="absolute bottom-3 left-1/2 flex -translate-x-1/2 gap-1.5">
             {images.map((src, i) => (
               <button
                 key={src}
@@ -113,7 +135,7 @@ export function ImageSlideshow({ images, alt, fit }: ImageSlideshowProps) {
                 }`}
               />
             ))}
-          </div>
+          </div>}
         </>
       )}
     </div>
