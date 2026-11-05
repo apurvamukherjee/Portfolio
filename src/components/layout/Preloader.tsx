@@ -3,10 +3,10 @@ import { motion } from 'framer-motion'
 import { DotLottieReact } from '@lottiefiles/dotlottie-react'
 import { FACTS } from '../../data/facts'
 
-const START_DELAY_MS = 500
-const TYPE_MS = 20
-const READ_MS = 1600
-const ERASE_MS = 8
+const START_DELAY_MS = 200
+const TYPE_MS = 12
+const READ_MS = 900
+const ERASE_MS = 4
 const EXIT_DELAY_MS = 150
 
 interface PreloaderProps {
