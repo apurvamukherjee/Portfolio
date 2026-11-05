@@ -65,6 +65,35 @@ export const projects: Project[] = [
     ],
   },
   {
+    name: "AimForge",
+    category: "games",
+    spineLogo: "/assets/projects/logos/aimforge.svg",
+    description:
+      "First-person <strong>3D aim trainer</strong> that runs in the browser — five guns, five animated knives, four operators, five training modes and six themed maps. Every model, texture and sound is <strong>generated in code</strong>: no install, just click Deploy.",
+    descriptionIsHtml: true,
+    tech: ["Three.js", "JavaScript", "WebGL 2", "Web Audio API"],
+    githubUrl: "https://github.com/apurvamukherjee/aim-forge",
+    liveUrl: "https://apurvamukherjee.github.io/aim-forge/",
+    caseStudy: {
+      problem:
+        "Aim trainers worth using are paid desktop downloads; browser ones are flat 2D dots that don't feel like a shooter.",
+      approach:
+        "Rebuilt my old 2D aim trainer as a full FPS in vanilla JS + Three.js with zero build step. Guns, knives, operators and all 6 maps are procedural meshes; every sound is synthesized with Web Audio. Each gun has its own recoil, spread, ADS and staged reload animation, sensitivity is CS-scale (cm/360), and the 5 modes (Gridshot, Reflex Flick, Smooth Tracking, Bot Duel, Free Range) share one arena layout so scores compare fairly across maps.",
+      impact:
+        "~4,000 lines of JS, zero model, texture or audio files, and a 66-second trailer rendered frame by frame from the real game with an original code-synthesized soundtrack — all of it served as a static site.",
+    },
+    images: [
+      "/assets/projects/aimforge/menu.webp",
+      "/assets/projects/aimforge/gridshot.webp",
+      "/assets/projects/aimforge/bots.webp",
+      "/assets/projects/aimforge/sniper-scope.webp",
+      "/assets/projects/aimforge/map-neon.webp",
+      "/assets/projects/aimforge/knife-butterfly.webp",
+      "/assets/projects/aimforge/loadout.webp",
+      "/assets/projects/aimforge/map-sunscorch.webp",
+    ],
+  },
+  {
     name: "KeyStrike",
     category: "games",
     spineLogo: "/assets/projects/logos/keystrike.svg",
@@ -367,18 +396,6 @@ export const projects: Project[] = [
     ],
     githubUrl: "https://github.com/apurvamukherjee/Kimu-The_chatting_app",
     liveUrl: "https://chat-app-alpha-ivory-12.vercel.app/",
-  },
-  {
-    name: "Aim Trainer Game",
-    category: "exp",
-    description:
-      "A Aim Trainer Game to improve your aim. made with different levels and difficulty levels.",
-    tech: [],
-    logoSrc: "/assets/projects/aimlogo.png",
-    spineLogo: "/assets/projects/aimlogo.png",
-    images: ["/assets/projects/aimss.png"],
-    githubUrl: "https://github.com/apurvamukherjee/AIm-Trainer-Game",
-    liveUrl: "https://apurvamukherjee.github.io/AIm-Trainer-Game/",
   },
   {
     name: "Gemini Clone",
