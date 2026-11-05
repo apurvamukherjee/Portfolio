@@ -75,12 +75,12 @@ export function BookLoader({ project }: BookLoaderProps) {
       />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 px-8 text-center">
-        <CategoryIcon size={22} aria-hidden className="text-foil/45" />
-        <div className="max-w-sm border-y border-foil/25 py-4">
-          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-foil/50">
+        <CategoryIcon size={22} aria-hidden className="text-gilt/45" />
+        <div className="max-w-sm border-y border-gilt/25 py-4">
+          <p className="text-[0.62rem] font-semibold uppercase tracking-[0.3em] text-gilt/50">
             {SHELF_LABELS[project.category]}
           </p>
-          <p className="mt-2 text-lg font-semibold tracking-[0.06em] text-foil">{project.name}</p>
+          <p className="mt-2 text-lg font-semibold tracking-[0.06em] text-gilt">{project.name}</p>
         </div>
       </div>
     </motion.div>

@@ -30,13 +30,18 @@
      faded into it lost their second half; this stays readable while still reading as a sweep. */
   --color-accent-text: #ff6b5e;
 
-  /* Book cloth. One graphite family for every spine — categories are told apart by the
-     shelf label and the foil glyph, not by color. Four tones only so a shelf reads as a
-     run of related volumes rather than a paint chart. */
-  --color-cloth-1: #34343e;
-  --color-cloth-2: #3d3d48;
-  --color-cloth-3: #2b2b34;
-  --color-cloth-4: #454551;
+  /* Book cloth. Deep, desaturated bookbinding tones so each spine is recognisable at a
+     glance while the shelf still reads as one library. Same in both themes. */
+  --color-cloth-1: #7a2430;
+  --color-cloth-2: #1f4a3a;
+  --color-cloth-3: #23395f;
+  --color-cloth-4: #8a5a1c;
+  --color-cloth-5: #4f2c5c;
+  --color-cloth-6: #1d5560;
+  --color-cloth-7: #9a3f22;
+  --color-cloth-8: #3a3f4a;
+  /* Spine lettering is always gilt on dark cloth, independent of the page theme. */
+  --color-gilt: #e8cf94;
   --color-foil: rgba(255, 255, 255, 0.82);
   --color-shelf-line: rgba(255, 255, 255, 0.16);
 
@@ -79,10 +84,6 @@
   --color-accent-deep: #6b0000;
   --color-accent-text: #8f0000;
 
-  --color-cloth-1: #a89f8c;
-  --color-cloth-2: #b5ad9a;
-  --color-cloth-3: #9a917e;
-  --color-cloth-4: #bfb7a5;
   --color-foil: rgba(23, 20, 15, 0.82);
   --color-shelf-line: rgba(0, 0, 0, 0.22);
 
