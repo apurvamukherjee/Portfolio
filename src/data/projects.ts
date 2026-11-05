@@ -122,6 +122,27 @@ export const projects: Project[] = [
   },
   {
     variant: "app",
+    name: "Spency",
+    category: "apps",
+    spineLogo: "/assets/projects/logos/spency.png",
+    description:
+      "Budgeting app for people paid monthly. Tell it what's in the bank and what you want left at month end; every morning it gives you one number — <strong>what's safe to spend today</strong> — and Claude keeps it current by reading your payment screenshots over an <strong>MCP connector</strong>. Weekly envelopes, yearly-bill savings, payday-to-payday months and multiple bank accounts.",
+    descriptionIsHtml: true,
+    tech: ["Next.js", "React", "TypeScript", "Supabase", "TanStack Query", "Zustand", "Tailwind CSS", "MCP", "Zod"],
+    status: "Ongoing",
+    openSource: true,
+    githubUrl: "https://github.com/apurvamukherjee/spency-pocket-wallet",
+    liveUrl: "https://spency-pocket-wallet-1ioz.vercel.app/login",
+    images: [
+      "/assets/projects/spency/home.png",
+      "/assets/projects/spency/inbox.png",
+      "/assets/projects/spency/bills.png",
+      "/assets/projects/spency/payday.png",
+      "/assets/projects/spency/reconcile.png",
+    ],
+  },
+  {
+    variant: "app",
     name: "LearnMo",
     category: "apps",
     spineLogo: "/assets/projects/logos/learnmo.webp",
