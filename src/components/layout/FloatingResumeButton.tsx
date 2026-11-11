@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 import { TbFileDescription } from 'react-icons/tb'
 import { site } from '../../data/site'
 import { useIsScrolling } from '../../hooks/useIsScrolling'
@@ -24,7 +25,7 @@ export function FloatingResumeButton() {
       whileHover={{ y: -3 }}
       whileTap={{ y: 3 }}
       animate={{ opacity: isScrolling ? 0.4 : 1, scale: reduced ? 1 : isScrolling ? 0.85 : 1 }}
-      transition={{ type: 'spring', stiffness: 420, damping: 24 }}
+      transition={iosSpring}
       className={`fixed z-40 flex h-12 w-12 items-center justify-center rounded-xl border-2 border-black bg-gradient-to-b sm:h-16 sm:w-16 sm:rounded-2xl from-accent to-accent-deep ${isScrolling ? 'pointer-events-none' : ''}`}
       style={{
         boxShadow: '0 4px 0 0 #1a0000, 0 10px 20px var(--color-shadow)',

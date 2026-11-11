@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 import { TbArrowUp } from 'react-icons/tb'
 import { useScrollPastThreshold } from '../../hooks/useScrollPastThreshold'
 import { useIsScrolling } from '../../hooks/useIsScrolling'
@@ -19,7 +20,7 @@ export function BackToTopButton() {
           exit={{ opacity: 0, y: 12, scale: 0.8 }}
           whileHover={{ y: -4 }}
           whileTap={{ scale: 0.9 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 24 }}
+          transition={iosSpring}
           className={`fixed z-40 flex h-12 w-12 items-center justify-center rounded-full border border-border bg-surface/80 text-ink shadow-card backdrop-blur-sm ${isScrolling ? 'pointer-events-none' : ''}`}
           style={{
             bottom: 'max(1.25rem, env(safe-area-inset-bottom))',
