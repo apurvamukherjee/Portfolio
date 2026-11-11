@@ -6,6 +6,7 @@ import { experience } from './experience'
 import { projects } from './projects'
 import { leadershipEvents } from './leadership'
 import type { Theme } from '../hooks/useTheme'
+import { openNotch } from '../components/layout/visor-notch/openNotch'
 import { useUi, type ProjectsView } from '../lib/ui'
 
 export interface CommandPreview {
@@ -138,6 +139,33 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
       },
     })
   }
+
+  commands.push(
+    {
+      id: 'play-music',
+      label: 'Open the music player',
+      keywords: 'music play notch island song visor audio',
+      alias: 'play',
+      preview: { heading: 'The notch at the top of the page', lines: ['A working copy of Visor, my macOS notch app. It plays music.'] },
+      action: openNotch,
+    },
+    {
+      id: 'open-terminal',
+      label: 'Open the terminal',
+      keywords: 'terminal shell sudo zsh console',
+      alias: 'terminal',
+      preview: { heading: 'guest — zsh', lines: ['A real prompt. Every command here works there too.', 'Also opens by typing sudo anywhere on the page.'] },
+      action: () => useUi.getState().setOverlay('terminal'),
+    },
+    {
+      id: 'matrix',
+      label: 'Enter the Matrix',
+      keywords: 'matrix rain konami easter egg green secret',
+      alias: 'matrix',
+      preview: { heading: 'Ten seconds of green rain', lines: ['Also unlocked by ↑↑↓↓←→←→BA.'] },
+      action: () => useUi.getState().unlockMatrix(),
+    },
+  )
 
   return commands
 }
