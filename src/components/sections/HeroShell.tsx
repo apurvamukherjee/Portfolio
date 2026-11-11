@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type ReactNode } from 'react'
 import { motion, useReducedMotion, type Variants } from 'framer-motion'
 import { TbArrowUpRight, TbBrandLinkedin, TbCheck, TbMail } from 'react-icons/tb'
 import { skillCategories } from '../../data/skills'
-import { projects } from '../../data/projects'
+import { projectBlurb, projects } from '../../data/projects'
 import { experience } from '../../data/experience'
 import { socialLinks } from '../../data/social'
 import { jumpToSection } from '../../lib/sectionTransition'
@@ -33,7 +33,7 @@ const WHOAMI: [string, ReactNode][] = [
 
 const PROJECT_ROWS = PINNED.flatMap((n) => projects.filter((p) => p.name === n)).map((p) => ({
   name: p.name,
-  blurb: p.description.replace(/<[^>]+>/g, '').split(/(?<=[.!?])\s/)[0].replace(/\.$/, ''),
+  blurb: projectBlurb(p).replace(/\.$/, ''),
   open: p.openSource,
 }))
 const MORE_PROJECTS = projects.length - PROJECT_ROWS.length
