@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
 import { HeroShell } from './HeroShell'
 import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, type TargetAndTransition, useReducedMotion } from 'framer-motion'
+import { pointerSpring } from '../../lib/motion'
 type Wobble = 'none' | 'close' | 'minimize' | 'maximize'
 
 const WOBBLE_LABEL: Record<Exclude<Wobble, 'none'>, string> = {
@@ -31,8 +32,8 @@ export function HeroIllustration() {
   const ref = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [4, -4]), { stiffness: 150, damping: 20 })
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-4, 4]), { stiffness: 150, damping: 20 })
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [4, -4]), pointerSpring)
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-4, 4]), pointerSpring)
 
   const [wobble, setWobble] = useState<Wobble>('none')
 
