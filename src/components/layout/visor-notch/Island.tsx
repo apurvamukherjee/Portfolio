@@ -92,7 +92,7 @@ export function Island() {
           {tab === 'shelf' && <Shelf />}
         </div>
       ) : (
-        <button className="island-hit" aria-label="Open the notch" aria-expanded={false} onClick={enter}>
+        <button className="island-hit" data-cursor="play" aria-label="Open the notch" aria-expanded={false} onClick={enter}>
           <Closed />
         </button>
       )}

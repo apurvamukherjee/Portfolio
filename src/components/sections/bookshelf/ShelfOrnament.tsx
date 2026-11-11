@@ -116,6 +116,7 @@ function OrnamentPiece({ ornament }: { ornament: Ornament }) {
         type="button"
         onClick={poke}
         aria-label={`Poke ${label}`}
+        data-cursor="poke"
         className="flex h-9 w-9 items-center justify-center rounded text-foil/35 transition-colors [-webkit-tap-highlight-color:transparent] hover:text-foil/70 focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent focus-visible:outline-offset-2"
         animate={reduced ? undefined : preset.animate}
         transition={reduced ? undefined : preset.transition}
