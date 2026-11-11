@@ -1,7 +1,7 @@
 import { site } from './site'
 import { socialLinks } from './social'
 import { skillCategories } from './skills'
-import { projects } from './projects'
+import { projectBlurb, projects } from './projects'
 import { experience } from './experience'
 
 const COMMAND_DESCRIPTIONS: Record<string, string> = {
@@ -34,11 +34,7 @@ function skillsLines(): string[] {
 }
 
 function projectsLines(): string[] {
-  return projects.map((project) => {
-    const plainDescription = project.description.replace(/<[^>]+>/g, '')
-    const firstSentence = plainDescription.split(/(?<=[.!?])\s/)[0]
-    return `${project.name} — ${firstSentence}`
-  })
+  return projects.map((project) => `${project.name} — ${projectBlurb(project)}`)
 }
 
 function experienceLines(): string[] {
