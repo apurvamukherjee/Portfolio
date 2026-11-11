@@ -19,6 +19,9 @@ interface OpenBookProps {
 export function OpenBook({ project, onClose }: OpenBookProps) {
   const reduced = useReducedMotion() ?? false
   const [settled, setSettled] = useState(reduced)
+  // Below lg the board scrolls sideways and would clip a book growing out of it, so the spread
+  // just fades in there instead of morphing from its place on the shelf.
+  const [morph] = useState(() => !reduced && matchMedia('(min-width: 1024px)').matches)
   const [shot, setShot] = useState(0)
   const titleId = useId()
   const closeBtnRef = useRef<HTMLButtonElement>(null)
@@ -72,7 +75,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        layoutId={reduced ? undefined : `book-${project.name}`}
+        layoutId={morph ? `book-${project.name}` : undefined}
         transition={reduced ? { duration: 0.15 } : iosSpringSoft}
         className="relative flex h-full w-full flex-col overflow-hidden bg-surface shadow-card md:h-[min(600px,86vh)] md:w-[min(920px,92vw)] md:rounded-2xl md:border md:border-border"
         style={{ perspective: 1600 }}
@@ -95,7 +98,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           animate={{ opacity: settled ? 1 : 0, y: settled ? 0 : 8 }}
           transition={{ duration: 0.36, ease: [0.22, 1, 0.36, 1], delay: settled ? 0.04 : 0 }}
         >
-          <section className="thin-scrollbar p-6 md:flex-1 md:overflow-y-auto md:border-r md:p-8">
+          <section className="thin-scrollbar p-6 md:flex-1 md:overflow-y-auto md:border-r md:border-border md:p-8">
             {project.logoSrc ? (
               <img src={project.logoSrc} alt="" className="h-12 w-12 rounded-full bg-white object-contain p-1" />
             ) : (
@@ -154,6 +157,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
           <section className="thin-scrollbar order-first border-b border-border p-4 pt-14 sm:p-6 sm:pt-14 md:order-none md:flex-[1.6] md:overflow-y-auto md:border-b-0 md:p-8">
             <div className="rounded-xl border border-border bg-surface-raised p-3 sm:p-4">
               <div
+                data-cursor="zoom"
                 className={
                   project.variant === 'app'
                     ? 'relative mx-auto aspect-[9/19] h-[min(60vh,560px)] overflow-hidden rounded-[2rem] border-4 border-white/10 bg-black shadow-card'
