@@ -43,7 +43,6 @@
   /* Spine lettering is always gilt on dark cloth, independent of the page theme. */
   --color-gilt: #e8cf94;
   --color-foil: rgba(255, 255, 255, 0.82);
-  --color-shelf-line: rgba(255, 255, 255, 0.16);
 
   /* KPI tile accents. iOS system palette — each tile owns one hue so the four read as a set
      of distinct cards rather than four copies of the same card. */
@@ -55,7 +54,6 @@
   /* Single source of truth for the shelf label column. Every shelf's board starts at the
      same x only because the label never sizes to its own text — widen this if a future
      SHELF_LABELS entry outgrows it. */
-  --shelf-label-w: 13rem;
 
   --animate-headshake: headshake 15s linear infinite;
   --animate-jello: jello 0.9s both;
@@ -84,7 +82,6 @@
   --color-accent-text: #8f0000;
 
   --color-foil: rgba(23, 20, 15, 0.82);
-  --color-shelf-line: rgba(0, 0, 0, 0.22);
 
   /* Light-mode variants: iOS's own darker "on light" values, so text on a tint stays legible. */
   --color-kpi-repos: #0071e3;
