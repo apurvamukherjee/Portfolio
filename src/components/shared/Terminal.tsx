@@ -1,11 +1,14 @@
 import { useEffect, useEffectEvent, useRef, useState, type KeyboardEvent } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
-import { runTerminalCommand } from '../../data/terminalCommands'
+import { findAction, runTerminalCommand } from '../../data/terminalCommands'
+import type { Command } from '../../data/commands'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
 import { appleEase, iosSpringSoft } from '../../lib/motion'
 interface TerminalProps {
   open: boolean
   onClose: () => void
+  /** Site actions, shared with the command palette. */
+  commands: Command[]
 }
 
 interface TranscriptLine {
@@ -85,7 +88,7 @@ function TrafficLights({ onClose }: { onClose: () => void }) {
   )
 }
 
-export function Terminal({ open, onClose }: TerminalProps) {
+export function Terminal({ open, onClose, commands }: TerminalProps) {
   const reduced = useReducedMotion()
   const [transcript, setTranscript] = useState<TranscriptLine[]>([])
   const [input, setInput] = useState('')
@@ -157,7 +160,15 @@ export function Terminal({ open, onClose }: TerminalProps) {
       return
     }
 
-    appendOutput(runTerminalCommand(trimmed))
+    const action = findAction(trimmed, commands)
+    if (action) {
+      // Actions change the page behind this window, so get out of the way to show the result.
+      action.action()
+      onClose()
+      return
+    }
+
+    appendOutput(runTerminalCommand(trimmed, commands))
   }
 
   function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {

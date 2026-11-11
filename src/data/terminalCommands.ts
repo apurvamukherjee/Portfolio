@@ -3,6 +3,7 @@ import { socialLinks } from './social'
 import { skillCategories } from './skills'
 import { projectBlurb, projects } from './projects'
 import { experience } from './experience'
+import type { Command } from './commands'
 
 const COMMAND_DESCRIPTIONS: Record<string, string> = {
   help: 'list available commands',
@@ -11,14 +12,20 @@ const COMMAND_DESCRIPTIONS: Record<string, string> = {
   skills: "tech stack, by category",
   projects: "things I've built",
   experience: 'work history',
-  resume: 'open the resume in a new tab',
   contact: 'ways to reach me',
   clear: 'clear the terminal',
   exit: 'close this terminal',
 }
 
-function helpLines(): string[] {
-  return ['Available commands:', ...Object.entries(COMMAND_DESCRIPTIONS).map(([name, desc]) => `  ${name.padEnd(10)} — ${desc}`)]
+function helpLines(commands: Command[]): string[] {
+  const width = Math.max(...commands.map((c) => c.alias.length))
+  return [
+    'Available commands:',
+    ...Object.entries(COMMAND_DESCRIPTIONS).map(([name, desc]) => `  ${name.padEnd(width)} — ${desc}`),
+    '',
+    'Actions (the same ones as ⌘K):',
+    ...commands.map((c) => `  ${c.alias.padEnd(width)} — ${c.label.toLowerCase()}`),
+  ]
 }
 
 function whoamiLines(): string[] {
@@ -64,8 +71,14 @@ function sudoLines(args: string): string[] {
   return ['sudo: permission denied']
 }
 
-/** `clear` and `exit` are handled by the Terminal component itself before reaching here. */
-export function runTerminalCommand(input: string): string[] {
+/** The site action a line of input names, if any: `theme`, `play`, `cd projects`… */
+export function findAction(input: string, commands: Command[]): Command | undefined {
+  const typed = input.trim().toLowerCase().replace(/\s+/g, ' ')
+  return commands.find((c) => c.alias === typed)
+}
+
+/** `clear`, `exit` and site actions are handled by the Terminal component itself before reaching here. */
+export function runTerminalCommand(input: string, commands: Command[]): string[] {
   const trimmed = input.trim()
   if (!trimmed) return []
 
@@ -74,7 +87,7 @@ export function runTerminalCommand(input: string): string[] {
 
   switch (name.toLowerCase()) {
     case 'help':
-      return helpLines()
+      return helpLines(commands)
     case 'whoami':
       return whoamiLines()
     case 'about':
@@ -85,9 +98,6 @@ export function runTerminalCommand(input: string): string[] {
       return projectsLines()
     case 'experience':
       return experienceLines()
-    case 'resume':
-      window.open(site.resumeHref, '_blank', 'noopener,noreferrer')
-      return ['Opening resume…']
     case 'contact':
       return contactLines()
     case 'sudo':

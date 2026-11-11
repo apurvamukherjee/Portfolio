@@ -105,7 +105,7 @@ function App() {
 
       <Suspense fallback={null}>
         <CommandPalette open={overlay === 'palette'} onClose={() => closeOverlay('palette')} commands={commands} />
-        <Terminal open={overlay === 'terminal'} onClose={() => closeOverlay('terminal')} />
+        <Terminal open={overlay === 'terminal'} onClose={() => closeOverlay('terminal')} commands={commands} />
       </Suspense>
     </IntroContext.Provider>
   )
