@@ -9,6 +9,7 @@ import { CtaLink } from '../../shared/CtaLink'
 import { CaseStudy } from '../../shared/CaseStudy'
 import { ImageSlideshow } from '../../shared/ImageSlideshow'
 import { BookLoader } from './BookLoader'
+import { iosSpring, iosSpringSoft } from '../../../lib/motion'
 
 interface OpenBookProps {
   project: Project
@@ -72,7 +73,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
         aria-modal="true"
         aria-labelledby={titleId}
         layoutId={reduced ? undefined : `book-${project.name}`}
-        transition={reduced ? { duration: 0.15 } : { type: 'spring', stiffness: 260, damping: 30, mass: 0.9 }}
+        transition={reduced ? { duration: 0.15 } : iosSpringSoft}
         className="relative flex h-full w-full flex-col overflow-hidden bg-surface shadow-card md:h-[min(600px,86vh)] md:w-[min(920px,92vw)] md:rounded-2xl md:border md:border-border"
         style={{ perspective: 1600 }}
       >
@@ -138,7 +139,7 @@ export function OpenBook({ project, onClose }: OpenBookProps) {
                   aria-label={`Visit ${project.name} on GitHub`}
                   whileHover={{ scale: 1.1, rotate: -6 }}
                   whileTap={{ scale: 0.92 }}
-                  transition={{ type: 'spring', stiffness: 350, damping: 18 }}
+                  transition={iosSpring}
                   className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition-colors hover:border-accent hover:text-accent"
                 >
                   <TbBrandGithub size={18} />
