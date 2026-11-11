@@ -6,6 +6,7 @@ import { experience } from './experience'
 import { projects } from './projects'
 import { leadershipEvents } from './leadership'
 import type { Theme } from '../hooks/useTheme'
+import { useUi, type ProjectsView } from '../lib/ui'
 
 export interface CommandPreview {
   heading: string
@@ -59,6 +60,11 @@ const SOCIAL_COMMANDS: { icon: SocialLink['icon']; label: string; keywords: stri
   { icon: 'linkedin', label: 'Open LinkedIn', keywords: 'career work' },
   { icon: 'leetcode', label: 'Open LeetCode', keywords: 'dsa problems coding practice' },
   { icon: 'instagram', label: 'Open Instagram', keywords: 'social photos' },
+]
+
+const VIEW_COMMANDS: { view: ProjectsView; label: string; keywords: string; line: string }[] = [
+  { view: 'shelf', label: 'Projects: bookshelf view', keywords: 'shelf books library covers', line: 'Every project as a book. Hover a spine to turn its cover out.' },
+  { view: 'list', label: 'Projects: list view', keywords: 'list cards detailed', line: 'Every project as a full card with its case study.' },
 ]
 
 export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Command[] {
@@ -117,6 +123,20 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
         action: () => openExternal(link.href),
       })
     }
+  }
+
+  for (const { view, label, keywords, line } of VIEW_COMMANDS) {
+    commands.push({
+      id: `view-${view}`,
+      label,
+      keywords: `projects view ${keywords}`,
+      alias: view,
+      preview: { heading: `${projects.length} projects`, lines: [line] },
+      action: () => {
+        useUi.getState().setView(view)
+        window.location.hash = 'projects'
+      },
+    })
   }
 
   return commands
