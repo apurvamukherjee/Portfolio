@@ -16,6 +16,8 @@ export interface Command {
   id: string
   label: string
   keywords?: string
+  /** What to type in the terminal to run this. The palette, the terminal and the hero shell all read this one list. */
+  alias: string
   /** What the palette shows about the destination while this row is highlighted. */
   preview?: CommandPreview
   action: () => void
@@ -64,6 +66,7 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
     id: `nav-${link.id}`,
     label: `Go to ${link.label}`,
     keywords: `section jump navigate ${link.id}`,
+    alias: `cd ${link.id}`,
     preview: SECTION_PREVIEWS[link.id],
     action: () => {
       window.location.hash = link.id
@@ -74,6 +77,7 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
     id: 'toggle-theme',
     label: theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode',
     keywords: 'theme dark light appearance',
+    alias: 'theme',
     preview: { heading: 'Appearance', lines: [`Currently ${theme}. Also on the navbar's sun/moon button.`] },
     action: onToggleTheme,
   })
@@ -84,6 +88,7 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
       id: 'copy-email',
       label: 'Copy email address',
       keywords: 'email contact gmail',
+      alias: 'email',
       preview: { heading: 'Copies to clipboard', lines: [mail.href.replace('mailto:', '')] },
       action: () => {
         void navigator.clipboard.writeText(mail.href.replace('mailto:', ''))
@@ -95,6 +100,7 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
     id: 'open-resume',
     label: 'Open resume',
     keywords: 'cv pdf resume download',
+    alias: 'resume',
     preview: { heading: 'Opens in a new tab', lines: ['Résumé on Google Drive'] },
     action: () => openExternal(site.resumeHref),
   })
@@ -106,6 +112,7 @@ export function buildCommands({ theme, onToggleTheme }: BuildCommandsArgs): Comm
         id: `open-${icon}`,
         label,
         keywords,
+        alias: icon,
         preview: { heading: 'Opens in a new tab', lines: [link.href] },
         action: () => openExternal(link.href),
       })
