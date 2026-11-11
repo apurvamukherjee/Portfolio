@@ -17,6 +17,11 @@ export const SHELF_LABELS: Record<ShelfCategory, string> = {
   exp: "Early Experiments",
 };
 
+/** First sentence of a project's description, as plain text. */
+export function projectBlurb(project: Project): string {
+  return project.description.replace(/<[^>]+>/g, "").split(/(?<=[.!?])\s/)[0];
+}
+
 export interface Project {
   name: string;
   description: string;
