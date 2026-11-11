@@ -27,7 +27,7 @@ export function Skills() {
         <SectionHeading tag="Skills" />
         <p className="w-full font-mono text-xs text-muted md:text-sm">
           <span className="text-accent">$</span> stack --count <span className="text-accent">→</span> {total} tools / {skillCategories.length} lanes
-          <span className="hidden sm:inline"> · hover to throttle</span>
+          <span className="hidden sm:inline"> · hover to throttle · click a tile to see what I built with it</span>
         </p>
       </div>
 
