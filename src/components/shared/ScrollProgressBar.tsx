@@ -1,8 +1,10 @@
 import { motion, useScroll, useSpring, useReducedMotion } from 'framer-motion'
+import { trackSpring } from '../../lib/motion'
+
 export function ScrollProgressBar() {
   const { scrollYProgress } = useScroll()
   const reduced = useReducedMotion()
-  const smoothed = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })
+  const smoothed = useSpring(scrollYProgress, trackSpring)
 
   return (
     <motion.div
