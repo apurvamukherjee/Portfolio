@@ -4,6 +4,8 @@ import { TbClipboardList, TbPlaneDeparture, TbTrophy, TbUsers } from 'react-icon
 export interface LeadershipEvent {
   icon: IconType
   rolePill: string
+  /** One kanji for the role, stamped on the card like a hanko seal. */
+  seal: string
   title: string
   org: string
   description: string
@@ -13,6 +15,7 @@ export const leadershipEvents: LeadershipEvent[] = [
   {
     icon: TbTrophy,
     rolePill: 'Mentor & Judge',
+    seal: '審',
     title: 'DriveBlaze Hackathon 2025',
     org: 'University of Engineering & Management, Kolkata',
     description:
@@ -21,6 +24,7 @@ export const leadershipEvents: LeadershipEvent[] = [
   {
     icon: TbPlaneDeparture,
     rolePill: 'Company Representative',
+    seal: '代',
     title: 'India Mobile Congress 2025',
     org: 'Yashobhoomi, New Delhi',
     description:
@@ -29,6 +33,7 @@ export const leadershipEvents: LeadershipEvent[] = [
   {
     icon: TbClipboardList,
     rolePill: 'Attendee',
+    seal: '参',
     title: 'CII Innovation Event & Capital Markets Conclave 2025',
     org: 'ITC Royal Bengal & ITC Sonar, Kolkata',
     description:
@@ -37,6 +42,7 @@ export const leadershipEvents: LeadershipEvent[] = [
   {
     icon: TbUsers,
     rolePill: 'Community',
+    seal: '集',
     title: 'Bengal Entrepreneurs Meet-Up 2.0',
     org: 'Kolkata',
     description:
