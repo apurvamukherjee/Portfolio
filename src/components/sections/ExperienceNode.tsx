@@ -3,6 +3,7 @@ import { iosSpring } from '../../lib/motion'
 import type { ExperienceRole } from '../../data/experience'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { Chip } from '../shared/Chip'
+import { filterByTech, hasProjects } from '../../lib/tech'
 
 interface ExperienceNodeProps extends ExperienceRole {
   /** True once the timeline's progress line has reached this role's dot. */
@@ -87,7 +88,7 @@ export function ExperienceNode({ role, icon: Icon, time, status, points, tech, r
 
         <div className="mt-4 flex flex-wrap gap-2">
           {tech.map((t) => (
-            <Chip key={t}>
+            <Chip key={t} onClick={hasProjects(t) ? () => filterByTech(t) : undefined}>
               {t}
             </Chip>
           ))}
