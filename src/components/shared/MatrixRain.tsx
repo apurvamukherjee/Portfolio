@@ -5,6 +5,8 @@ import type { Theme } from '../../hooks/useTheme'
 const LETTERS = 'アカサタナハマヤラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 const FRAME_INTERVAL_MS = 40
 const UNLOCKED_FRAME_INTERVAL_MS = 28
+// The rain belongs to the hero. It is gone by the time body text starts, so it never sits behind copy.
+const FADE_OVER_VIEWPORTS = 0.85
 
 interface MatrixRainProps {
   theme: Theme
@@ -54,6 +56,10 @@ export function MatrixRain({ theme, unlocked }: MatrixRainProps) {
     const draw = (time: number) => {
       rafId = requestAnimationFrame(draw)
       const green = unlockedRef.current
+      // Every frame, not every tick, so the fade tracks the scroll smoothly.
+      const fade = green ? 1 : Math.max(0, 1 - window.scrollY / (window.innerHeight * FADE_OVER_VIEWPORTS))
+      canvas.style.opacity = String(fade * (isMobile ? 0.9 : 0.7))
+      if (fade === 0) return
       if (time - lastTime < (green ? UNLOCKED_FRAME_INTERVAL_MS : FRAME_INTERVAL_MS)) return
       lastTime = time
 
@@ -117,7 +123,7 @@ export function MatrixRain({ theme, unlocked }: MatrixRainProps) {
 
   return (
     <>
-      <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-10 opacity-90 md:opacity-70" aria-hidden />
+      <canvas ref={canvasRef} className="pointer-events-none fixed inset-0 -z-10" aria-hidden />
       {toast}
     </>
   )
