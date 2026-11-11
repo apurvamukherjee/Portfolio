@@ -79,7 +79,7 @@ export function Projects() {
 
         {view === 'shelf' ? (
           <div className="mt-8 w-full">
-            <Bookshelf projects={projects} />
+            <Bookshelf projects={projects} tech={tech} />
           </div>
         ) : (
           <motion.div
