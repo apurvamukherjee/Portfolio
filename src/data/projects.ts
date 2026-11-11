@@ -17,6 +17,21 @@ export const SHELF_LABELS: Record<ShelfCategory, string> = {
   exp: "Early Experiments",
 };
 
+/** Directory-style name on each shelf group's label plate. */
+export const SHELF_SLUGS: Record<ShelfCategory, string> = {
+  oss: "open-source",
+  games: "games",
+  apps: "offline-first",
+  native: "native",
+  exp: "lab",
+};
+
+/** Which groups share a board. Eight books each, so both boards fit the page width with one cover turned out. */
+export const SHELF_BOARDS: ShelfCategory[][] = [
+  ["oss", "games", "native"],
+  ["apps", "exp"],
+];
+
 /** First sentence of a project's description, as plain text. */
 export function projectBlurb(project: Project): string {
   return project.description.replace(/<[^>]+>/g, "").split(/(?<=[.!?])\s/)[0];
