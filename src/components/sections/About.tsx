@@ -73,7 +73,7 @@ export function About() {
   return (
     <section id="about" className="w-full px-6 py-24 md:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4">
-        <SectionHeading tag="AboutMe" />
+        <SectionHeading tag="AboutMe" index={1} />
 
         <motion.div
           className="mt-8 flex w-full flex-col items-center gap-12 md:flex-row md:items-center md:gap-14"

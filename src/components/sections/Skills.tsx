@@ -24,7 +24,7 @@ export function Skills() {
     <section ref={ref} id="skills" className="relative w-full overflow-hidden py-24">
       <Dragon reveal={reduced ? fullReveal : scrollReveal} drift={reduced ? noDrift : scrollDrift} glow={reduced ? fullGlow : scrollGlow} />
       <div className="relative mx-auto flex max-w-5xl flex-col items-center gap-4 px-6 md:px-16">
-        <SectionHeading tag="Skills" />
+        <SectionHeading tag="Skills" index={2} />
         <p className="w-full font-mono text-xs text-muted md:text-sm">
           <span className="text-accent">$</span> stack --count <span className="text-accent">→</span> {total} tools / {skillCategories.length} lanes
           <span className="hidden sm:inline"> · hover to throttle · click a tile to see what I built with it</span>

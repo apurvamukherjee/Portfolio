@@ -44,7 +44,7 @@ export function Projects() {
     <section id="projects" className="w-full px-6 py-24 md:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4">
         <div className="flex w-full flex-wrap items-center justify-between gap-4">
-          <SectionHeading tag="Projects" />
+          <SectionHeading tag="Projects" index={4} />
 
           <div className="group relative flex-none">
             <div

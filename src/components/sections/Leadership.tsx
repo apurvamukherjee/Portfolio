@@ -9,7 +9,7 @@ export function Leadership() {
   return (
     <section id="leadership" className="w-full px-6 py-24 md:px-16">
       <div className="mx-auto flex max-w-5xl flex-col items-center gap-4">
-        <SectionHeading tag="Leadership" />
+        <SectionHeading tag="Leadership" index={5} />
 
         <motion.div
           className="mt-8 grid w-full grid-cols-1 gap-6 md:grid-cols-2"

@@ -65,7 +65,7 @@ export function Experience() {
   return (
     <section id="experience" className="w-full px-6 py-24 md:px-16">
       <div className="mx-auto flex max-w-4xl flex-col items-center gap-4">
-        <SectionHeading tag="Experience" />
+        <SectionHeading tag="Experience" index={3} />
 
         <motion.div
           className="mt-8 w-full"
