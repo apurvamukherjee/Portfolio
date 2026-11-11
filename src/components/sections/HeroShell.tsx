@@ -1,17 +1,47 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
-import { motion, useReducedMotion, type Variants } from 'framer-motion'
-import { TbArrowUpRight, TbBrandLinkedin, TbCheck, TbMail } from 'react-icons/tb'
+import { useEffect, useRef, useState, type KeyboardEvent, type MouseEvent, type ReactNode } from 'react'
+import { motion, useInView, useReducedMotion, type Variants } from 'framer-motion'
+import { TbArrowUpRight, TbBrandLinkedin, TbCheck, TbGitBranch, TbMail } from 'react-icons/tb'
 import { skillCategories } from '../../data/skills'
 import { projectBlurb, projects } from '../../data/projects'
 import { experience } from '../../data/experience'
 import { socialLinks } from '../../data/social'
 import { jumpToSection } from '../../lib/sectionTransition'
+import { fuzzyScore } from '../../lib/fuzzyMatch'
+import { appleEase } from '../../lib/motion'
 import { useUi } from '../../lib/ui'
+import { useCommands } from '../../hooks/useCommands'
+import { useIntro } from '../../hooks/useIntro'
 
-const COMMANDS = ['whoami', 'skills', 'projects', 'experience', 'sudo hire-me'] as const
-type Command = (typeof COMMANDS)[number]
+/** Commands that render a designed view rather than text. Also the chips under the screen. */
+const VIEWS = ['whoami', 'skills', 'projects', 'experience', 'sudo hire-me'] as const
+type View = (typeof VIEWS)[number]
+const isView = (text: string): text is View => (VIEWS as readonly string[]).includes(text)
+
+const VIEW_HELP: Record<View, string> = {
+  whoami: 'who you are talking to',
+  skills: 'the stack, by lane',
+  projects: 'pinned work',
+  experience: 'where I have worked',
+  'sudo hire-me': 'how to reach me',
+}
+
+type Output =
+  | { kind: 'view'; view: View }
+  | { kind: 'help' }
+  | { kind: 'done'; label: string }
+  | { kind: 'missing'; name: string; guess: string | null }
+
+interface Entry {
+  id: number
+  text: string
+  output: Output | null
+  /** Typed out by the shell (a chip, the idle demo) rather than by the visitor. */
+  animate: boolean
+}
 
 const TYPE_MS = 42
+// How long the idle demo holds each view before typing the next command.
+const DEMO_MS = 5200
 const PINNED = ['Visor', 'Zenith', 'KeyStrike', 'Pixelpanic', 'Monopolis', 'Kiwami']
 
 const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, ms))
@@ -47,33 +77,69 @@ const row: Variants = {
   visible: { opacity: 1, y: 0, transition: { duration: 0.22, ease: 'easeOut' } },
 }
 
+const normalise = (raw: string) => raw.trim().toLowerCase().replace(/\s+/g, ' ')
+
+/** The nearest real command to a mistyped one, or null when nothing is close. */
+function closest(name: string, names: string[]): string | null {
+  let best: string | null = null
+  let bestScore = 0
+  for (const candidate of names) {
+    // Both directions: "proj" is inside "projects", and "skils" is a subsequence of nothing but "skills" contains most of it.
+    const score = Math.max(fuzzyScore(name, candidate), fuzzyScore(candidate, name))
+    if (score > bestScore) {
+      best = candidate
+      bestScore = score
+    }
+  }
+  return best
+}
+
+interface HeroShellProps {
+  /** Maximised window: a taller screen. */
+  tall: boolean
+}
+
 /**
- * The hero's interactive shell. Each command types itself out, then renders a small structured
- * view instead of raw text. Commands live in a tab bar so there's always an obvious next click.
+ * The hero's shell, and a real one: it takes typed input with history and tab completion, runs
+ * every site action the command palette has, and renders designed views for the commands about
+ * me. Until someone touches it, it demos itself by typing through those views.
  */
-export function HeroShell() {
+export function HeroShell({ tall }: HeroShellProps) {
   const reduced = !!useReducedMotion()
-  const [cmd, setCmd] = useState<Command>('whoami')
-  const [run, setRun] = useState(0)
+  const introDone = useIntro()
+  const commands = useCommands()
+  const [entry, setEntry] = useState<Entry>({ id: 0, text: 'whoami', output: { kind: 'view', view: 'whoami' }, animate: true })
   const [typed, setTyped] = useState('')
   const [done, setDone] = useState(false)
+  const [input, setInput] = useState('')
+  const [history, setHistory] = useState<string[]>([])
+  const [historyIndex, setHistoryIndex] = useState(0)
+  // The demo ends for good the first time the visitor does anything to the shell.
+  const [touched, setTouched] = useState(false)
+  const root = useRef<HTMLDivElement>(null)
   const screen = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
+  const inView = useInView(root, { amount: 0.5 })
+
+  const names = [...VIEWS, 'help', 'clear', ...commands.map((c) => c.alias)]
+  const query = normalise(input)
+  const completion = query ? names.find((n) => n.startsWith(query) && n !== query) : undefined
 
   useEffect(() => {
     let alive = true
     screen.current?.scrollTo({ top: 0 })
     async function play() {
-      setDone(false)
-      if (reduced) {
-        setTyped(cmd)
+      if (!entry.animate || reduced) {
+        setTyped(entry.text)
         setDone(true)
         return
       }
+      setDone(false)
       setTyped('')
-      for (let i = 1; i <= cmd.length; i++) {
+      for (let i = 1; i <= entry.text.length; i++) {
         await sleep(TYPE_MS)
         if (!alive) return
-        setTyped(cmd.slice(0, i))
+        setTyped(entry.text.slice(0, i))
       }
       await sleep(160)
       if (alive) setDone(true)
@@ -82,55 +148,185 @@ export function HeroShell() {
     return () => {
       alive = false
     }
-  }, [cmd, run, reduced])
+  }, [entry, reduced])
+
+  useEffect(() => {
+    if (touched || !done || !inView || !introDone || reduced) return
+    const timer = setTimeout(() => {
+      setEntry((e) => {
+        const next = VIEWS[(VIEWS.indexOf(e.text as View) + 1) % VIEWS.length]
+        return { id: e.id + 1, text: next, output: { kind: 'view', view: next }, animate: true }
+      })
+    }, DEMO_MS)
+    return () => clearTimeout(timer)
+  }, [touched, done, inView, introDone, reduced, entry.id])
+
+  function run(raw: string, animate: boolean) {
+    const text = normalise(raw)
+    setTouched(true)
+    if (!text) return
+    if (text === 'clear') {
+      setEntry((e) => ({ id: e.id + 1, text: '', output: null, animate: false }))
+      return
+    }
+
+    let output: Output
+    if (isView(text)) output = { kind: 'view', view: text }
+    else if (text === 'help') output = { kind: 'help' }
+    else {
+      const action = commands.find((c) => c.alias === text)
+      if (action) {
+        action.action()
+        output = { kind: 'done', label: action.label }
+      } else {
+        output = { kind: 'missing', name: text, guess: closest(text, names) }
+      }
+    }
+    setEntry((e) => ({ id: e.id + 1, text, output, animate }))
+  }
+
+  function submit() {
+    const text = normalise(input)
+    setInput('')
+    if (text) {
+      setHistory((prev) => [...prev, text])
+      setHistoryIndex(history.length + 1)
+    }
+    run(text, false)
+  }
+
+  function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+    const atEnd = e.currentTarget.selectionStart === input.length
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      submit()
+    } else if ((e.key === 'Tab' || (e.key === 'ArrowRight' && atEnd)) && completion) {
+      e.preventDefault()
+      setInput(completion)
+    } else if (e.key === 'ArrowUp' && history.length > 0) {
+      e.preventDefault()
+      const next = Math.max(0, historyIndex - 1)
+      setHistoryIndex(next)
+      setInput(history[next])
+    } else if (e.key === 'ArrowDown' && history.length > 0) {
+      e.preventDefault()
+      const next = Math.min(history.length, historyIndex + 1)
+      setHistoryIndex(next)
+      setInput(history[next] ?? '')
+    } else if (e.key === 'Escape') {
+      e.currentTarget.blur()
+    }
+  }
+
+  // Clicking the screen puts you at the prompt, like a real terminal, unless you were selecting
+  // text or clicking something that is already a control.
+  function focusPrompt(e: MouseEvent<HTMLDivElement>) {
+    if (e.target instanceof Element && e.target.closest('a, button')) return
+    if (window.getSelection()?.toString()) return
+    inputRef.current?.focus({ preventScroll: true })
+  }
+
+  const demoing = !touched && done && inView && introDone && !reduced
 
   return (
-    <div className="flex flex-col">
-      <div
-        ref={screen}
-        role="log"
-        aria-live="polite"
-        aria-label="Interactive terminal demo"
-        className="thin-scrollbar h-[300px] overflow-y-auto px-4 py-4 font-mono text-[12px] leading-relaxed text-white/80 sm:px-5 sm:text-[13px]"
-      >
-        <p className="whitespace-nowrap">
-          <Prompt />
-          <span className="text-white">{typed}</span>
-          {!done && <Caret />}
-        </p>
-
-        {done && (
-          <motion.div key={`${cmd}-${run}`} className="mt-3" initial={reduced ? false : 'hidden'} animate="visible" variants={list}>
-            {cmd === 'whoami' && <Whoami />}
-            {cmd === 'skills' && <Skills />}
-            {cmd === 'projects' && <Projects />}
-            {cmd === 'experience' && <Experience />}
-            {cmd === 'sudo hire-me' && <HireMe />}
-            <motion.p variants={row} className="mt-4 whitespace-nowrap">
-              <Prompt />
-              <Caret blink />
-            </motion.p>
-          </motion.div>
+    <div ref={root} className="relative flex flex-col" onPointerDown={() => setTouched(true)}>
+      {/* A line of light crosses under the title bar each time a command runs. */}
+      <div aria-hidden className="absolute inset-x-0 top-0 h-px overflow-hidden">
+        {!reduced && (
+          <motion.span
+            key={entry.id}
+            className="block h-full w-1/2 bg-gradient-to-r from-transparent via-accent to-transparent"
+            initial={{ x: '-100%' }}
+            animate={{ x: '200%' }}
+            transition={{ duration: 0.7, ease: appleEase }}
+          />
         )}
       </div>
 
       <div
+        ref={screen}
+        role="log"
+        aria-live={touched ? 'polite' : 'off'}
+        aria-label="Terminal output"
+        onClick={focusPrompt}
+        className={`thin-scrollbar cursor-text overflow-y-auto px-4 py-4 font-mono text-[12px] leading-relaxed text-white/80 transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:px-5 sm:text-[13px] ${
+          tall ? 'h-[420px]' : 'h-[264px]'
+        }`}
+      >
+        {entry.text && (
+          <p className="whitespace-nowrap">
+            <Prompt />
+            <span className="text-white">{typed}</span>
+            {!done && <Caret />}
+          </p>
+        )}
+
+        {done && entry.output && (
+          <motion.div key={entry.id} className="mt-3" initial={reduced ? false : 'hidden'} animate="visible" variants={list}>
+            {entry.output.kind === 'view' && entry.output.view === 'whoami' && <Whoami />}
+            {entry.output.kind === 'view' && entry.output.view === 'skills' && <Skills />}
+            {entry.output.kind === 'view' && entry.output.view === 'projects' && <Projects />}
+            {entry.output.kind === 'view' && entry.output.view === 'experience' && <Experience />}
+            {entry.output.kind === 'view' && entry.output.view === 'sudo hire-me' && <HireMe />}
+            {entry.output.kind === 'help' && (
+              <Help actions={commands.map((c) => [c.alias, c.label.toLowerCase()])} onRun={(name) => run(name, true)} />
+            )}
+            {entry.output.kind === 'done' && (
+              <motion.p variants={row} className="inline-flex items-center gap-1.5 text-[#5ee07a]">
+                <TbCheck aria-hidden className="h-3.5 w-3.5" /> {entry.output.label.toLowerCase()}
+              </motion.p>
+            )}
+            {entry.output.kind === 'missing' && (
+              <Missing name={entry.output.name} guess={entry.output.guess} onRun={(name) => run(name, true)} />
+            )}
+          </motion.div>
+        )}
+      </div>
+
+      <label className="flex cursor-text items-center gap-2 border-t border-white/[0.06] px-4 py-2 font-mono text-[16px] sm:px-5 sm:text-[13px]">
+        <span className="shrink-0 whitespace-nowrap text-[12px] sm:text-[13px]">
+          <Prompt />
+        </span>
+        <span className="relative min-w-0 flex-1">
+          {/* Completion ghost: the typed part is invisible and only holds the rest in position. */}
+          <span aria-hidden className="pointer-events-none absolute inset-0 overflow-hidden whitespace-pre text-white/25">
+            <span className="invisible">{input}</span>
+            {completion ? completion.slice(query.length) : input ? '' : 'type a command, or help'}
+          </span>
+          <input
+            ref={inputRef}
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onFocus={() => setTouched(true)}
+            spellCheck={false}
+            autoComplete="off"
+            autoCapitalize="off"
+            autoCorrect="off"
+            enterKeyHint="go"
+            aria-label="Terminal command"
+            className="relative w-full bg-transparent text-white caret-accent outline-none"
+          />
+        </span>
+        {completion && (
+          <kbd className="hidden shrink-0 rounded border border-white/15 px-1 text-[10px] text-white/40 sm:block">tab</kbd>
+        )}
+      </label>
+
+      <div
         role="toolbar"
-        aria-label="Terminal commands"
+        aria-label="Quick commands"
         className="thin-scrollbar flex gap-1 overflow-x-auto border-t border-white/[0.06] bg-white/[0.02] px-2 py-2 font-mono text-xs"
       >
-        {COMMANDS.map((c) => {
-          const active = cmd === c
+        {VIEWS.map((c) => {
+          const active = entry.text === c
           return (
             <button
               key={c}
               type="button"
               aria-pressed={active}
               data-cursor="run"
-              onClick={() => {
-                setCmd(c)
-                setRun((n) => n + 1)
-              }}
+              onClick={() => run(c, true)}
               className={`relative flex min-h-9 shrink-0 items-center gap-1.5 rounded-md px-3 transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent ${
                 active ? 'bg-white/[0.07] text-white' : 'text-white/45 hover:bg-white/[0.04] hover:text-white/80'
               }`}
@@ -139,17 +335,29 @@ export function HeroShell() {
                 ❯
               </span>
               {c}
+              {/* Demo countdown: fills while this view is held, then the next command types itself. */}
+              {active && demoing && (
+                <motion.span
+                  aria-hidden
+                  key={entry.id}
+                  className="absolute inset-x-2 bottom-0.5 h-px origin-left bg-accent"
+                  initial={{ scaleX: 0 }}
+                  animate={{ scaleX: 1 }}
+                  transition={{ duration: DEMO_MS / 1000, ease: 'linear' }}
+                />
+              )}
             </button>
           )
         })}
-        {/* The shell's own commands only print. Everything that acts on the page lives in the palette. */}
+        {/* Same list the prompt runs, for people who would rather pick than type. */}
         <button
           type="button"
           onClick={() => useUi.getState().setOverlay('palette')}
           data-cursor="commands"
-          className="ml-auto flex min-h-9 shrink-0 items-center gap-1.5 rounded-md px-3 text-accent/80 transition-colors hover:bg-white/[0.04] hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+          aria-label="Open the command palette"
+          // Pinned to the right edge so it stays reachable when the chips scroll under it.
+          className="sticky right-0 ml-auto flex min-h-9 shrink-0 items-center rounded-md bg-[#111116] px-2 text-accent/80 transition-colors hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
         >
-          more
           <kbd className="rounded border border-white/15 px-1 font-mono text-[10px] text-white/60">⌘K</kbd>
         </button>
       </div>
@@ -160,18 +368,67 @@ export function HeroShell() {
 function Prompt() {
   return (
     <>
-      <span className="text-white/40">~/apurva</span> <span className="text-accent">❯</span>{' '}
+      <span className="text-white/40">~/apurva</span>{' '}
+      <span className="hidden text-[#5ee07a]/70 sm:inline">
+        <TbGitBranch aria-hidden className="mb-0.5 inline h-3 w-3" />
+        main{' '}
+      </span>
+      <span className="text-accent">❯</span>{' '}
     </>
   )
 }
 
-function Caret({ blink = false }: { blink?: boolean }) {
+function Help({ actions, onRun }: { actions: string[][]; onRun: (name: string) => void }) {
+  const rows = [...VIEWS.map((v) => [v, VIEW_HELP[v]]), ['clear', 'clear the screen'], ...actions]
   return (
-    <span
-      aria-hidden
-      className={`ml-px inline-block h-[1.05em] w-[0.55ch] translate-y-[0.2em] bg-white/70 ${blink ? 'animate-pulse-dot motion-reduce:animate-none' : ''}`}
-    />
+    <ul className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
+      {rows.map(([name, about]) => (
+        <motion.li key={name} variants={row} className="min-w-0">
+          <button
+            type="button"
+            data-cursor="run"
+            onClick={() => onRun(name)}
+            className="flex w-full min-w-0 items-baseline gap-2 rounded py-0.5 text-left hover:bg-white/[0.04] focus-visible:outline focus-visible:outline-1 focus-visible:outline-accent"
+          >
+            <span className="shrink-0 text-accent">{name}</span>
+            <span className="truncate text-white/40">{about}</span>
+          </button>
+        </motion.li>
+      ))}
+    </ul>
   )
+}
+
+function Missing({ name, guess, onRun }: { name: string; guess: string | null; onRun: (name: string) => void }) {
+  return (
+    <>
+      <motion.p variants={row} className="text-white/60">
+        zsh: command not found: <span className="text-white">{name}</span>
+      </motion.p>
+      <motion.p variants={row} className="mt-1 text-white/45">
+        {guess ? (
+          <>
+            did you mean{' '}
+            <button type="button" data-cursor="run" onClick={() => onRun(guess)} className="text-accent underline-offset-2 hover:underline">
+              {guess}
+            </button>
+            ?
+          </>
+        ) : (
+          <>
+            try{' '}
+            <button type="button" data-cursor="run" onClick={() => onRun('help')} className="text-accent underline-offset-2 hover:underline">
+              help
+            </button>
+          </>
+        )}
+      </motion.p>
+    </>
+  )
+}
+
+function Caret() {
+  return <span aria-hidden className="ml-px inline-block h-[1.05em] w-[0.55ch] translate-y-[0.2em] bg-white/70" />
 }
 
 function Whoami() {
