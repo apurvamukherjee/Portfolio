@@ -1,9 +1,10 @@
-import { lazy, Suspense, useState } from 'react'
+import { lazy, Suspense, useMemo, useState } from 'react'
 import { useTheme } from './hooks/useTheme'
 import { useReducedMotion } from 'framer-motion'
 import { useCommandPaletteShortcut } from './hooks/useCommandPaletteShortcut'
 import { useKeySequence } from './hooks/useKeySequence'
 import { IntroContext } from './hooks/useIntro'
+import { buildCommands } from './data/commands'
 import { useUi } from './lib/ui'
 import { MatrixRain } from './components/shared/MatrixRain'
 import { CursorSpotlight } from './components/shared/CursorSpotlight'
@@ -49,6 +50,7 @@ function App() {
   const overlay = useUi((s) => s.overlay)
   const matrix = useUi((s) => s.matrix)
   const { setOverlay, closeOverlay, unlockMatrix } = useUi.getState()
+  const commands = useMemo(() => buildCommands({ theme, onToggleTheme: toggle }), [theme, toggle])
 
   const handleIntroComplete = () => {
     try {
@@ -102,12 +104,7 @@ function App() {
       <BackToTopButton />
 
       <Suspense fallback={null}>
-        <CommandPalette
-          open={overlay === 'palette'}
-          onClose={() => closeOverlay('palette')}
-          theme={theme}
-          onToggleTheme={toggle}
-        />
+        <CommandPalette open={overlay === 'palette'} onClose={() => closeOverlay('palette')} commands={commands} />
         <Terminal open={overlay === 'terminal'} onClose={() => closeOverlay('terminal')} />
       </Suspense>
     </IntroContext.Provider>

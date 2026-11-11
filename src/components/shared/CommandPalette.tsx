@@ -1,20 +1,18 @@
 import { useEffect, useMemo, useRef, useState, type KeyboardEvent } from 'react'
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { TbCommand, TbCornerDownLeft } from 'react-icons/tb'
-import { buildCommands } from '../../data/commands'
+import type { Command } from '../../data/commands'
 import { fuzzyScore } from '../../lib/fuzzyMatch'
 import { useLockBodyScroll } from '../../hooks/useLockBodyScroll'
 import { appleEase, iosSpring } from '../../lib/motion'
-import type { Theme } from '../../hooks/useTheme'
 
 interface CommandPaletteProps {
   open: boolean
   onClose: () => void
-  theme: Theme
-  onToggleTheme: () => void
+  commands: Command[]
 }
 
-export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandPaletteProps) {
+export function CommandPalette({ open, onClose, commands }: CommandPaletteProps) {
   const reduced = useReducedMotion()
   const [query, setQuery] = useState('')
   const [activeIndex, setActiveIndex] = useState(0)
@@ -22,8 +20,6 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
   const previousFocusRef = useRef<Element | null>(null)
 
   useLockBodyScroll(open)
-
-  const commands = useMemo(() => buildCommands({ theme, onToggleTheme }), [theme, onToggleTheme])
 
   const filtered = useMemo(() => {
     return commands
@@ -136,7 +132,10 @@ export function CommandPalette({ open, onClose, theme, onToggleTheme }: CommandP
                   }`}
                 >
                   <span>{command.label}</span>
-                  {i === activeIndex && <TbCornerDownLeft className="shrink-0" size={14} />}
+                  <span className="flex shrink-0 items-center gap-2">
+                    <kbd className="hidden font-mono text-[11px] text-muted sm:block">{command.alias}</kbd>
+                    {i === activeIndex && <TbCornerDownLeft size={14} />}
+                  </span>
                 </li>
               ))}
             </ul>
