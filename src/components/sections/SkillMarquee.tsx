@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { brandColors, type Skill } from '../../data/skills'
+import { iosSpring } from '../../lib/motion'
 
 interface SkillMarqueeProps {
   skills: Skill[]
@@ -58,7 +59,7 @@ export function SkillMarquee({ skills, reverse = false, secondsPerItem = 3.2 }: 
               title={name}
               aria-label={name}
               whileHover={reduced ? undefined : { y: -6, scale: 1.08 }}
-              transition={{ type: 'spring', stiffness: 380, damping: 26 }}
+              transition={iosSpring}
               style={{ ['--brand' as string]: brandColors[name] ?? 'var(--color-ink)' }}
               className="skill-tile group relative flex h-24 w-24 items-center justify-center rounded-2xl border border-border md:h-28 md:w-28"
             >
