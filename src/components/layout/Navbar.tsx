@@ -10,6 +10,10 @@ import { Hamburger } from './Hamburger'
 import { MobileMenu } from './MobileMenu'
 import { ThemeToggle } from '../shared/ThemeToggle'
 import { jumpToSection } from '../../lib/sectionTransition'
+import { useUi } from '../../lib/ui'
+
+const MOD_KEY = /Mac|iPhone|iPad/.test(navigator.platform) ? '⌘' : 'Ctrl'
+const openPalette = () => useUi.getState().setOverlay('palette')
 
 // Module-level so useScrollSpy's effect dependency stays referentially stable across renders.
 const SECTION_IDS = navLinks.map((l) => l.id)
@@ -63,6 +67,17 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
           </nav>
 
           <div className="flex items-center gap-3">
+            {/* The one visible door to everything hidden: sections, music, terminal, the Matrix. */}
+            <button
+              type="button"
+              onClick={openPalette}
+              aria-label="Open the command palette"
+              data-cursor="commands"
+              className="hidden h-9 items-center gap-1.5 rounded-full border border-border bg-surface-raised px-3 font-mono text-xs text-muted transition-colors hover:border-accent/60 hover:text-ink focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent sm:flex"
+            >
+              <kbd className="font-mono">{MOD_KEY}</kbd>
+              <kbd className="font-mono">K</kbd>
+            </button>
             <ThemeToggle theme={theme} onToggle={onToggleTheme} />
             <Hamburger open={menuOpen} controls="mobile-menu" onClick={() => setMenuOpen((o) => !o)} />
           </div>
