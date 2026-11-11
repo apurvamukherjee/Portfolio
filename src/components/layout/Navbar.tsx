@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 import { navLinks } from '../../data/nav'
 import { useScrollSpy } from '../../hooks/useScrollSpy'
 import { useIntro } from '../../hooks/useIntro'
@@ -52,7 +53,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
                   {activeId === link.id && (
                     <motion.span
                       layoutId="nav-active-indicator"
-                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                      transition={iosSpring}
                       className="absolute -bottom-1.5 left-0 right-0 h-0.5 rounded-full bg-accent"
                     />
                   )}
