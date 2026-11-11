@@ -1,20 +1,11 @@
 import { useEffect, useState } from 'react'
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion'
+import { AnimatePresence, motion, useMotionValue, useTransform, useReducedMotion } from 'framer-motion'
 import { useFinePointer } from '../../hooks/useFinePointer'
+import { iosSpring } from '../../lib/motion'
 
-const RING_SIZE = 208
-
-// Radius of each glow layer (matches the old inline radial-gradient's explicit circle radius).
-const CORE_RADIUS = 200
-const TRAIL_RADIUS = 340
-const TAIL_RADIUS = 520
-
-const CORE_GRADIENT =
-  'radial-gradient(circle 200px at center, color-mix(in srgb, var(--color-accent) 16%, transparent), transparent 65%)'
-const TRAIL_GRADIENT =
-  'radial-gradient(circle 340px at center, color-mix(in srgb, var(--color-accent) 9%, transparent), transparent 68%)'
-const TAIL_GRADIENT =
-  'radial-gradient(circle 520px at center, color-mix(in srgb, var(--color-accent-deep) 20%, transparent), transparent 70%)'
+const GLOW_RADIUS = 200
+const GLOW =
+  'radial-gradient(circle 200px at center, color-mix(in srgb, var(--color-accent) 14%, transparent), transparent 65%)'
 
 interface Ripple {
   id: number
@@ -25,35 +16,24 @@ interface Ripple {
 let rippleId = 0
 
 /**
- * Cursor-following glow: a subtle core plus two trailing "ember" rings behind it for a light
- * comet-tail feel, a slowly rotating conic energy ring riding along with the cursor, and a
- * shockwave ripple burst on click. Every glow layer is its own fixed-size div with a *static*
- * radial-gradient background, positioned purely via a `transform: translate` motion value —
- * animating transform is GPU-compositor-only, so this never triggers a full-viewport repaint
- * the way animating the `background` position itself would on every cursor move. None of it
- * triggers a React re-render on mousemove either — only clicks (for ripples) touch state.
+ * One soft glow under the cursor, a ripple on click, and a small label naming what the thing
+ * under the pointer does. Anything with `data-cursor="open"` (or any other verb) gets the label,
+ * which is how a visitor learns what is interactive without trying everything.
+ *
+ * The glow is a fixed-size div moved by transform only, so mousemove never repaints the viewport
+ * or re-renders React; state changes only on click and when the label under the pointer changes.
  */
 export function CursorSpotlight() {
   const reduced = useReducedMotion()
   const fine = useFinePointer()
   const active = fine && !reduced
   const [ripples, setRipples] = useState<Ripple[]>([])
+  const [label, setLabel] = useState<string | null>(null)
 
   const x = useMotionValue(-9999)
   const y = useMotionValue(-9999)
-  const trailX = useSpring(x, { stiffness: 220, damping: 30, mass: 0.5 })
-  const trailY = useSpring(y, { stiffness: 220, damping: 30, mass: 0.5 })
-  const tailX = useSpring(x, { stiffness: 100, damping: 28, mass: 0.7 })
-  const tailY = useSpring(y, { stiffness: 100, damping: 28, mass: 0.7 })
-
-  const coreOffsetX = useTransform(x, (v) => v - CORE_RADIUS)
-  const coreOffsetY = useTransform(y, (v) => v - CORE_RADIUS)
-  const trailOffsetX = useTransform(trailX, (v) => v - TRAIL_RADIUS)
-  const trailOffsetY = useTransform(trailY, (v) => v - TRAIL_RADIUS)
-  const tailOffsetX = useTransform(tailX, (v) => v - TAIL_RADIUS)
-  const tailOffsetY = useTransform(tailY, (v) => v - TAIL_RADIUS)
-  const ringX = useTransform(x, (v) => v - RING_SIZE / 2)
-  const ringY = useTransform(y, (v) => v - RING_SIZE / 2)
+  const glowX = useTransform(x, (v) => v - GLOW_RADIUS)
+  const glowY = useTransform(y, (v) => v - GLOW_RADIUS)
 
   useEffect(() => {
     if (!active) return
@@ -62,6 +42,10 @@ export function CursorSpotlight() {
       x.set(e.clientX)
       y.set(e.clientY)
     }
+    const handleOver = (e: PointerEvent) => {
+      const target = e.target instanceof Element ? e.target.closest('[data-cursor]') : null
+      setLabel(target?.getAttribute('data-cursor') ?? null)
+    }
     const handleDown = (e: PointerEvent) => {
       if (e.pointerType === 'touch') return
       const id = rippleId++
@@ -69,9 +53,11 @@ export function CursorSpotlight() {
       window.setTimeout(() => setRipples((prev) => prev.filter((r) => r.id !== id)), 700)
     }
     window.addEventListener('pointermove', handleMove, { passive: true })
+    window.addEventListener('pointerover', handleOver, { passive: true })
     window.addEventListener('pointerdown', handleDown, { passive: true })
     return () => {
       window.removeEventListener('pointermove', handleMove)
+      window.removeEventListener('pointerover', handleOver)
       window.removeEventListener('pointerdown', handleDown)
     }
   }, [active, x, y])
@@ -83,42 +69,25 @@ export function CursorSpotlight() {
       <motion.div
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-30 rounded-full will-change-transform"
-        style={{
-          width: TAIL_RADIUS * 2,
-          height: TAIL_RADIUS * 2,
-          background: TAIL_GRADIENT,
-          x: tailOffsetX,
-          y: tailOffsetY,
-        }}
-      />
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-30 rounded-full will-change-transform"
-        style={{
-          width: TRAIL_RADIUS * 2,
-          height: TRAIL_RADIUS * 2,
-          background: TRAIL_GRADIENT,
-          x: trailOffsetX,
-          y: trailOffsetY,
-        }}
-      />
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-30 rounded-full will-change-transform"
-        style={{
-          width: CORE_RADIUS * 2,
-          height: CORE_RADIUS * 2,
-          background: CORE_GRADIENT,
-          x: coreOffsetX,
-          y: coreOffsetY,
-        }}
+        style={{ width: GLOW_RADIUS * 2, height: GLOW_RADIUS * 2, background: GLOW, x: glowX, y: glowY }}
       />
 
-      <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-30 h-52 w-52" style={{ x: ringX, y: ringY }}>
-        <div
-          className="h-full w-full animate-jelly-flow opacity-30"
-          style={{ backgroundImage: 'conic-gradient(from 0deg, transparent, color-mix(in srgb, var(--color-accent) 40%, transparent), transparent 40%)' }}
-        />
+      {/* Above every overlay (palette and terminal sit at z-100) so labels work inside them too. */}
+      <motion.div aria-hidden className="pointer-events-none fixed left-0 top-0 z-[110]" style={{ x, y }}>
+        <AnimatePresence>
+          {label && (
+            <motion.span
+              key={label}
+              initial={{ opacity: 0, scale: 0.6 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.6 }}
+              transition={iosSpring}
+              className="absolute left-4 top-4 origin-top-left whitespace-nowrap rounded-full bg-accent px-2.5 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.12em] text-white shadow-card"
+            >
+              {label}
+            </motion.span>
+          )}
+        </AnimatePresence>
       </motion.div>
 
       <AnimatePresence>
