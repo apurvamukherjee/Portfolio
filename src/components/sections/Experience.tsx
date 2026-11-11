@@ -5,7 +5,7 @@ import { SectionHeading } from '../shared/SectionHeading'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { Chip } from '../shared/Chip'
 import { ExperienceNode } from './ExperienceNode'
-import { fadeUp, staggerContainer, viewportOnce, withMotionPreference } from '../../lib/motion'
+import { fadeUp, staggerContainer, trackSpring, viewportOnce, withMotionPreference } from '../../lib/motion'
 
 // Matches the track's inset: it runs from the first dot's centre to the last one's.
 const TRACK_INSET = 22
@@ -25,7 +25,7 @@ export function Experience() {
   const reduced = useReducedMotion()
   const timelineRef = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: timelineRef, offset: ['start 0.8', 'end 0.3'] })
-  const progress = useSpring(scrollYProgress, { stiffness: 300, damping: 40, restDelta: 0.001 })
+  const progress = useSpring(scrollYProgress, trackSpring)
   const [reachedCount, setReachedCount] = useState(0)
   // Where each dot sits along the track (0–1). Measured lazily, dropped whenever the timeline resizes.
   const stopsRef = useRef<number[] | null>(null)
