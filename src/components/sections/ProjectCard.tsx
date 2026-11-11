@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 import { TbBrandGithub, TbChevronDown } from 'react-icons/tb'
 import type { Project } from '../../data/projects'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
@@ -57,7 +58,7 @@ export function ProjectCard(project: Project) {
               aria-label={`Visit ${project.name} on GitHub`}
               whileHover={{ scale: 1.1, rotate: -6 }}
               whileTap={{ scale: 0.92 }}
-              transition={{ type: 'spring', stiffness: 350, damping: 18 }}
+              transition={iosSpring}
               className="flex h-10 w-10 items-center justify-center rounded-full border border-border text-ink transition-colors hover:border-accent hover:text-accent"
             >
               <TbBrandGithub size={18} />
