@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { iosSpringSoft } from '../../../lib/motion'
 import type { Project } from '../../../data/projects'
 import { CATEGORY_ICON } from '../../../lib/projectStyles'
 import { SHELF_LABELS } from '../../../data/projects'
@@ -31,7 +32,7 @@ export function BookLoader({ project }: BookLoaderProps) {
          opacity until the last third stops the whole thing reading as a cross-fade. */
       exit={{ opacity: 0, rotateY: -105 }}
       transition={{
-        rotateY: { type: 'spring', stiffness: 170, damping: 24 },
+        rotateY: iosSpringSoft,
         opacity: { duration: 0.22, delay: 0.2 },
       }}
     >
