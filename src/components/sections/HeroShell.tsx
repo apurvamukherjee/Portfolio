@@ -6,6 +6,7 @@ import { projectBlurb, projects } from '../../data/projects'
 import { experience } from '../../data/experience'
 import { socialLinks } from '../../data/social'
 import { jumpToSection } from '../../lib/sectionTransition'
+import { useUi } from '../../lib/ui'
 
 const COMMANDS = ['whoami', 'skills', 'projects', 'experience', 'sudo hire-me'] as const
 type Command = (typeof COMMANDS)[number]
@@ -125,6 +126,7 @@ export function HeroShell() {
               key={c}
               type="button"
               aria-pressed={active}
+              data-cursor="run"
               onClick={() => {
                 setCmd(c)
                 setRun((n) => n + 1)
@@ -140,6 +142,16 @@ export function HeroShell() {
             </button>
           )
         })}
+        {/* The shell's own commands only print. Everything that acts on the page lives in the palette. */}
+        <button
+          type="button"
+          onClick={() => useUi.getState().setOverlay('palette')}
+          data-cursor="commands"
+          className="ml-auto flex min-h-9 shrink-0 items-center gap-1.5 rounded-md px-3 text-accent/80 transition-colors hover:bg-white/[0.04] hover:text-accent focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent"
+        >
+          more
+          <kbd className="rounded border border-white/15 px-1 font-mono text-[10px] text-white/60">⌘K</kbd>
+        </button>
       </div>
     </div>
   )
