@@ -84,7 +84,7 @@ export function Navbar({ theme, onToggleTheme }: NavbarProps) {
         </div>
       </motion.header>
 
-      <MobileMenu open={menuOpen} onClose={closeMenu} links={navLinks} activeId={activeId} />
+      <MobileMenu open={menuOpen} onClose={closeMenu} links={navLinks} activeId={activeId} onOpenPalette={openPalette} />
     </>
   )
 }

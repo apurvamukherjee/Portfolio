@@ -10,9 +10,10 @@ interface MobileMenuProps {
   onClose: () => void
   links: NavLink[]
   activeId: string
+  onOpenPalette: () => void
 }
 
-export function MobileMenu({ open, onClose, links, activeId }: MobileMenuProps) {
+export function MobileMenu({ open, onClose, links, activeId, onOpenPalette }: MobileMenuProps) {
   useLockBodyScroll(open)
   const firstLinkRef = useRef<HTMLAnchorElement>(null)
 
@@ -78,6 +79,18 @@ export function MobileMenu({ open, onClose, links, activeId }: MobileMenuProps) 
               >
                 {'</Resume>'}
               </a>
+            </li>
+            <li>
+              <button
+                type="button"
+                onClick={() => {
+                  onClose()
+                  onOpenPalette()
+                }}
+                className="rounded-full border border-border px-4 py-2 font-mono text-sm text-muted outline-none focus-visible:ring-2 focus-visible:ring-accent"
+              >
+                {'> commands'}
+              </button>
             </li>
           </ul>
         </motion.div>
