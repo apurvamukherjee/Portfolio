@@ -1,4 +1,5 @@
 import { motion, useReducedMotion } from 'framer-motion'
+import { iosSpring } from '../../lib/motion'
 import type { ExperienceRole } from '../../data/experience'
 import { GradientSweepCard } from '../shared/GradientSweepCard'
 import { Chip } from '../shared/Chip'
@@ -20,7 +21,7 @@ export function ExperienceNode({ role, icon: Icon, time, status, points, tech, r
         data-reached={reached}
         initial={false}
         animate={{ scale: reached ? 1 : 0.86 }}
-        transition={{ type: 'spring', stiffness: 520, damping: 16 }}
+        transition={iosSpring}
         className="relative z-10 flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-full bg-surface ring-4 ring-surface-raised"
       >
         <motion.span
@@ -40,7 +41,7 @@ export function ExperienceNode({ role, icon: Icon, time, status, points, tech, r
           // Springs in for the pop; empties with a plain tween so it never overshoots past zero.
           transition={
             reached
-              ? { scale: { type: 'spring', stiffness: 380, damping: 22 }, opacity: { duration: 0.2 } }
+              ? { scale: iosSpring, opacity: { duration: 0.2 } }
               : { duration: 0.25, ease: 'easeIn' }
           }
         />
