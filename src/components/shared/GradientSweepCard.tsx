@@ -1,6 +1,6 @@
 import { useRef, type MouseEvent, type ReactNode } from 'react'
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion'
-import { iosSpring } from '../../lib/motion'
+import { iosSpring, pointerSpring } from '../../lib/motion'
 interface GradientSweepCardProps {
   children: ReactNode
   className?: string
@@ -20,8 +20,8 @@ export function GradientSweepCard({ children, className = '', tilt = true }: Gra
 
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 22 })
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 22 })
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), pointerSpring)
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), pointerSpring)
 
   function handleMouseMove(e: MouseEvent<HTMLDivElement>) {
     if (!active || !ref.current) return
