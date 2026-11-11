@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { brandColors, type Skill } from '../../data/skills'
 import { iosSpring } from '../../lib/motion'
+import { filterByTech, hasProjects } from '../../lib/tech'
 
 interface SkillMarqueeProps {
   skills: Skill[]
@@ -53,15 +54,27 @@ export function SkillMarquee({ skills, reverse = false, secondsPerItem = 3.2 }: 
           ['--dir' as string]: reverse ? 'reverse' : 'normal',
         }}
       >
-        {items.map(({ name, icon: Icon }, i) => (
+        {items.map(({ name, icon: Icon }, i) => {
+          // Only tiles with something to show are buttons; the rest stay plain so a click never lands on nothing.
+          const linked = hasProjects(name)
+          const Tile = linked ? motion.button : motion.div
+          return (
           <li key={i} aria-hidden={i >= skills.length || undefined} className="mr-5 shrink-0">
-            <motion.div
+            <Tile
+              {...(linked
+                ? {
+                    type: 'button' as const,
+                    onClick: () => filterByTech(name),
+                    tabIndex: i >= skills.length ? -1 : 0,
+                    'data-cursor': 'filter',
+                    'aria-label': `${name}: show projects built with it`,
+                  }
+                : { 'aria-label': name })}
               title={name}
-              aria-label={name}
               whileHover={reduced ? undefined : { y: -6, scale: 1.08 }}
               transition={iosSpring}
               style={{ ['--brand' as string]: brandColors[name] ?? 'var(--color-ink)' }}
-              className="skill-tile group relative flex h-24 w-24 items-center justify-center rounded-2xl border border-border md:h-28 md:w-28"
+              className="skill-tile group relative flex h-24 w-24 items-center justify-center rounded-2xl border border-border focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent md:h-28 md:w-28"
             >
               <span aria-hidden className="skill-tile-corner left-2 top-2 border-l border-t" />
               <span aria-hidden className="skill-tile-corner bottom-2 right-2 border-b border-r" />
@@ -72,9 +85,10 @@ export function SkillMarquee({ skills, reverse = false, secondsPerItem = 3.2 }: 
               <span className="pointer-events-none absolute -bottom-6 whitespace-nowrap font-mono text-[11px] text-muted opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                 {name}
               </span>
-            </motion.div>
+            </Tile>
           </li>
-        ))}
+          )
+        })}
       </ul>
     </div>
   )
