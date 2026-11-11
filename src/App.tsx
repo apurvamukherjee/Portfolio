@@ -4,6 +4,7 @@ import { useReducedMotion } from 'framer-motion'
 import { useCommandPaletteShortcut } from './hooks/useCommandPaletteShortcut'
 import { useKeySequence } from './hooks/useKeySequence'
 import { IntroContext } from './hooks/useIntro'
+import { CommandsContext } from './hooks/useCommands'
 import { buildCommands } from './data/commands'
 import { useUi } from './lib/ui'
 import { MatrixRain } from './components/shared/MatrixRain'
@@ -80,7 +81,9 @@ function App() {
 
       <main className="relative">
         <ErrorBoundary>
-          <Hero />
+          <CommandsContext.Provider value={commands}>
+            <Hero />
+          </CommandsContext.Provider>
         </ErrorBoundary>
         <ErrorBoundary>
           <About />
