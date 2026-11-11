@@ -9,10 +9,15 @@ import { MacBookFrame } from '../shared/MacBookFrame'
 import { CtaLink } from '../shared/CtaLink'
 import { Chip } from '../shared/Chip'
 import { CaseStudy } from '../shared/CaseStudy'
+import { techKey } from '../../lib/tech'
+import { useUi } from '../../lib/ui'
 
 export function ProjectCard(project: Project) {
   const [caseStudyOpen, setCaseStudyOpen] = useState(false)
   const { caseStudy } = project
+  const tech = useUi((s) => s.tech)
+  const setTech = useUi((s) => s.setTech)
+  const activeKey = tech ? techKey(tech) : null
 
   return (
     <GradientSweepCard className="flex flex-col overflow-hidden rounded-lg md:flex-row">
@@ -41,11 +46,14 @@ export function ProjectCard(project: Project) {
 
         {project.tech.length > 0 && (
           <div className="flex flex-wrap gap-2">
-            {project.tech.map((t) => (
-              <Chip key={t}>
-                {t}
-              </Chip>
-            ))}
+            {project.tech.map((t) => {
+              const on = techKey(t) === activeKey
+              return (
+                <Chip key={t} pressed={on} onClick={() => setTech(on ? null : t)}>
+                  {t}
+                </Chip>
+              )
+            })}
           </div>
         )}
 
