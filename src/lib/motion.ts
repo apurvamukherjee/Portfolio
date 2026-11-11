@@ -45,5 +45,11 @@ export const iosSpring = { type: 'spring', stiffness: 380, damping: 30, mass: 0.
 /** Softer variant for larger surfaces (sheets, modals) where a bouncy overshoot looks cheap. */
 export const iosSpringSoft = { type: 'spring', stiffness: 260, damping: 32, mass: 1 } as const
 
+/** For values that chase scroll progress: critically damped, so a line never overshoots its target. */
+export const trackSpring = { stiffness: 300, damping: 40, restDelta: 0.001 } as const
+
+/** For values that chase the pointer (tilt, magnetic pull): quick, with a hint of give. */
+export const pointerSpring = { stiffness: 300, damping: 22 } as const
+
 /** Apple's standard ease curve, for properties springs can't drive (opacity, colors, width). */
 export const appleEase = [0.32, 0.72, 0, 1] as const
