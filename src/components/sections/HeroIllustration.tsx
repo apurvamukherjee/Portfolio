@@ -1,5 +1,15 @@
 import { useEffect, useRef, useState, type PointerEvent } from 'react'
-import { AnimatePresence, motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'framer-motion'
+import {
+  AnimatePresence,
+  motion,
+  useDragControls,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useSpring,
+  useTransform,
+  useVelocity,
+} from 'framer-motion'
 import { HeroShell } from './HeroShell'
 import { iosSpring, iosSpringSoft, pointerSpring } from '../../lib/motion'
 
@@ -21,6 +31,8 @@ const LIGHTS = [
 
 // A closed terminal would leave the hero empty, so the session restarts itself.
 const REOPEN_MS = 1700
+const MAX_TILT_X = 9
+const MAX_TILT_Y = 11
 
 /**
  * The hero's terminal window. It tilts toward the cursor, its edge lights up where the pointer
@@ -33,8 +45,19 @@ export function HeroIllustration() {
   const windowRef = useRef<HTMLDivElement>(null)
   const x = useMotionValue(0)
   const y = useMotionValue(0)
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [5, -5]), pointerSpring)
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), pointerSpring)
+  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [MAX_TILT_X, -MAX_TILT_X]), pointerSpring)
+  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-MAX_TILT_Y, MAX_TILT_Y]), pointerSpring)
+
+  // Layers inside the window read --dx/--dy (-1..1) to shift as if they sat in front of the glass.
+  // Written straight to the element so the parallax costs no React render.
+  useMotionValueEvent(rotateY, 'change', (v) => windowRef.current?.style.setProperty('--dx', (v / MAX_TILT_Y).toFixed(3)))
+  useMotionValueEvent(rotateX, 'change', (v) => windowRef.current?.style.setProperty('--dy', (-v / MAX_TILT_X).toFixed(3)))
+
+  // Grab the title bar and toss the window; it swings with the throw and springs home.
+  const drag = useDragControls()
+  const dragX = useMotionValue(0)
+  const dragY = useMotionValue(0)
+  const swing = useSpring(useTransform(useVelocity(dragX), [-2500, 2500], [-10, 10]), pointerSpring)
 
   const [mode, setMode] = useState<Mode>('normal')
   // Bumped on every reopen so the shell remounts and boots from whoami again.
@@ -102,14 +125,27 @@ export function HeroIllustration() {
 
       <motion.div
         ref={windowRef}
-        style={reduced ? undefined : { rotateX, rotateY }}
+        style={reduced ? undefined : { rotateX, rotateY, rotateZ: swing, x: dragX, y: dragY }}
+        drag={!reduced}
+        dragListener={false}
+        dragControls={drag}
+        dragSnapToOrigin
+        dragElastic={0.35}
+        dragTransition={{ bounceStiffness: 260, bounceDamping: 14 }}
+        whileDrag={{ scale: 1.03 }}
         // Stays in the layout while closed, so the hero does not jump when it comes back.
-        animate={closed ? { opacity: 0, scale: 0.9, y: 18 } : { opacity: 1, scale: 1, y: 0 }}
+        animate={closed ? { opacity: 0, scale: 0.9 } : { opacity: 1, scale: 1 }}
         transition={reduced ? { duration: 0.15 } : iosSpring}
         inert={closed}
-        className="hero-window relative overflow-hidden rounded-2xl bg-[#0d0d12] shadow-[0_30px_80px_-20px_rgba(0,0,0,0.7),inset_0_0_0_1px_rgba(255,255,255,0.1)] ring-1 ring-black/40"
+        className="hero-window relative overflow-hidden rounded-2xl bg-[#0d0d12] ring-1 ring-black/40"
       >
-        <div className="relative flex h-11 items-center border-b border-white/[0.06] bg-white/[0.03] px-4">
+        <div
+          data-cursor={reduced ? undefined : 'drag'}
+          onPointerDown={(e) => {
+            if (!reduced && !(e.target as HTMLElement).closest('button:not([tabindex="-1"])')) drag.start(e)
+          }}
+          className={`relative flex h-11 touch-none select-none items-center border-b border-white/[0.06] bg-white/[0.03] px-4 ${reduced ? '' : 'cursor-grab active:cursor-grabbing'}`}
+        >
           <div className="group/lights relative z-[1] flex items-center gap-2">
             {LIGHTS.map(({ mode: target, label, bg, glyph }) => (
               <button

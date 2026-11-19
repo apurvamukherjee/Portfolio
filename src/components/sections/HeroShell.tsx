@@ -249,7 +249,8 @@ export function HeroShell({ tall }: HeroShellProps) {
         aria-live={touched ? 'polite' : 'off'}
         aria-label="Terminal output"
         onClick={focusPrompt}
-        className={`thin-scrollbar cursor-text overflow-y-auto px-4 py-4 font-mono text-[12px] leading-relaxed text-white/80 transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:px-5 sm:text-[13px] ${
+        style={{ ['--depth' as string]: '6px' }}
+        className={`hero-depth thin-scrollbar cursor-text overflow-y-auto px-4 py-4 font-mono text-[12px] leading-relaxed text-white/80 transition-[height] duration-500 ease-[cubic-bezier(0.32,0.72,0,1)] motion-reduce:transition-none sm:px-5 sm:text-[13px] ${
           tall ? 'h-[420px]' : 'h-[264px]'
         }`}
       >
@@ -438,9 +439,10 @@ function Whoami() {
         <img
           src="/assets/img/circlepic.jpg"
           alt=""
-          className="h-11 w-11 shrink-0 rounded-xl object-cover ring-1 ring-white/15"
+          style={{ ['--depth' as string]: '20px' }}
+          className="hero-depth h-11 w-11 shrink-0 rounded-xl object-cover shadow-[0_10px_24px_-6px_rgba(0,0,0,0.8)] ring-1 ring-white/15"
         />
-        <div className="min-w-0">
+        <div style={{ ['--depth' as string]: '12px' }} className="hero-depth min-w-0">
           <p className="truncate font-sans text-sm font-semibold text-white">Apurva Mukherjee</p>
           <p className="truncate text-white/40">
             <span className="text-accent">apurva</span>@portfolio

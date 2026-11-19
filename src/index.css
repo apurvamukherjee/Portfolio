@@ -229,6 +229,15 @@
    scroll-driven animations just see the static illustration. */
 /* Hero terminal window. --mx/--my are the pointer's position inside the window, written straight
    to the element on pointermove, so the lit edge and the glare track it without a React render. */
+.hero-window {
+  box-shadow:
+    calc(var(--dx, 0) * -28px) calc(30px + var(--dy, 0) * -28px) 80px -20px rgba(0, 0, 0, 0.7),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+/* --depth is how far in front of the glass a layer sits, in px of travel at full tilt. */
+.hero-depth {
+  transform: translate3d(calc(var(--dx, 0) * var(--depth, 4px)), calc(var(--dy, 0) * var(--depth, 4px)), 0);
+}
 .hero-window-edge {
   position: absolute;
   inset: 0;
